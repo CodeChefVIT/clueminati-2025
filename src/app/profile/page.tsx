@@ -9,30 +9,12 @@ export default function ProfileScreen() {
   const [showQR, setShowQR] = useState<boolean>(false);
   const dummyTeamId = "TEAM-12345-BLUELOCK";
 
-  const timerBox = "/assets/timer-box.png";
   const profilePic = "/assets/profile-pic.png";
 
   return (
-    <div className="w-full flex flex-col items-center justify-start text-white min-h-[calc(100vh-7rem)] p-4 sm:p-8">
-      {/* Top Bar */}
-      <div className="w-full max-w-sm flex justify-between items-center mb-12 sm:mb-16">
-        <div className="relative w-40 sm:w-44">
-          <img src="/assets/round-box.png" alt="Round" className="w-full" />
-          <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-xl sm:text-2xl">
-            Round S
-          </span>
-        </div>
-
-        <div className="relative w-40 sm:w-44">
-          <img src={timerBox} alt="Timer" className="w-full" />
-          <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-xl sm:text-2xl">
-            01:28:49
-          </span>
-        </div>
-      </div>
-
+    <div className="w-full flex flex-col items-center justify-start text-white px-4 sm:px-8 flex-1">
       {/* Profile Picture */}
-      <div className="relative w-36 h-36 sm:w-48 sm:h-48 mb-4">
+      <div className="relative w-36 h-36 sm:w-48 sm:h-48 mt-4 sm:mt-6">
         <img
           src={profilePic}
           alt="Profile"
@@ -42,7 +24,7 @@ export default function ProfileScreen() {
       </div>
 
       {/* Name and Email */}
-      <div className="text-center mb-6">
+      <div className="text-center mt-4 mb-6">
         <h1 className="text-3xl sm:text-4xl font-bold text-white">Ayman Raza</h1>
         <p className="text-base sm:text-lg text-gray-300">
           aymanraza2024@vitstudent.ac.in
@@ -50,7 +32,7 @@ export default function ProfileScreen() {
       </div>
 
       {/* Team Info */}
-      <div className="text-white text-xl sm:text-2xl max-w-xs w-full mb-8 space-y-6">
+      <div className="text-white text-xl sm:text-2xl max-w-xs w-full space-y-4 flex-1">
         <div className="flex justify-between">
           <span>Team Name:</span>
           <span>BLUELOCK</span>
@@ -66,7 +48,7 @@ export default function ProfileScreen() {
       </div>
 
       {/* Buttons */}
-      <div className="flex flex-col space-y-6 items-center w-full max-w-xs">
+      <div className="flex flex-col space-y-4 items-center w-full max-w-xs mt-auto mb-6 sm:mb-8">
         <Button label="Leave Team" onClick={() => alert("Leave Team clicked")} />
         <Button label="Log Out" onClick={() => alert("Log Out clicked")} />
         <Button label="Show Team QR" onClick={() => setShowQR(true)} />
@@ -84,10 +66,10 @@ export default function ProfileScreen() {
             </p>
 
             <Button
-  label="Close"
-  onClick={() => setShowQR(false)}
-  className="w-40 sm:w-44 text-lg sm:text-xl"
-/>
+              label="Close"
+              onClick={() => setShowQR(false)}
+              className="w-40 sm:w-44 text-lg sm:text-xl mt-4"
+            />
           </div>
         </div>
       )}

@@ -22,12 +22,17 @@ const BottomNav: FC = () => {
     { active: "/assets/profile_active.png", inactive: "/assets/profile_inactive.png", alt: "Profile", path: "/profile" },
   ];
 
-  const currentTab = tabs.findIndex(tab => tab.path === pathname);
-
   return (
     <div className="absolute bottom-4 left-0 right-0 flex justify-evenly items-center px-6 z-20">
       {tabs.map((tab, i) => {
-        const isActive = i === currentTab;
+        let isActive = pathname === tab.path;
+
+        // marking Home active also for /questions (or any other "sub-pages"..)
+        // basically if you want to set home button active for any other subpages like maybe pop up screens and all , just add pathname.startsWith() like ive done for questions here..
+        if (tab.path === "/" && (pathname === "/" || pathname.startsWith("/questions"))) {
+          isActive = true;
+        }
+
         return (
           <button
             key={i}
