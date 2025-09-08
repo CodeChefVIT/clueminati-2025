@@ -1,15 +1,23 @@
 'use client'
 
 import { useState } from "react";
-import {motion} from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { ImageOff } from "lucide-react";
+import localFont from "next/font/local";
 
+const rethinkSansBold = localFont({
+  src: "../../../public/assets/RethinkSans-Bold.ttf", 
+  variable: "--font-rethinkSansBold",
+});
+const rethinkSansMedium = localFont({
+  src: "../../../public/assets/RethinkSans-Medium.ttf", 
+  variable: "--font-rethinkSansMedium",
+});
 
-export default function Home() {
+export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -19,7 +27,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden w-full">
+    <div className={`min-h-screen relative overflow-hidden w-full ${rethinkSansBold.variable} ${rethinkSansMedium.variable}`}>
       <div 
         className="absolute inset-0 bg-center bg-cover bg-no-repeat flex items-center justify-center"
         style={{backgroundImage:"url('/assets/loginbg.png')",
@@ -27,23 +35,17 @@ export default function Home() {
         }}
       />
 
-      <div className="relative z-10 min-h-screen flex items-center justify-center p-8">
-        <motion.div
-          className="w-full max-w-sm mx-auto mb-21"
-        >
-          {/* Login Title */}
-          <motion.h1 
-            className="text-4xl font-bold text-white text-center mb-8 drop-shadow-2xl"
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-9">
+        <div className="w-full max-w-sm mx-auto mb-23">
+          <h1 
+            className="text-4xl font-bold text-white text-center mb-10"
+            style={{ fontFamily: 'var(--font-rethinkSansBold)' }}
           >
             Login
-          </motion.h1>
+          </h1>
 
-          <form onSubmit={handleSubmit} className="space-y-3">
-            {/* Email Field */}
-            <motion.div
-              initial={{ opacity: 1, x: 0 }}
-              className="space-y-1"
-            >
+          <form onSubmit={handleSubmit} className="">
+            <div className="space-y-1">
               <Label 
                 htmlFor="email" 
                 className="text-white font-bold text-base"
@@ -55,23 +57,17 @@ export default function Home() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-15 w-90 bg-[#D3D5D7] border-black/20 
-                          rounded-lg text-gray-800 placeholder:text-gray-500
-                          focus:bg-gray-100/95 focus:border-gray-400/70"
+                className="h-[60px] w-[100%] bg-[#D3D5D7] border border-black/20 rounded-lg text-black mb-2.5"
+
                 required
               />
-            </motion.div>
+            </div>
 
-            {/* Password Field */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="space-y-1"
-            >
+            <div className="space-y-1">
               <Label 
                 htmlFor="password" 
                 className="text-white font-bold text-base"
-                >
+              >
                 Password
               </Label>
               <Input
@@ -79,43 +75,31 @@ export default function Home() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-15 w-90 bg-[#D3D5D7] border-black/20 
-                          rounded-lg text-gray-800 placeholder:text-gray-500
-                          focus:bg-gray-100/95 focus:border-gray-400/70"
+                className="h-[60px] w-[100%] bg-[#D3D5D7] border border-black/20 rounded-lg text-black mb-2"
+
                 required
               />
-            </motion.div>
+            </div>
 
-            {/* Forgot Password Link */}
-            <motion.div
-              initial={{ opacity: 1 }}
-              
-              className=" "
-            >
+            <div className="text-right">
               <button
                 type="button"
-                className="text-white text-sm px-50">
+                className="text-white font-medium text-base mb-1 mr-3"
+              >
                 Forget Password?
               </button>
-            </motion.div>
+            </div>
 
-            {/* Proceed Button */}
-            <motion.div
-              initial={{ opacity: 1, y: 0 }}
-                
-              className="pt-2"
-            >
+            <div className="flex justify-center mt-4">
               <Button
                 type="submit"
-                className=""
+  className="w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover flex items-center justify-center "
+  style={{ backgroundImage: "url('/assets/proceedbuttonlogin.svg')" }}
               >
-                <span className="flex items-center justify-center ">
-                  PROCEED
-                </span>
               </Button>
-            </motion.div>
+            </div>
           </form>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

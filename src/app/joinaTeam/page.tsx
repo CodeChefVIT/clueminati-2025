@@ -5,8 +5,18 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ArrowRight } from "lucide-react"
+import localFont from "next/font/local";
 
-export default function Home() {
+const rethinkSansBold = localFont({
+  src: "../../../public/assets/RethinkSans-Bold.ttf", 
+  variable: "--font-rethinkSansBold",
+});
+const rethinkSansMedium = localFont({
+  src: "../../../public/assets/RethinkSans-Medium.ttf", 
+  variable: "--font-rethinkSansMedium",
+});
+
+export default function JoinTeam() {
   const [teamCode, setTeamCode] = useState('')
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -15,40 +25,31 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Minecraft-style pixelated background */}
+    <div className="{`min-h-screen relative overflow-hidden w-full ${rethinkSansBold.variable} ${rethinkSansMedium.variable}`}">
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url('https://images.pexels.com/photos/163036/mario-luigi-figures-funny-163036.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop')`,
-          filter: 'blur(1px) brightness(0.7)',
-          imageRendering: 'pixelated'
+        className="absolute inset-0 bg-center bg-cover bg-no-repeat flex items-center justify-center"
+        style={{backgroundImage:"url('/assets/loginbg.png')",
+          filter: 'brightness(0.55)'
         }}
       />
       
-      {/* Overlay gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-900/40 via-gray-800/60 to-gray-900/80" />
-      
-      {/* Content */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
-        <div className="w-full max-w-sm mx-auto">
-          {/* Title */}
-          <h1 
-            className="text-4xl font-bold text-white text-center mb-12 drop-shadow-2xl"
-            style={{ 
-              textShadow: '2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(255,255,255,0.1)' 
-            }}
+  
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-9">
+        <div className="w-full max-w-sm mx-auto mb-40">
+          <h1
+            className="text-4xl font-bold text-white text-center mb-15"
+            style={{ fontFamily: "var(--font-rethinkSansBold)" }}
           >
             Join A Team
           </h1>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Team Code Field */}
-            <div className="space-y-2">
+          <form onSubmit={handleSubmit} className="space-y-2">
+            
+            <div className="space-y-2 text-center">
               <Label 
                 htmlFor="teamCode" 
-                className="text-white/90 font-medium text-base drop-shadow-lg"
-                style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.8)' }}
+                className="text-white font-bold text-lg ml-5"
+                
               >
                 Enter Team Code
               </Label>
@@ -57,49 +58,30 @@ export default function Home() {
                 type="text"
                 value={teamCode}
                 onChange={(e) => setTeamCode(e.target.value)}
-                className="h-14 bg-gray-200/90 backdrop-blur-sm border-gray-300/50 
-                          rounded-lg text-gray-800 placeholder:text-gray-500
-                          focus:bg-gray-100/95 focus:border-gray-400/70
-                          shadow-lg"
-                placeholder=""
+                className="h-[50px] w-[91%] bg-[#D3D5D7] border border-black/20 rounded-lg text-black flex justify-center mx-auto "
                 required
               />
             </div>
 
-            {/* Don't have a team link */}
-            <div className="text-center">
-              <span className="text-white/80 text-sm drop-shadow-lg mr-1"
-                    style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.8)' }}>
+     
+            <div className="text-right ">
+              <span className="text-white font-medium text-base mr-1">
                 Don't have a team?
               </span>
-              <button
-                type="button"
-                className="text-green-400 hover:text-green-300 underline text-sm 
-                          drop-shadow-lg"
-                style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.8)' }}
-              >
+              <button type="button" className="text-[#00E4B6] text-base mr-7">
                 Create
               </button>
             </div>
 
-            {/* Proceed Button */}
-            <div className="pt-8">
+ 
+            <div className="flex justify-center mt-22">
               <Button
                 type="submit"
-                className="w-full h-14 bg-gradient-to-r from-purple-800/90 to-purple-900/90 
-                          hover:from-purple-700/95 hover:to-purple-800/95 
-                          border border-purple-600/30 text-white font-bold text-lg
-                          rounded-lg shadow-2xl backdrop-blur-sm"
-                style={{ 
-                  textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
-                  boxShadow: '0 8px 32px rgba(168, 85, 247, 0.4), inset 0 1px 0 rgba(255,255,255,0.1)'
+                className="w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover flex items-center justify-center "
+                style={{
+                  backgroundImage: "url('/assets/proceedbuttonlogin.svg')",
                 }}
-              >
-                <span className="flex items-center justify-center gap-3">
-                  PROCEED
-                  <ArrowRight className="w-6 h-6" />
-                </span>
-              </Button>
+              ></Button>
             </div>
           </form>
         </div>

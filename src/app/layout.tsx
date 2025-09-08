@@ -7,12 +7,15 @@ import BottomNav from "../components/BottomNav";
 import { pixelFont } from "./fonts"; // relative to layout.tsx
 import Image from "next/image";
 import TopNav from "@/components/TopNav";
+import localFont from "next/font/local";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -21,7 +24,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         className={`
           ${geistSans.variable} ${geistMono.variable} ${pixelFont.variable}
           antialiased relative text-white
-          font-pixel
         `}
       >
         {/* <div className="absolute inset-0 bg-black/50 z-10"></div> */}
