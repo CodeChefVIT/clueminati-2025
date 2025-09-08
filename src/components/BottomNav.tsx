@@ -22,24 +22,27 @@ const BottomNav: FC = () => {
     { active: "/assets/profile_active.png", inactive: "/assets/profile_inactive.png", alt: "Profile", path: "/profile" },
   ];
 
-  const currentTab = tabs.findIndex(tab => tab.path === pathname);
-
   return (
-    <div className="absolute bottom-4 left-0 right-0 flex justify-evenly items-center  z-20">
+    <div className="absolute bottom-4 left-0 right-0 flex justify-evenly items-center z-20">
       {tabs.map((tab, i) => {
-        const isActive = i === currentTab;
+        let isActive = pathname === tab.path;
+
+        
+        if (tab.path === "/" && (pathname === "/" || pathname.startsWith("/questions"))) {
+          isActive = true;
+        }
+
         return (
           <button
             key={i}
             onClick={() => router.push(tab.path)}
-            className="flex items-center justify-center  cursor-pointer"
+            className="flex items-center justify-center cursor-pointer"
           >
             <Image
               src={isActive ? tab.active : tab.inactive}
               alt={tab.alt}
               width={200}
               height={200}
-              // className="object-contain"
             />
           </button>
         );
