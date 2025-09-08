@@ -32,6 +32,7 @@ export async function connectToDatabase(){
 
   try {
     cached!.conn = await cached!.promise;
+    if(cached?.conn)console.log("mongo connected")
   } catch (e) {
     cached!.promise = null;
     throw e;
