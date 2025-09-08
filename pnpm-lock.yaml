@@ -41,15 +41,12 @@ importers:
       react-dom:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
-<<<<<<< HEAD
-      tailwind-merge:
-        specifier: ^3.3.1
-        version: 3.3.1
-=======
       react-qr-code:
         specifier: ^2.0.18
         version: 2.0.18(react@19.1.0)
->>>>>>> 022b0e0bd256320847991e4191e071b59dd0b27b
+      tailwind-merge:
+        specifier: ^3.3.1
+        version: 3.3.1
       web-push:
         specifier: ^3.6.7
         version: 3.6.7
