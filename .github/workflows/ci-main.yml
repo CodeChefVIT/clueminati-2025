@@ -26,7 +26,10 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 9 
-          run_install: true
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install
 
       - name: Run build
         run: pnpm build
