@@ -1,14 +1,14 @@
 import { model , Schema , type Model , models } from "mongoose";
-import { Istation } from "@/interface";
+import { IStation } from "../interfaces";
 
-const stationSchema = new Schema<Istation>({
-    stationId: { type: String, required: true, unique: true },
-    memberId: { type: String, required: true, unique: true },
-    difficulty: { type: String, enum: ["Easy", "Midium", "Hard"], required: true},
+const stationSchema = new Schema<IStation>({
+    station_name: { type: String, required: true, unique: true },
+    difficulty: { type: String, enum: ["Easy", "Midium", "Hard"], default: [], required: false},
+    members: { type: [{ type: String, ref: "User" }], required: true },
 })
 
 
-const Station: Model<Istation> =
-  models.Station ?? model<Istation>("Station", stationSchema);
+const Station: Model<IStation> =
+  models.Station ?? model<IStation>("Station", stationSchema);
 
 export default Station;

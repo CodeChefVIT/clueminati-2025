@@ -1,40 +1,43 @@
 import { model , Schema , type Model , models } from "mongoose";
-import { Iteam } from "@/interface";
+import { ITeam } from "../interfaces";
+import { number } from "zod";
 
-const TeamSchema = new Schema<Iteam>({
-    teamName: { type: String, required: true, unique: true },
-    members: { type: [String], required: true, unique: true },
-    path: { type: String, required: true, unique: true },
-    secretString: { type: String || null, required: true, unique: true },
-    score: { type: Number, required: true, unique: true },
-    r1: {
-        questionEncountered: {
-            easy: [{type: String, ref: "Questions"}],
-            midium: [{type: String, ref: "Questions"}],
-            hard: [{type: String, ref: "Questions"}],
+const TeamSchema = new Schema<ITeam>({
+    teamname: { type: String, required: true, unique: true },
+    members: { type: [String], required: true, default: [], unique: true },
+    round1: {
+        questions_encountered: {
+            easy: { type: [{type: String, ref: "Questions"}], default: [] },
+            midium: { type: [{type: String, ref: "Questions"}], default: [] },
+            hard: { type: [{type: String, ref: "Questions"}], default: [] },
         },
-        questionSolve: {
-            easy: [{type: String, ref: "Questions"}],
-            midium: [{type: String, ref: "Questions"}],
-            hard: [{type: String, ref: "Questions"}],
+        questions_solved: {
+            easy: { type: [{type: String, ref: "Questions"}], default: [] },
+            midium: { type: [{type: String, ref: "Questions"}], default: [] },
+            hard: { type: [{type: String, ref: "Questions"}], default: [] },
         },
+        score: { type: Number, default: 0},
     },
-    r2: {
-        questionEncountered: {
-            easy: [{type: String, ref: "Questions"}],
-            midium: [{type: String, ref: "Questions"}],
-            hard: [{type: String, ref: "Questions"}],
+    round2: {
+        questions_encountered: {
+            easy: { type: [{type: String, ref: "Questions"}], default: [] },
+            midium: { type: [{type: String, ref: "Questions"}], default: [] },
+            hard: { type: [{type: String, ref: "Questions"}], default: [] },
         },
-        questionSolve: {
-            easy: [{type: String, ref: "Questions"}],
-            midium: [{type: String, ref: "Questions"}],
-            hard: [{type: String, ref: "Questions"}],
+        questions_solved: {
+            easy: { type: [{type: String, ref: "Questions"}], default: [] },
+            midium: { type: [{type: String, ref: "Questions"}], default: [] },
+            hard: { type: [{type: String, ref: "Questions"}], default: [] },
         },
+        score: { type: Number, default: 0},
+        path: { type: [String], required: true, default: [] },
+        secretString: { type: String , required: false },
     },
+    total_score: { type: Number, default: 0, required: true },
 })
 
 
-const Team: Model<Iteam> =
-  models.Team ?? model<Iteam>("Team", TeamSchema);
+const Team: Model<ITeam> =
+  models.Team ?? model<ITeam>("Team", TeamSchema);
 
 export default Team;
