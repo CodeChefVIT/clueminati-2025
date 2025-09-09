@@ -48,7 +48,7 @@ export default function Login() {
             <div className="space-y-1">
               <Label 
                 htmlFor="email" 
-                className="text-white font-bold text-base"
+                className="text-white font-medium text-lg"
               >
                 Email Address
               </Label>
@@ -57,7 +57,7 @@ export default function Login() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-[60px] w-[100%] bg-[#D3D5D7] border border-black/20 rounded-lg text-black mb-2.5"
+                className="h-[60px] w-[100%] bg-[#D3D5D7] border border-black/20 rounded-lg text-black mb-3"
 
                 required
               />
@@ -66,7 +66,7 @@ export default function Login() {
             <div className="space-y-1">
               <Label 
                 htmlFor="password" 
-                className="text-white font-bold text-base"
+                className="text-white font-medium text-lg"
               >
                 Password
               </Label>
@@ -84,7 +84,7 @@ export default function Login() {
             <div className="text-right">
               <button
                 type="button"
-                className="text-white font-medium text-base mb-1 mr-3"
+                className="text-[#EAEBED] font-medium text-lg mb-1 mr-3"
               >
                 Forget Password?
               </button>

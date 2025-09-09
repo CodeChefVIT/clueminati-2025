@@ -5,16 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ArrowRight } from "lucide-react"
-import localFont from "next/font/local";
 
-const rethinkSansBold = localFont({
-  src: "../../../public/assets/RethinkSans-Bold.ttf", 
-  variable: "--font-rethinkSansBold",
-});
-const rethinkSansMedium = localFont({
-  src: "../../../public/assets/RethinkSans-Medium.ttf", 
-  variable: "--font-rethinkSansMedium",
-});
 
 export default function JoinTeam() {
   const [teamCode, setTeamCode] = useState('')
@@ -35,7 +26,7 @@ export default function JoinTeam() {
       
   
       <div className="relative z-10 min-h-screen flex items-center justify-center p-9">
-        <div className="w-full max-w-sm mx-auto mb-40">
+        <div className="w-full max-w-sm mx-auto mb-25">
           <h1
             className="text-4xl font-bold text-white text-center mb-15"
             style={{ fontFamily: "var(--font-rethinkSansBold)" }}
@@ -45,10 +36,10 @@ export default function JoinTeam() {
 
           <form onSubmit={handleSubmit} className="space-y-2">
             
-            <div className="space-y-2 text-center">
+            <div className="space-y-1 text-center">
               <Label 
                 htmlFor="teamCode" 
-                className="text-white font-bold text-lg ml-5"
+                className="text-white font-medium text-lg ml-5"
                 
               >
                 Enter Team Code
@@ -74,7 +65,7 @@ export default function JoinTeam() {
             </div>
 
  
-            <div className="flex justify-center mt-22">
+            <div className="flex justify-center mt-30">
               <Button
                 type="submit"
                 className="w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover flex items-center justify-center "

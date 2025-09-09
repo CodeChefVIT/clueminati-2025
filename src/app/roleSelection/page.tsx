@@ -21,6 +21,7 @@ export default function Home() {
     {
       id: 'liar',
       name: 'liar',
+      image: '/assets/role1.svg'
       },
     {
       id: 'role1',
@@ -72,7 +73,7 @@ export default function Home() {
         <div className="w-full max-w-sm mx-auto">
          
           <h1 
-            className="text-4xl font-bold text-white text-center mb-8 "
+            className="text-4xl font-bold text-white text-center mb-10 "
         
           >
             Role Selection
@@ -84,23 +85,23 @@ export default function Home() {
               <div
                 key={role.id}
                 onClick={() => handleRoleClick(role.id)}
-                className={`bg-gray-200/90  rounded-lg p-4 text-center cursor-pointer
+                className={`bg-[#D9D9D9]  rounded-lg p-4 text-center cursor-pointer
                           ${selectedRole === role.id ? '' : ''}
                           `}
               >
                 <div 
-                  className="w-16 h-16 mx-auto mb-2 bg-cover bg-center rounded"
+                  className="w-16 h-16 mx-auto mb-5 bg-cover bg-center rounded"
                   style={{
                     backgroundImage: `url('${role.image}')`,
                   }}
                 />
-                <p className="text-gray-800 font-medium text-sm">{role.name}</p>
+                <p className="text-[#200606] font-medium text-base">{role.name}</p>
               </div>
             ))}
           </div>
 
        
-          <div className="flex justify-center mb-8">
+          <div className="flex justify-center mb-15">
             <div
               onClick={() => handleRoleClick(roles[4].id)}
               className={`bg-gray-200/90  rounded-lg p-4 text-center cursor-pointer w-24
