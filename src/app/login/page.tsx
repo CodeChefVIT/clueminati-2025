@@ -1,83 +1,121 @@
 'use client'
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import {toast} from "react-hot-toast"
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 
-export default function LoginPage() {
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import axios from "axios"
+import { useRouter } from "next/navigation"
+import { toast } from "react-hot-toast"
+import localFont from "next/font/local";
+
+const rethinkSansBold = localFont({
+  src: "../../../public/assets/RethinkSans-Bold.ttf", 
+  variable: "--font-rethinkSansBold",
+});
+const rethinkSansMedium = localFont({
+  src: "../../../public/assets/RethinkSans-Medium.ttf", 
+  variable: "--font-rethinkSansMedium",
+});
+
+export default function Login() {
   const router = useRouter()
-  const [user, setUser]  = useState({
-    email:"",
-    password: "",
-  })
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const [buttonDisabled,setButtonDisabled] = useState(false)
-  const [loading,setLoading] = useState(false)
-
-  const onLogin = async ()=> {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
     try {
-      setLoading(true);
-      const response = await axios.post("/api/users/login", user);
-      console.log("Login success", response.data);
+      setLoading(true)
+      const response = await axios.post("/api/users/login", {
+        email,
+        password
+      })
       
-      if (response.data.success) {
-        toast.success("Login successful!");
-        // Use window.location for a full page reload
-        window.location.href = "/profile";
-      }
-      
-    } catch (error:any) {
-      console.log("Login failed", error);
-      toast.error(error.response?.data?.error || "Login failed");
+      toast.success("Login successful!")
+      router.push("/profile")
+    } catch (error: any) {
+      toast.error(error.response.data.error || "Login failed")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
-
-  useEffect(()=> {
-    if(user.email.length > 0 && user.password.length > 0 ){
-      setButtonDisabled(false)
-    }else{
-      setButtonDisabled(true)
-    }
-
-  },[user])  //user is dependency array, if theres any change in the array, it induces a change in the useEffect function
-
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen py-2'>
-      <h1>{loading?"Proccessing" : "Login"}</h1>
-      <hr/>
-      <label htmlFor="email">email</label>
-      <input
-      className=''
-      id='email'
-      value={user.email}
-      onChange={(e) => setUser({...user,email: e.target.value})}
-      placeholder='email'      
-      type="text"/>
-      <hr/>
+    <div className={`min-h-screen relative overflow-hidden w-full ${rethinkSansBold.variable} ${rethinkSansMedium.variable}`}>
+      <div 
+        className="absolute inset-0 bg-center bg-cover bg-no-repeat flex items-center justify-center"
+        style={{backgroundImage:"url('/assets/loginbg.png')",
+          filter: 'brightness(0.55)'
+        }}
+      />
 
-      <label htmlFor="password">password</label>
-      <input
-      className=''
-      id='password'
-      value={user.password}
-      onChange={(e) => setUser({...user,password: e.target.value})}
-      placeholder='password'      
-      type="text"/>
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-9">
+        <div className="w-full max-w-sm mx-auto mb-23">
+          <h1 
+            className="text-4xl font-bold text-white text-center mb-10"
+            style={{ fontFamily: 'var(--font-rethinkSansBold)' }}
+          >
+            Login
+          </h1>
 
-      <button onClick={onLogin}
-      className='p-2 border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600'>
-        {buttonDisabled? "No Login" : "Login"}
-      </button>
+          <form onSubmit={handleSubmit} className="">
+            <div className="space-y-1">
+              <Label 
+                htmlFor="email" 
+                className="text-white font-medium text-lg"
+              >
+                Email Address
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="h-[60px] w-[100%] bg-[#D3D5D7] border border-black/20 rounded-lg text-black mb-3"
 
-      <Link href="/signup" className="text-blue-500 hover:text-blue-700 underline mt-4">
-        Visit Signup page
-      </Link>
+                required
+              />
+            </div>
 
+            <div className="space-y-1">
+              <Label 
+                htmlFor="password" 
+                className="text-white font-medium text-lg"
+              >
+                Password
+              </Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="h-[60px] w-[100%] bg-[#D3D5D7] border border-black/20 rounded-lg text-black mb-2"
+
+                required
+              />
+            </div>
+
+            <div className="text-right">
+              <button
+                type="button"
+                className="text-[#EAEBED] font-medium text-lg mb-1 mr-3"
+              >
+                Forget Password?
+              </button>
+            </div>
+
+            <div className="flex justify-center mt-4">
+              <Button
+                type="submit"
+  className="w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover flex items-center justify-center "
+  style={{ backgroundImage: "url('/assets/proceedbuttonlogin.svg')" }}
+              >
+              </Button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-  )
+  );
 }
-
-
