@@ -2,11 +2,16 @@ import { z } from "zod";
 
 export const UserSchema = z.object({
   fullname: z.string().min(1, "Full name is required"),
-  email: z.string().email("Invalid email format"),
+  email: z.email("Invalid email format"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   role: z.enum(["admin", "core_member", "participant"]).default("participant"),
   region: z.enum(["indoor", "outdoor"]).optional(),
   teamId: z.string().optional(),
+  isVerified: z.boolean().default(false),
+  verifyToken: z.string().optional(),
+  verifyTokenExpiry: z.date().optional(),
+  forgotPasswordToken: z.string().optional(),
+  forgotPasswordTokenExpiry: z.date().optional(),
 });
 
 const QuestionTrackingSchema = z.object({
