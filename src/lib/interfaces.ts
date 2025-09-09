@@ -47,8 +47,15 @@ export const StationSchema = z.object({
   members: z.array(z.string()).default([]), // userId[]
 });
 
+export const GameStatSchema = z.object({
+  eventState: z.enum(["not_started", "r1", "r2", "r3", "Finished"]),
+  r1StartTime: z.date(),
+  r2StartTime: z.date(),
+});
+
 export type IUser = z.infer<typeof UserSchema>;
 export type ITeam = z.infer<typeof TeamSchema>;
 export type IQuestion = z.infer<typeof QuestionSchema>;
 export type IStation = z.infer<typeof StationSchema>;
+export type IGameStat = z.infer<typeof GameStatSchema>;
 
