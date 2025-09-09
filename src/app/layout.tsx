@@ -32,15 +32,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           className="absolute  w-full h-full object-cover z-0 !brightness-50  "
           width={100}
           height={100}
-          
         />
         <div className="grid grid-rows-[10%_1fr_15%] h-screen">
           <div className="z-30 relative">
             <TopNav />
           </div>
-          <div className="relative z-20   overflow-y-scroll">
-            {children}
-          </div>
+          <div className="relative z-20 overflow-y-scroll">{children}</div>
           <div className="relative  z-30 ">
             <BottomNav />
           </div>
