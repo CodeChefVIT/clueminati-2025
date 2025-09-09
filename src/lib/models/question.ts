@@ -1,7 +1,7 @@
 import { model , Schema , type Model , models } from "mongoose";
 import { IQuestion } from "../interfaces";
 
-const questionsSchema = new Schema<IQuestion>({
+const questionSchema = new Schema<IQuestion>({
     question_description: { type: String, required: true },
     difficulty: { type: String, enum: ["easy", "medium", "hard"], required: true},
     answer: { type: String, required: true },
@@ -9,6 +9,6 @@ const questionsSchema = new Schema<IQuestion>({
 })
 
 
-const Questions: Model<IQuestion> = models.Questions ?? model<IQuestion>("Questions", questionsSchema);
+const Question: Model<IQuestion> = models.Question ?? model<IQuestion>("Question", questionSchema);
 
-export default Questions;
+export default Question;
