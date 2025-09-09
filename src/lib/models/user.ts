@@ -1,17 +1,26 @@
-import { model , Schema , type Model , models } from "mongoose";
-import { IUser } from "@/interface";
+import { model, Schema, type Document, type Model, models } from "mongoose";
+import { IUser } from "../interfaces";
 
 const userSchema = new Schema<IUser>({
-  userId: { type: String, required: true, unique: true },
-  role: { type: String, enum: ["participants", "member", "admin"], required: true },
-  username: { type: String, required: true },
+  fullname: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  teamId: { type: String, required: true, unique: true },
-  region: { type: String, enum: ["hell", "earth"], required: true },
+  password: { type: String, required: false},
+  role: {
+    type: String,
+    enum: ["admin", "core_member", "participant"],
+    default: "participant",
+    required: true,
+  },
+
+  region: {
+    type: String,
+    enum: ["indoor", "outdoor"],
+    required: false,
+  },
+
+  teamId: { type: String, required: false },
 });
 
-const User: Model<IUser> =
-  models.User ?? model<IUser>("User", userSchema);
+const User: Model<IUser> = models.User ?? model<IUser>("User", userSchema);
 
 export default User;
