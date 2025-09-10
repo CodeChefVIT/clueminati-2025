@@ -71,7 +71,15 @@ export const EventSchema = z.object({
   updatedAt: z.coerce.date().optional(),
 });
 
-export type Event = z.infer<typeof EventSchema>;
+export const ValidateQuestionSchema = z.object({
+  teamId: z.string(),
+  questionId: z.string(),
+  userAnswer: z.string()
+
+})
+
+export type IValidateQuestion = z.infer<typeof ValidateQuestionSchema>
+export type IEvent = z.infer<typeof EventSchema>;
 export type IUser = z.infer<typeof UserSchema>;
 export type ITeam = z.infer<typeof TeamSchema>;
 export type IQuestion = z.infer<typeof QuestionSchema>;
