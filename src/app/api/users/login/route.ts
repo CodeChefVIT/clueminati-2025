@@ -42,6 +42,7 @@ export async function POST(request: NextRequest){
 
     const response = NextResponse.json({
       message: "Logged in successfully",
+      jwt: token,
       success: true
     });
 
