@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from "react";
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { ImageOff } from "lucide-react";
+import axios from "axios"
+import { useRouter } from "next/navigation"
+import { toast } from "react-hot-toast"
 import localFont from "next/font/local";
 
 const rethinkSansBold = localFont({
@@ -18,14 +19,30 @@ const rethinkSansMedium = localFont({
 });
 
 export default function Login() {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Login attempted with:', { email, password })
+    try {
+      setLoading(true)
+      const response = await axios.post("/api/users/login", {
+        email,
+        password
+      })
+      console.log("Pushing")
+      toast.success("Login successful!")
+      router.push("/profile")
+      
+      
+    } catch (error: any) {
+      toast.error(error.response.data.error || "Login failed")
+    } finally {
+      setLoading(false)
+    }
   }
-
   return (
     <div className={`min-h-screen relative overflow-hidden w-full ${rethinkSansBold.variable} ${rethinkSansMedium.variable}`}>
       <div 
@@ -81,14 +98,14 @@ export default function Login() {
               />
             </div>
 
-            <div className="text-right">
+            {/* <div className="text-right">
               <button
                 type="button"
                 className="text-[#EAEBED] font-medium text-lg mb-1 mr-3"
               >
                 Forget Password?
               </button>
-            </div>
+            </div> */}
 
             <div className="flex justify-center mt-4">
               <Button
