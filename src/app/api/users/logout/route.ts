@@ -1,7 +1,7 @@
-import {connect} from '@/lib/dbConfig/dbConfig'
+import { connectToDatabase } from '@/lib/db'
 import {NextRequest, NextResponse} from 'next/server'
 
-connect()
+connectToDatabase()
 
 export async function GET(request: NextRequest){
   try {

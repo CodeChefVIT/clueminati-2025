@@ -1,7 +1,10 @@
+import { connectToDatabase } from "@/lib/db";
 import { TeamSchema } from "@/lib/interfaces";
 import Team from "@/lib/models/team";
 import { NextResponse } from "next/server";
 import z from "zod";
+
+connectToDatabase()
 
 export async function POST(req: Request) {
   try {

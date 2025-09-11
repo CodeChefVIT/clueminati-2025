@@ -1,10 +1,10 @@
-import {connect} from '@/lib/dbConfig/dbConfig'
 import User from '@/lib/models/user'
 import {NextRequest, NextResponse} from 'next/server'     
 import bcryptjs from 'bcryptjs'                     //importing bcryptjs for hashing passwords
 import { sendEmail } from '@/lib/mailer'
+import { connectToDatabase } from '@/lib/db'
 
-connect()
+connectToDatabase()
 
 export async function POST(request: NextRequest){   //took request as parameter for POST method
   try {                                                       /// try-catch block for error handling

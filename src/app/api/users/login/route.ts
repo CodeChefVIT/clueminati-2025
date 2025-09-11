@@ -1,10 +1,11 @@
-import {connect} from '@/lib/dbConfig/dbConfig'
+ 
 import User from '@/lib/models/user'
 import {NextRequest, NextResponse} from 'next/server'
 import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import { connectToDatabase } from '@/lib/db'
 
-connect()
+connectToDatabase()
 
 export async function POST(request: NextRequest){
   try {
