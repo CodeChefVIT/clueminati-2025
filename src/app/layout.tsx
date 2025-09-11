@@ -30,7 +30,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         className={`${
           isRethinkPage
             ? `${rethinkSansMedium.variable} ${rethinkSansBold.variable} font-rethink`
-            : `${pixelFont.variable} font-pixel`
+            : `${pixelFont.variable} font-pixel relative min-h-screen`
         }`}
       >
         

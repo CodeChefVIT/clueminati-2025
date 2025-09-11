@@ -1,3 +1,4 @@
+// this route is for round one to validate user answer and also provide respective points
 import { normalizeAnswer } from "@/app/utils/normalizeAnswer";
 import { connectToDatabase } from "@/lib/db";
 import { ValidateQuestionSchema } from "@/lib/interfaces";
@@ -35,7 +36,7 @@ export async function POST(req: Request) {
     const difficulty = theQuestion.difficulty;
     team.round1?.questions_solved[difficulty].push(questionId);
     const points =
-      difficulty === "easy" ? 10 : difficulty === "medium" ? 20 : 30;
+      difficulty === "easy" ? 10 : difficulty === "medium" ? 40 : 70;
 
     if (team.round1) {
       team.round1.score += points;
