@@ -1,11 +1,10 @@
 import GameStat from "@/lib/models/gameStat";
 
 export async function getCurrentRound(): Promise<"not_started" | "1" | "2" | "finished"> {
-  // Fetch the single GameStat document
   const gameStat = await GameStat.findOne();
   if (!gameStat) return "not_started";
 
-  const now = new Date().getTime(); // numeric UTC timestamp
+  const now = new Date().getTime(); 
   const r1Start = gameStat.r1StartTime.getTime();
   const r1End = gameStat.r1EndTime.getTime();
   const r2Start = gameStat.r2StartTime?.getTime();
