@@ -10,7 +10,7 @@ interface SendEmailParams {
 
 export const sendEmail = async({email, emailType, userId}: SendEmailParams)=>{
   try {
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD || !process.env.DOMAIN) {
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD || !process.env.CLIENT_URL) {
       throw new Error('Required environment variables are not set');
     }
     const hashedToken = await bcryptjs.hash(userId.toString(),10)
@@ -33,9 +33,9 @@ export const sendEmail = async({email, emailType, userId}: SendEmailParams)=>{
       from: process.env.EMAIL_USER!,
       to: email,
       subject: emailType === "VERIFY" ? "Verify your email" : "Reset your password",
-      html: `<p>Click <a href="${process.env.DOMAIN}/verifyemail?token=${hashedToken}">Here</a> to 
+      html: `<p>Click <a href="${process.env.CLIENT_URL}/verifyemail?token=${hashedToken}">Here</a> to 
       ${emailType === "VERIFY" ? "verify your email" : "reset your password"} or copy paste the link 
-      below in your browser.<br>${process.env.DOMAIN}/verifyemail?token=${hashedToken}</p>`
+      below in your browser.<br>${process.env.CLIENT_URL}/verifyemail?token=${hashedToken}</p>`
     }
 
     await transport.sendMail(mailOptions)

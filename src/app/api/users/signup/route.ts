@@ -1,15 +1,17 @@
-import User from '@/lib/models/user'
 import {NextRequest, NextResponse} from 'next/server'     
 import bcryptjs from 'bcryptjs'                     //importing bcryptjs for hashing passwords
 import { sendEmail } from '@/lib/mailer'
 import { connectToDatabase } from '@/lib/db'
+import User from '@/lib/models/user'
+import { UserSchema } from '@/lib/interfaces'
 
 connectToDatabase()
 
 export async function POST(request: NextRequest){   //took request as parameter for POST method
   try {                                                       /// try-catch block for error handling
-    const reqBody = await request.json()            // extracting json data from request body
-    const {fullname, email, password} = reqBody     // destructuring json data to get fullname, email, password
+    const reqBody = await request.json()   
+    const parsed = UserSchema.parse(reqBody)        
+    const {fullname, email, password} = parsed     // destructuring json data to get fullname, email, password
     
     console.log("Starting signup process for:", email);      
     
