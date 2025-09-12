@@ -1,119 +1,192 @@
-'use client'
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import {toast} from "react-hot-toast"
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+"use client";
+
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+import localFont from "next/font/local";
+import Link from "next/link";
+
+const rethinkSansBold = localFont({
+  src: "../../../public/assets/RethinkSans-Bold.ttf",
+  variable: "--font-rethinkSansBold",
+});
+const rethinkSansMedium = localFont({
+  src: "../../../public/assets/RethinkSans-Medium.ttf",
+  variable: "--font-rethinkSansMedium",
+});
 
 export default function SignupPage() {
-  const router = useRouter()
-  const [user, setUser]  = useState({
-    email:"",
-    password: "",
-    fullname: ""
-  })
+  const router = useRouter();
+  const [fullname, setFullname] = useState("");
+  const [regno, setregno] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [buttonDisabled, setButtonDisabled] = useState(true);
 
-  const [buttonDisabled,setButtonDisabled] = useState(false)
-  const [loading,setLoading] = useState(false)
-  const [emailError, setEmailError] = useState("")
+  useEffect(() => {
+    if (fullname && email && password) {
+      setButtonDisabled(false);
+    } else {
+      setButtonDisabled(true);
+    }
+  }, [fullname, email, password]);
 
-  const onSignup = async ()=> {
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      setLoading(true)
-      setEmailError("") // Clear any existing error
-      const response = await axios.post("/api/users/signup", user)
+      setLoading(true);
+      setEmailError("");
+      const response = await axios.post("/api/users/signup", {
+        fullname,
+        email,
+        password,
+      });
       console.log("Signup success", response.data);
-      toast.success("Signup successful! Please check your email to verify your account.");
-      router.push("/login")
-
-    } catch (error:any) {
+      toast.success(
+        "Signup successful! Please check your email to verify your account."
+      );
+      router.push("/login");
+    } catch (error: any) {
       console.log("Signup failed", error);
       if (error.response?.data?.error === "user already exists") {
-        const errorMessage = error.response?.data?.message || "This email is already registered. Please login or use a different email.";
+        const errorMessage =
+          error.response?.data?.message ||
+          "This email is already registered. Please login or use a different email.";
         setEmailError(errorMessage);
         toast.error(errorMessage);
       } else {
         toast.error(error.response?.data?.error || "Signup failed");
       }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
-
-  useEffect(()=> {
-    if(user.email.length > 0 && user.password.length > 0 && user.fullname.length > 0){
-      setButtonDisabled(false)
-    }else{
-      setButtonDisabled(true)
-    }
-
-  },[user])  //user is dependency array, if theres any change in the array, it induces a change in the useEffect function
+  };
 
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen py-2'>
-      <h1>{loading?"Proccessing" : "Signup"}</h1>
-      <hr/>
-      <label htmlFor="fullname">Full Name</label>
-      <input
-      className='p-2 border rounded-lg mb-4 focus:outline-none focus:border-gray-600'
-      id='fullname'
-      value={user.fullname}
-      onChange={(e) => setUser({...user,fullname: e.target.value})}
-      placeholder='Full Name'      
-      type="text"
-      required/>
+    <div
+      className={`min-h-screen relative overflow-hidden w-full ${rethinkSansBold.variable} ${rethinkSansMedium.variable}`}
+    >
+      <div
+        className="absolute inset-0 bg-center bg-cover bg-no-repeat flex items-center justify-center"
+        style={{
+          backgroundImage: "url('/assets/loginbg.png')",
+          filter: "brightness(0.55)",
+        }}
+      />
 
-      <hr/>
-      <label htmlFor="email">email</label>
-      <div className="w-full max-w-md">
-        <input
-          className={`p-2 border rounded-lg w-full ${
-            emailError ? 'border-red-500' : 'border-gray-300'
-          } focus:outline-none focus:border-gray-600`}
-          id='email'
-          value={user.email}
-          onChange={(e) => {
-            setUser({...user, email: e.target.value});
-            setEmailError(""); // Clear error when user types
-          }}
-          placeholder='email'      
-          type="email"
-          required
-        />
-        {emailError && (
-          <p className="text-red-500 text-sm mt-1 mb-2">{emailError}</p>
-        )}
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-10">
+        <div className="w-full max-w-sm mx-auto">
+          <h1 className="text-4xl font-bold text-white text-center mb-7">
+            Sign Up
+          </h1>
+
+          <form onSubmit={handleSignup}>
+            <div className="space-y-1">
+              <Label
+                htmlFor="fullname"
+                className="text-white font-medium text-lg"
+              >
+                Full Name
+              </Label>
+              <Input
+                id="fullname"
+                type="text"
+                value={fullname}
+                onChange={(e) => setFullname(e.target.value)}
+                className="h-[60px] w-[100%] bg-[#D3D5D7] border border-black/20 rounded-lg text-black mb-2"
+                required
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label
+                htmlFor="fullname"
+                className="text-white font-medium text-lg"
+              >
+                Registration Number
+              </Label>
+              <Input
+                id="fullname"
+                type="text"
+                value={regno}
+                onChange={(e) => setFullname(e.target.value)}
+                className="h-[60px] w-[100%] bg-[#D3D5D7] border border-black/20 rounded-lg text-black mb-2"
+                required
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="email" className="text-white font-medium text-lg">
+                Email Address
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setEmailError("");
+                }}
+                className={`h-[60px] w-[100%] bg-[#D3D5D7] border ${
+                  emailError ? "border-red-500" : "border-black/20"
+                } rounded-lg text-black mb-2`}
+                required
+              />
+              {emailError && (
+                <p className="text-red-500 text-sm mb-2">{emailError}</p>
+              )}
+            </div>
+
+            <div className="space-y-1">
+              <Label
+                htmlFor="password"
+                className="text-white font-medium text-lg"
+              >
+                Password
+              </Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="h-[60px] w-[100%] bg-[#D3D5D7] border border-black/20 rounded-lg text-black mb-6"
+                required
+              />
+            </div>
+
+            <div className="flex justify-center mt-6">
+              <Button
+                type="submit"
+                disabled={buttonDisabled || loading || !!emailError}
+                className={`w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover flex items-center justify-center
+      ${
+        buttonDisabled || loading || !!emailError
+          ? "pointer-events-none"
+          : "pointer-events-auto"
+      }
+    `}
+                style={{
+                  backgroundImage: "url('/assets/proceedbuttonlogin.svg')",
+                  opacity: 1, 
+                }}
+              ></Button>
+            </div>
+          </form>
+
+          <p className="text-center font-medium text-base text-white mt-5">
+            Already have an account?{" "}
+            <Link href="/login" className="text-[#24CCFF]">
+              Login here
+            </Link>
+          </p>
+        </div>
       </div>
-      <hr/>
-
-      <label htmlFor="password">password</label>
-      <input
-      className='p-2 border rounded-lg mb-4 focus:outline-none focus:border-gray-600'
-      id='password'
-      value={user.password}
-      onChange={(e) => setUser({...user,password: e.target.value})}
-      placeholder='password'      
-      type="password"
-      required/>
-
-      <button 
-        onClick={onSignup}
-        disabled={buttonDisabled || loading || !!emailError}
-        className={`p-2 rounded-lg mb-4 focus:outline-none ${
-          buttonDisabled || loading || !!emailError
-            ? 'bg-gray-300 cursor-not-allowed'
-            : 'bg-blue-500 hover:bg-blue-600 text-white'
-        } transition-colors duration-300`}
-      >
-        {loading ? "Signing up..." : buttonDisabled ? "Please fill all fields" : "Sign up"}
-      </button>
-
-      <Link href="/login" className="text-blue-500 hover:text-blue-700 underline mt-4">
-        Visit login page
-      </Link>
-
     </div>
-  )
+  );
 }
-
-

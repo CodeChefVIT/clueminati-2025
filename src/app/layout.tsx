@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   
-  const rethinkPages = ["/login", "/createaTeam", "/joinaTeam", "/roleSelection"];
+  const rethinkPages = ["/login", "/create-a-team", "/join-a-team", "/role-selection", "/signup"];
 
   
   const isRethinkPage = rethinkPages.some((page) => pathname.startsWith(page));
