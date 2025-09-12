@@ -6,7 +6,7 @@ interface ButtonProps {
   className?: string; // optional to override size
 }
 
-const roundBox = "/assets/round-box.png";
+const roundBox = "/assets/round-box.svg";
 
 const Button: FC<ButtonProps> = ({ label, onClick, className }) => {
   return (

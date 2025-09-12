@@ -44,7 +44,7 @@ const GamePopup = () => {
             onClick={handleClose}
             className="absolute -top-8 right-5 w-8 h-8 bg-cover bg-center bg-no-repeat hover:opacity-80 transition-opacity z-10"
             style={{
-              backgroundImage: "url(/assets/X.png)",
+              backgroundImage: "url(/assets/X.svg)",
             }}
             aria-label="Close popup"
           />
