@@ -4,8 +4,20 @@ import { useState } from "react";
 // @ts-ignore
 import QRCode from "react-qr-code";
 import Button from "../../components/Button";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function ProfileScreen() {
+  const router = useRouter()
+  async function logout() {
+    try {
+      const response = await axios.get("/api/users/logout");
+      console.log(response.data); 
+      router.push("/login")
+    } catch (error: any) {
+      console.error("Logout failed:", error.response?.data || error.message);
+    }
+  }
   const [showQR, setShowQR] = useState<boolean>(false);
   const dummyTeamId = "TEAM-12345-BLUELOCK";
 
@@ -14,7 +26,6 @@ export default function ProfileScreen() {
   return (
     <div className="w-full flex flex-col items-center justify-start text-white min-h-[calc(100vh-7rem)] p-4 sm:p-8 pt-4">
       {/* Top Bar */}
-      
 
       <div className="flex flex-col items-center ">
         {/* Profile Picture */}
@@ -58,7 +69,7 @@ export default function ProfileScreen() {
             label="Leave Team"
             onClick={() => alert("Leave Team clicked")}
           />
-          <Button label="Log Out" onClick={() => alert("Log Out clicked")} />
+          <Button label="Log Out" onClick={logout} />
           <Button label="Show Team QR" onClick={() => setShowQR(true)} />
         </div>
       </div>

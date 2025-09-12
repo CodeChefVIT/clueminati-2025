@@ -1,14 +1,19 @@
 // this route is for round one to validate user answer and also provide respective points
+import { getUserFromToken } from "@/app/utils/getUserFromToken";
 import { normalizeAnswer } from "@/app/utils/normalizeAnswer";
 import { connectToDatabase } from "@/lib/db";
 import { ValidateQuestionSchema } from "@/lib/interfaces";
 import Question from "@/lib/models/question";
 import Team from "@/lib/models/team";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 connectToDatabase();
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
+    const tUser = await getUserFromToken(req);
+    if (!tUser) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     const body = await req.json();
 
     const parsed = ValidateQuestionSchema.parse(body);

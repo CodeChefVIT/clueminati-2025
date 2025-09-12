@@ -3,13 +3,13 @@ import { jwtVerify } from 'jose'
 
 const PUBLIC_PATHS = ['/login', '/signup', '/verifyemail']
 
-async function verifyToken(token: string): Promise<boolean> {
+async function verifyToken(token: string) {
   try {
     const secret = new TextEncoder().encode(process.env.TOKEN_SECRET)
-    await jwtVerify(token, secret)
-    return true
+    const { payload } = await jwtVerify(token, secret)
+    return payload // return decoded payload
   } catch (err) {
-    return false
+    return null
   }
 }
 
@@ -18,25 +18,24 @@ export async function middleware(request: NextRequest) {
   const isPublicPath = PUBLIC_PATHS.includes(path)
 
   const token = request.cookies.get('token')?.value || ''
+  const payload = token ? await verifyToken(token) : null
 
   if (isPublicPath) {
-    if (token && await verifyToken(token)) {
-      // Token is valid → redirect to profile
+    if (payload) {
       return NextResponse.redirect(new URL('/profile', request.url))
     }
-    // No token or invalid → allow access to public path
     return NextResponse.next()
   }
 
-  // For protected paths
-  if (!token || !(await verifyToken(token))) {
-    // No token or invalid → redirect to login
-    const response = NextResponse.redirect(new URL('/login', request.url))
-    // Optionally: response.cookies.delete('token')
-    return response
+  if (!payload) {
+    return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // Token is valid → allow access
+  // 🔑 extra check for participants
+  if (payload.role === 'participant' && !payload.teamId && path !== '/join-team') {
+    return NextResponse.redirect(new URL('/join-team', request.url))
+  }
+
   return NextResponse.next()
 }
 
@@ -47,6 +46,7 @@ export const config = {
     '/profile/:path*',
     '/login',
     '/signup',
-    '/verifyemail'
+    '/verifyemail',
+    '/join-team', // add this if needed
   ]
 }

@@ -4,7 +4,8 @@ import { number } from "zod";
 
 const TeamSchema = new Schema<ITeam>({
     teamname: { type: String, required: true, unique: true },
-    members: { type: [String], required: true, default: [], unique: true },
+    joinCode: {type: String, unique: true},
+    members: { type: [String], required: true, default: [] },
     round1: {
         questions_encountered: {
             easy: { type: [{type: String, ref: "Questions"}], default: [] },

@@ -1,4 +1,3 @@
- 
 import User from '@/lib/models/user'
 import {NextRequest, NextResponse} from 'next/server'
 import bcryptjs from 'bcryptjs'
@@ -11,8 +10,6 @@ export async function POST(request: NextRequest){
   try {
     const reqBody = await request.json()
     const {email, password} = reqBody
-    // validation
-    console.log(reqBody);
 
     const user = await User.findOne({email})
 
@@ -24,10 +21,7 @@ export async function POST(request: NextRequest){
       return NextResponse.json({error:"Please verify your email before logging in"},{status:400})
     }
 
-    console.log("User exists and is verified");
-
     const validPassword = await bcryptjs.compare(password,user.password)
-
     if(!validPassword){
       return NextResponse.json({error:"Check your credentials"},{status:400})
     }
@@ -35,18 +29,29 @@ export async function POST(request: NextRequest){
     const tokenData = {
       id: user._id,
       fullname: user.fullname,
-      email: user.email      //payload, more the data on the token, more the bandwidth
+      email: user.email,
+      role: user.role,
+      teamId: user.teamId ?? null,
     }
 
-    const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, {expiresIn: '1d'})
+    const token = jwt.sign(tokenData, process.env.TOKEN_SECRET!, {expiresIn: '1d'})
 
-    const response = NextResponse.json({
+    // prepare response
+    const responsePayload: any = {
       message: "Logged in successfully",
-      jwt: token, //for gamedev integration
-      success: true
-    });
+      jwt: token,
+      success: true,
+    }
 
-    // Set cookie separately
+    // Special check for participants
+    if(user.role === "participant" && !user.teamId){
+      responsePayload.message = "Logged in succesfully but team not selected"
+      responsePayload.redirect = "/team-selection"
+    }
+
+    const response = NextResponse.json(responsePayload)
+
+    // set cookie
     response.cookies.set({
       name: 'token',
       value: token,
@@ -54,7 +59,7 @@ export async function POST(request: NextRequest){
       path: '/',
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 86400 // 1 day
+      maxAge: 86400
     });
 
     return response
@@ -62,5 +67,4 @@ export async function POST(request: NextRequest){
   } catch (error:any) {
     return NextResponse.json({error:error.message},{status:500}) 
   }
-
 }

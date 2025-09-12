@@ -33,6 +33,7 @@ const Round2Schema = Round1Schema.extend({
 
 export const TeamSchema = z.object({
   teamname: z.string().min(1, "Team name is required"),
+  joinCode: z.string().optional(),
   members: z.array(z.string()).default([]), // userId[]
   round1: Round1Schema.optional(),
   round2: Round2Schema.optional(),

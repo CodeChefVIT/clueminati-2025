@@ -1,12 +1,27 @@
+import { getUserFromToken } from "@/app/utils/getUserFromToken";
 import { connectToDatabase } from "@/lib/db";
 import { QuestionSchema } from "@/lib/interfaces";
 import Question from "@/lib/models/question";
-import { NextResponse } from "next/server";
+import User from "@/lib/models/user";
+import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 
 connectToDatabase();
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
+    const tUser = await getUserFromToken(req);
+    if (!tUser) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const user = await User.findById(tUser.id);
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    if (user.role !== "admin") {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
     const body = await req.json();
     const parsed = QuestionSchema.parse(body);
     const newQuestion = await Question.create(parsed);
@@ -17,11 +32,14 @@ export async function POST(req: Request) {
   } catch (err) {
     if (err instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Validation failed", details: err.message},
+        { error: "Validation failed", details: err.message },
         { status: 400 }
       );
     }
-    console.error("error creating question", err)
-    return NextResponse.json({error: "Internal Server Error"}, {status: 500})
+    console.error("error creating question", err);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
