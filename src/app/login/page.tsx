@@ -98,14 +98,14 @@ export default function Login() {
               />
             </div>
 
-            {/* <div className="text-right">
+            { <div className="text-right">
               <button
                 type="button"
                 className="text-[#EAEBED] font-medium text-lg mb-1 mr-3"
               >
                 Forget Password?
               </button>
-            </div> */}
+            </div> }
 
             <div className="flex justify-center mt-4">
               <Button
