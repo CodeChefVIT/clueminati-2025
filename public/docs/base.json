@@ -19,6 +19,66 @@
             "post": {
                 "$ref": "./users/join-team.json#/paths/~1api~1users~1join-team/post"
             }
+        },
+        "/api/ping/ping": {
+            "get": {
+                "$ref": "./ping/ping.json#/paths/~1api~1ping/get"
+            }
+        },
+        "/api/admin/create-question": {
+            "post": {
+                "$ref": "./admin/create-question.json#/paths/~1api~1admin~1create-question/post"
+            }
+        },
+        "/api/admin/create-station": {
+            "post": {
+                "$ref": "./admin/create-station.json#/paths/~1api~1admin~1create-station/post"
+            }
+        },
+        "/api/admin/create-user": {
+            "post": {
+                "$ref": "./admin/create-user.json#/paths/~1api~1admin~1create-user/post"
+            }
+        },
+        "/api/admin/update-round": {
+            "post": {
+                "$ref": "./admin/update-round.json#/paths/~1api~1admin~1update-round/post"
+            }
+        },
+        "/api/leaderboard/leaderboard": {
+            "get": {
+                "$ref": "./leaderboard/leaderboard.json#/paths/~1api~1leaderboard/get"
+            }
+        },
+        "/api/round-one/get-question-by-id": {
+            "get": {
+                "$ref": "./round-one/get-question-by-id.json#/paths/~1api~1round-one~1get-question-by-id/get"
+            }
+        },
+        "/api/round-one/serve-question": {
+            "get": {
+                "$ref": "./round-one/serve-question.json#/paths/~1api~1round-one~1serve-question/get"
+            }
+        },
+        "/api/round-one/validate-answer": {
+            "post": {
+                "$ref": "./round-one/validate-answer.json#/paths/~1api~1round-one~1validate-answer/post"
+            }
+        },
+        "/api/submission-history/submission-history": {
+            "get": {
+                "$ref": "./submission-history/submission-history.json#/paths/~1api~1submission-history/get"
+            }
+        },
+        "/api/users/verifyemail": {
+            "post": {
+                "$ref": "./users/verifyemail.json#/paths/~1api~1users~1verifyemail/post"
+            }
+        },
+        "/api/users/signup": {
+            "post": {
+                "$ref": "./users/signup.json#/paths/~1api~1users~1signup/post"
+            }
         }
     }
 }

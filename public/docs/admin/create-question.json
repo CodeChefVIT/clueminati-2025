@@ -1,0 +1,189 @@
+{
+  "paths": {
+    "/api/admin/create-question": {
+      "post": {
+        "summary": "Create a new question",
+        "description": "Creates a new question in the database. Requires a valid authentication token for an admin user.",
+        "tags": [
+            "admin"
+        ],
+        "operationId": "createQuestion",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                    "question_description": { "type": "string", "example": "who is best club" },
+                    "difficulty": { "type": "string", "example": "medium"},
+                    "answer": { "type": "string", "example": "codechef" },
+                    "round": { "type": "string", "example": "2"}
+                },
+                "required": [
+                    "question_description",
+                    "difficulty",
+                    "answer",
+                    "round"
+                ]
+            }
+          }
+        }
+    },
+        "responses": {
+          "201": {
+            "description": "Question created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "question created successfully"
+                    },
+                    "data": {
+                        "type":"object",
+                      "example": {
+                        "question_description": "who is best club" ,
+                        "difficulty": "medium"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data or validation failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Validation failed"
+                    },
+                    "details": {
+                      "type": "string",
+                      "example": "question_text: Required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized. Missing or invalid token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. User is not an admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Access denied"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Question": {
+        "type": "object",
+        "properties": {
+          "question_text": {
+            "type": "string",
+            "description": "The text of the question."
+          },
+          "difficulty": {
+            "type": "string",
+            "enum": [
+              "easy",
+              "medium",
+              "hard"
+            ],
+            "description": "The difficulty level of the question."
+          },
+          "answer": { "type": "string", "example": "codechef" },
+          "round": { "type": "string", 
+                     "enum": ["1", "2"],
+                     "description": "The round in which the question can Showup on."}
+        },
+        "required": [
+          "question_text",
+          "difficulty",
+          "answer",
+          "round"
+        ]
+      }
+    }
+  }
+}
