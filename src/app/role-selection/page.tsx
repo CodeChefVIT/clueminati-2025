@@ -138,9 +138,10 @@ export default function Home() {
           <div className="flex justify-center mb-8">
             <Button
               onClick={() => handleMemberClick(4)}
-              className="h-12 w-24 bg-gray-800/90 hover:bg-gray-700/95 
-                        border border-gray-600/30 text-yellow-400 font-bold
+              className="w-35 h-10 bg-no-repeat bg-center rounded-xl bg-cover flex items-center justify-center  text-yellow-400 font-bold
                         rounded-lg "
+                        style={{backgroundImage:"url('/assets/namebox.svg')",
+        }}
               
             >
               {assignments[4] ? roles.find(r => r.id === assignments[4])?.name || teamMembers[4] : teamMembers[4]}
@@ -149,7 +150,7 @@ export default function Home() {
 
 
           <p 
-            className="text-white/90 text-center text-sm "
+            className="text-white text-center font-medium text-base mt-15 "
             >
             Drag to Assign Roles
           </p>

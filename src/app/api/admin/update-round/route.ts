@@ -1,13 +1,13 @@
-//this is a temp route just to create dummy users please delete this once signup and login are done
-
 import { getUserFromToken } from "@/app/utils/getUserFromToken";
 import { connectToDatabase } from "@/lib/db";
-import { UserSchema } from "@/lib/interfaces";
+import { GameStatSchema } from "@/lib/interfaces";
+import GameStat from "@/lib/models/gameStat";
 import User from "@/lib/models/user";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 
 connectToDatabase();
+
 export async function POST(req: NextRequest) {
   try {
     const tUser = await getUserFromToken(req);
@@ -24,10 +24,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
     const body = await req.json();
-    const parsed = UserSchema.parse(body);
-    const newUser = await User.create(parsed);
+    const parsed = GameStatSchema.parse(body);
+
+    const existing = await GameStat.findOne();
+
+    if (existing) {
+      Object.assign(existing, parsed); 
+      await existing.save();
+
+      return NextResponse.json(
+        { message: "Game updated successfully", data: existing },
+        { status: 200 }
+      );
+    }
+
+    const newGame = await GameStat.create(parsed);
     return NextResponse.json(
-      { message: "User created successfully", data: newUser },
+      { message: "Game created successfully", data: newGame },
       { status: 201 }
     );
   } catch (err) {
@@ -37,7 +50,7 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    console.error("error creating user", err);
+    console.error("Error creating/updating game", err);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }
