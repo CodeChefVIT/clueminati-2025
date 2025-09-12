@@ -1,0 +1,24 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "My API",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000"
+        }
+    ],
+    "paths": {
+        "/api/users/create-team": {
+            "post": {
+                "$ref": "./users/create-team.json#/paths/~1api~1users~1create-team/post"
+            }
+        },
+        "/api/users/join-team": {
+            "post": {
+                "$ref": "./users/join-team.json#/paths/~1api~1users~1join-team/post"
+            }
+        }
+    }
+}

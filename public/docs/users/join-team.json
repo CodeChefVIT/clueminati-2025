@@ -1,0 +1,162 @@
+{
+    "paths": {
+        "/api/users/join-team": {
+            "post": {
+                "summary": "Join a team using join code",
+                "description": "Allows an authenticated user to join a team by providing a valid join code. The team cannot exceed 5 members.",
+                "operationId": "joinTeam",
+                "tags": [
+                    "users"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "joinCode": {
+                                        "type": "string",
+                                        "example": "XYZ123"
+                                    }
+                                },
+                                "required": [
+                                    "joinCode"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully joined the team",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Successfully joined the team"
+                                        },
+                                        "team": {
+                                            "$ref": "#/components/schemas/Team"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (missing join code, user already in a team, or team full)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "User already in a team"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized (invalid or missing token)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found (invalid join code or user not found)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Invalid join code"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Internal server error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "schemas": {
+            "Team": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "example": "64c1234abc5678def9012345"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Code Masters"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "A team for competitive programming"
+                    },
+                    "joinCode": {
+                        "type": "string",
+                        "example": "XYZ123"
+                    },
+                    "members": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "example": "64c9876def5432abc1098765"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
