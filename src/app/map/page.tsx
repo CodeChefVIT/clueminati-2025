@@ -2,7 +2,7 @@
 
 import Button from "@/components/Button";
 const mapSvgPath = "/assets/map.svg"; 
-const Brick="/assets/brick.png"; 
+const Brick="/assets/brick.svg"; 
 
 export default function MapScreen() {
   return (

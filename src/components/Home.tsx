@@ -17,7 +17,7 @@ export default function Home() {
 
       {/* QR Scanner Icon */}
       <Image
-        src="/assets/qr_scanner_icon.png"
+        src="/assets/qr_scanner_icon.svg"
         alt="Scan Frame"
         width={211}
         height={163}
@@ -27,7 +27,7 @@ export default function Home() {
       {/* Scan Button */}
       <Link href="/Scanner" aria-label="Navigate to another page">
         <Image
-          src="/assets/scan.png"
+          src="/assets/scan.svg"
           alt="Scan Button"
           width={137}
           height={38}
@@ -45,7 +45,7 @@ export default function Home() {
         Your Score
       </h2>
       <Image
-        src="/assets/score card.png"
+        src="/assets/score card.svg"
         alt="Score Frame"
         width={254}
         height={70}

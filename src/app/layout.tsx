@@ -35,7 +35,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       >
         
         <Image
-          src="/assets/background.png"
+          src="/assets/background.svg"
           alt="Background"
           className="absolute w-full h-full object-cover z-0 !brightness-50"
           width={100}

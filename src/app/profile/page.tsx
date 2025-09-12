@@ -9,7 +9,7 @@ export default function ProfileScreen() {
   const [showQR, setShowQR] = useState<boolean>(false);
   const dummyTeamId = "TEAM-12345-BLUELOCK";
 
-  const profilePic = "/assets/profile-pic.png";
+  const profilePic = "/assets/profile-pic.svg";
 
   return (
     <div className="w-full flex flex-col items-center justify-start text-white min-h-[calc(100vh-7rem)] p-4 sm:p-8 pt-4">

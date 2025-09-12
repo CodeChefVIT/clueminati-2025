@@ -17,9 +17,9 @@ const teams = [
 
 const getBanner = (rank: number) => {
   if (rank >= 1 && rank <= 10) {
-    return `/assets/banners/banner-${rank}.png`;
+    return `/assets/banners/banner-${rank}.svg`;
   }
-  return "/assets/banners/banner-default.png";
+  return "/assets/banners/banner-default.svg";
 };
 
 export default function Leaderboard() {
