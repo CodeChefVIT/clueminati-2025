@@ -1,4 +1,3 @@
-// this route is for round one to validate user answer and also provide respective points
 import { getUserFromToken } from "@/app/utils/getUserFromToken";
 import { normalizeAnswer } from "@/app/utils/normalizeAnswer";
 import { connectToDatabase } from "@/lib/db";
@@ -8,14 +7,15 @@ import Team from "@/lib/models/team";
 import { NextRequest, NextResponse } from "next/server";
 
 connectToDatabase();
+
 export async function POST(req: NextRequest) {
   try {
     const tUser = await getUserFromToken(req);
     if (!tUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const body = await req.json();
 
+    const body = await req.json();
     const parsed = ValidateQuestionSchema.parse(body);
     const { teamId, questionId, userAnswer } = parsed;
 
@@ -26,11 +26,12 @@ export async function POST(req: NextRequest) {
         { status: 404 }
       );
     }
-    const isCorrect =
-      normalizeAnswer(userAnswer as string) ===
-      normalizeAnswer(theQuestion?.answer as string);
-    if (!isCorrect) {
-      return NextResponse.json({ message: "incorrect" }, { status: 200 });
+
+    if (theQuestion.round !== "1") {
+      return NextResponse.json(
+        { error: "This question does not belong to Round 1" },
+        { status: 400 }
+      );
     }
 
     const team = await Team.findById(teamId);
@@ -39,6 +40,20 @@ export async function POST(req: NextRequest) {
     }
 
     const difficulty = theQuestion.difficulty;
+    if (team.round1?.questions_solved[difficulty].includes(questionId)) {
+      return NextResponse.json(
+        { message: "Question already solved" },
+        { status: 200 }
+      );
+    }
+
+    const isCorrect =
+      normalizeAnswer(userAnswer as string) ===
+      normalizeAnswer(theQuestion.answer as string);
+    if (!isCorrect) {
+      return NextResponse.json({ message: "incorrect" }, { status: 200 });
+    }
+
     team.round1?.questions_solved[difficulty].push(questionId);
     const points =
       difficulty === "easy" ? 10 : difficulty === "medium" ? 40 : 70;
@@ -47,14 +62,17 @@ export async function POST(req: NextRequest) {
       team.round1.score += points;
     }
     team.total_score += points;
+
     await team.save();
+
     return NextResponse.json(
       { message: "correct", data: theQuestion },
       { status: 200 }
     );
   } catch (e) {
+    console.error("Error validating question:", e);
     return NextResponse.json(
-      { error: "internal server " + e },
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }
