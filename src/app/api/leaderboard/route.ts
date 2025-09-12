@@ -1,17 +1,18 @@
 // src/app/api/leaderboard/route.ts
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import Team from "@/lib/models/team";
+import { getUserFromToken } from "@/app/utils/getUserFromToken";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-   
+    const tUser = await getUserFromToken(req);
+    if (!tUser) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     await connectToDatabase();
 
-    const teams = await Team.find({})
-      .sort({ total_score: -1 })
-      .lean();
-
+    const teams = await Team.find({}).sort({ total_score: -1 }).lean();
 
     const leaderboard = teams.map((team: any, index: number) => ({
       rank: index + 1,
@@ -20,7 +21,6 @@ export async function GET() {
       members: team.members || [],
     }));
 
-  
     return NextResponse.json(
       {
         message: "Leaderboard fetched successfully",
@@ -36,4 +36,3 @@ export async function GET() {
     );
   }
 }
-

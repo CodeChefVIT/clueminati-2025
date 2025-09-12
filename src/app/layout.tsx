@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 export default function RootLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
-  const rethinkPages = ["/login", "/create-team", "/join-team", "/roleSelection"];
+  const rethinkPages = ["/login", "/create-team", "/join-team", "/role-selection"];
   const docsPage = pathname.startsWith("/docs");
 
   const isRethinkPage = rethinkPages.some((page) => pathname.startsWith(page));
