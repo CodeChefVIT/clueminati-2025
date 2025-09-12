@@ -1,0 +1,175 @@
+{
+    "paths": {
+        "/api/users/create-team": {
+            "post": {
+                "summary": "Create a new team",
+                "description": "Creates a new team with a unique join code. The user creating the team is automatically added as a member. Requires authentication via Bearer token.",
+                "operationId": "createTeam",
+                "tags": [
+                    "users"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TeamInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Team created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Team Created Successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Team"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Validation failed"
+                                        },
+                                        "details": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "User not found"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "schemas": {
+            "TeamInput": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Code Masters"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "A team for competitive programming"
+                    }
+                },
+                "required": [
+                    "name"
+                ]
+            },
+            "Team": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "example": "64c1234abc5678def9012345"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Code Masters"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "A team for competitive programming"
+                    },
+                    "joinCode": {
+                        "type": "string",
+                        "example": "XYZ123"
+                    },
+                    "members": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "example": "64c9876def5432abc1098765"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
