@@ -7,6 +7,11 @@ export const UserSchema = z.object({
   role: z.enum(["admin", "core_member", "participant"]).default("participant"),
   region: z.enum(["indoor", "outdoor"]).optional(),
   teamId: z.string().optional(),
+  isVerified: z.boolean().default(false),
+  verifyToken: z.string().optional(),
+  verifyTokenExpiry: z.date().optional(),
+  forgotPasswordToken: z.string().optional(),
+  forgotPasswordTokenExpiry: z.date().optional()
 });
 
 const QuestionTrackingSchema = z.object({
