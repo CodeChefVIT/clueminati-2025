@@ -20,6 +20,36 @@
                 "$ref": "./users/join-team.json#/paths/~1api~1users~1join-team/post"
             }
         },
+        "/api/users/leave-team": {
+            "post": {
+                "$ref": "./users/leave-team.json#/paths/~1api~1users~1leave-team/post"
+            }
+        },
+        "/api/users/login": {
+            "post": {
+                "$ref": "./users/login.json#/paths/~1api~1users~1login/post"
+            }
+        },
+        "/api/users/logout": {
+            "get": {
+                "$ref": "./users/logout.json#/paths/~1api~1users~1logout/get"
+            }
+        },
+        "/api/users/profile": {
+            "post": {
+                "$ref": "./users/profile.json#/paths/~1api~1users~1profile/post"
+            }
+        },
+        "/api/users/verifyemail": {
+            "post": {
+                "$ref": "./users/verifyemail.json#/paths/~1api~1users~1verifyemail/post"
+            }
+        },
+        "/api/users/signup": {
+            "post": {
+                "$ref": "./users/signup.json#/paths/~1api~1users~1signup/post"
+            }
+        },
         "/api/ping/ping": {
             "get": {
                 "$ref": "./ping/ping.json#/paths/~1api~1ping/get"
@@ -69,15 +99,170 @@
             "get": {
                 "$ref": "./submission-history/submission-history.json#/paths/~1api~1submission-history/get"
             }
-        },
-        "/api/users/verifyemail": {
-            "post": {
-                "$ref": "./users/verifyemail.json#/paths/~1api~1users~1verifyemail/post"
+        }
+    },
+    "components": {
+        "schemas": {
+            "TeamInput": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Code Masters"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "A team for competitive programming"
+                    }
+                },
+                "required": [
+                    "name"
+                ]
+            },
+            "Team": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "example": "64c1234abc5678def9012345"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Code Masters"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "A team for competitive programming"
+                    },
+                    "joinCode": {
+                        "type": "string",
+                        "example": "XYZ123"
+                    },
+                    "members": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "example": "64c9876def5432abc1098765"
+                        }
+                    }
+                }
+            },
+            "User": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "example": "64a7c4e8f9b1e2a345678901"
+                    },
+                    "fullname": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "john@example.com"
+                    },
+                    "role": {
+                        "type": "string",
+                        "example": "participant"
+                    },
+                    "teamId": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "example": "64a7c5f1f9b1e2a345678902"
+                    }
+                }
+            },
+            "LoginRequest": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password"
+                    }
+                },
+                "required": [
+                    "email",
+                    "password"
+                ]
+            },
+            "LoginResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "jwt": {
+                        "type": "string"
+                    },
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "redirect": {
+                        "type": "string"
+                    }
+                }
+            },
+            "LogoutResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "success": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "Question": {
+                "type": "object",
+                "properties": {
+                    "question_text": {
+                        "type": "string",
+                        "description": "The text of the question."
+                    },
+                    "difficulty": {
+                        "type": "string",
+                        "enum": [
+                            "easy",
+                            "medium",
+                            "hard"
+                        ],
+                        "description": "The difficulty level of the question."
+                    },
+                    "answer": {
+                        "type": "string",
+                        "example": "codechef",
+                        "description": "The correct answer to the question."
+                    },
+                    "round": {
+                        "type": "string",
+                        "enum": [
+                            "1",
+                            "2"
+                        ],
+                        "description": "The round in which the question can show up in."
+                    }
+                },
+                "required": [
+                    "question_text",
+                    "difficulty",
+                    "answer",
+                    "round"
+                ]
             }
         },
-        "/api/users/signup": {
-            "post": {
-                "$ref": "./users/signup.json#/paths/~1api~1users~1signup/post"
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
             }
         }
     }
