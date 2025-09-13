@@ -1,8 +1,29 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Button from "./Button";
+
 
 export default function Home() {
+  const [score, setScore] = useState<number>(0);
+
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const response = await axios.post("/api/users/profile");
+        const team = response.data.data.team;
+        if (team?.total_score !== undefined) {
+          setScore(team.total_score);
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    }
+    fetchProfile();
+  }, []);
+
   return (
     <main className="flex flex-col items-center justify-center h-full relative overflow-hidden">
       <h1
@@ -34,23 +55,14 @@ export default function Home() {
         />
       </Link>
 
-      {/* Score Section */}
-      <h2
-        className="mt-19 text-[30px] font-bold text-white"
-        style={{
-          WebkitTextStrokeWidth: "0.35px",
-          WebkitTextStrokeColor: "#000",
-        }}
-      >
-        Your Score
-      </h2>
-      <Image
-        src="/assets/score card.svg"
-        alt="Score Frame"
-        width={254}
-        height={70}
-        className="mt-4"
-      />
+      
+      <div className="mt-8">
+        <Button
+          label={`Score: ${score}`}
+          onClick={() => {}}
+          className="cursor-default"
+        />
+      </div>
     </main>
   );
 }
