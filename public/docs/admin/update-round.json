@@ -1,0 +1,191 @@
+{
+  "paths": {
+    "/api/admin/update-round": {
+      "post": {
+        "summary": "Create or update game statistics",
+        "description": "Creates a new game statistics document or updates an existing one if it is found. This route requires a valid authentication token for an admin user.",
+        "tags": [
+          "admin"
+        ],
+        "operationId": "updateRound",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GameStat"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Game updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Game updated successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/GameStat"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Game created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Game created successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/GameStat"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data or validation failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Validation failed"
+                    },
+                    "details": {
+                      "type": "string",
+                      "example": "round: Required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized. Missing or invalid token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. User is not an admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Access denied"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+        "GameStat": {
+            "type": "object",
+            "properties": {
+            "r1StartTime": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "r1EndTime": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "r2StartTime": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "r2EndTime": {
+                "type": "string",
+                "format": "date-time"
+            }
+            },
+            "required": [
+            "r1StartTime",
+            "r1EndTime",
+            "r2StartTime",
+            "r2EndTime"
+            ]
+        }
+    }
+  }
+}

@@ -1,0 +1,203 @@
+{
+  "paths": {
+    "/api/round-one/validate-answer": {
+      "post": {
+        "summary": "Validate a user's answer for a Round 1 question",
+        "description": "Checks if the provided answer is correct, updates the team's score, and marks the question as solved. Requires authentication.",
+        "operationId": "validateAnswer",
+        "tags": [
+          "round-one"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "teamId": {
+                    "type": "string",
+                    "description": "The unique ID of the team."
+                  },
+                  "questionId": {
+                    "type": "string",
+                    "description": "The unique ID of the question being answered."
+                  },
+                  "userAnswer": {
+                    "type": "string",
+                    "description": "The user's submitted answer."
+                  }
+                },
+                "required": [
+                  "teamId",
+                  "questionId",
+                  "userAnswer"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Answer is correct, incorrect, or already solved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "correct"
+                        },
+                        "data": {
+                          "$ref": "#/components/schemas/Question"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "incorrect"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Question already solved"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid input or question does not belong to Round 1).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "This question does not belong to Round 1"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized. Missing or invalid token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (question or team not found).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Question not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Question": {
+        "type": "object",
+        "properties": {
+          "question_text": {
+            "type": "string",
+            "description": "The text of the question."
+          },
+          "difficulty": {
+            "type": "string",
+            "enum": [
+              "easy",
+              "medium",
+              "hard"
+            ],
+            "description": "The difficulty level of the question."
+          },
+          "answer": {
+            "type": "string",
+            "example": "codechef",
+            "description": "The correct answer to the question."
+          },
+          "round": {
+            "type": "string",
+            "enum": [
+              "1",
+              "2"
+            ],
+            "description": "The round in which the question can show up in."
+          }
+        },
+        "required": [
+          "question_text",
+          "difficulty",
+          "answer",
+          "round"
+        ]
+      }
+    }
+  }
+}

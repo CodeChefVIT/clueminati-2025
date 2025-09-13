@@ -1,0 +1,214 @@
+{
+  "paths": {
+    "/api/admin/create-user": {
+      "post": {
+        "summary": "Create a new user (Admin)",
+        "description": "Creates a new user in the database. This is a temporary route for testing and requires a valid authentication token for an admin user.",
+        "tags": [
+          "admin"
+        ],
+        "operationId": "createUser",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User created successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data or validation failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Validation failed"
+                    },
+                    "details": {
+                      "type": "string",
+                      "example": "username: Required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized. Missing or invalid token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. User is not an admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Access denied"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+        "User": {
+            "type": "object",
+            "properties": {
+            "fullname": {
+                "type": "string",
+                "description": "Full name is required."
+            },
+            "email": {
+                "type": "string",
+                "format": "email",
+                "description": "Invalid email format."
+            },
+            "password": {
+                "type": "string",
+                "minLength": 6,
+                "description": "Password must be at least 6 characters."
+            },
+            "role": {
+                "type": "string",
+                "enum": [
+                "admin",
+                "core_member",
+                "participant"
+                ],
+                "default": "participant"
+            },
+            "region": {
+                "type": "string",
+                "enum": [
+                "indoor",
+                "outdoor"
+                ],
+                "nullable": true
+            },
+            "teamId": {
+                "type": "string",
+                "nullable": true
+            },
+            "isVerified": {
+                "type": "boolean",
+                "default": false
+            },
+            "verifyToken": {
+                "type": "string",
+                "nullable": true
+            },
+            "verifyTokenExpiry": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+            },
+            "forgotPasswordToken": {
+                "type": "string",
+                "nullable": true
+            },
+            "forgotPasswordTokenExpiry": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+            }
+            },
+            "required": [
+            "fullname",
+            "email",
+            "password",
+            "role",
+            "isVerified"
+            ]
+        }
+    }
+  }
+}

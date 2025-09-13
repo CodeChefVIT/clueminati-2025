@@ -1,0 +1,127 @@
+{
+  "paths": {
+    "/api/submission-history": {
+      "get": {
+        "summary": "Get a team's submission history",
+        "description": "Fetches a list of all questions a team has successfully solved in Round 1.",
+        "operationId": "getSubmissionHistory",
+        "tags": [
+          "submission-history"
+        ],
+        "parameters": [
+          {
+            "name": "teamId",
+            "in": "query",
+            "required": true,
+            "description": "The unique ID of the team to retrieve the submission history for.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Submission history fetched successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "solved": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SolvedQuestion"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request. Missing `teamId` in query parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Missing teamId"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Team not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Team not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "SolvedQuestion": {
+        "type": "object",
+        "properties": {
+          "questionId": {
+            "type": "string",
+            "description": "The unique ID of the solved question."
+          },
+          "difficulty": {
+            "type": "string",
+            "enum": [
+              "easy",
+              "medium",
+              "hard"
+            ],
+            "description": "The difficulty level of the solved question."
+          },
+          "questionDescription": {
+            "type": "string",
+            "nullable": true,
+            "description": "The description of the solved question, if found."
+          }
+        }
+      }
+    }
+  }
+}
