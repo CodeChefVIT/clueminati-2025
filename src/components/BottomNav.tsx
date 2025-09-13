@@ -17,7 +17,7 @@ const BottomNav: FC = () => {
 
   const tabs: Tab[] = [
     { active: "/assets/home_active.svg", inactive: "/assets/home_inactive.svg", alt: "Home", path: "/" },
-    { active: "/assets/leaderboards_active.svg", inactive: "/assets/leaderboards_inactive.svg", alt: "Leaderboards", path: "/leaderboards" },
+    { active: "/assets/leaderboards_active.svg", inactive: "/assets/leaderboards_inactive.svg", alt: "Leaderboard", path: "/leaderboard" },
     { active: "/assets/timer_active.svg", inactive: "/assets/timer_inactive.svg", alt: "Timer", path: "/submission-history" },
     { active: "/assets/profile_active.svg", inactive: "/assets/profile_inactive.svg", alt: "Profile", path: "/profile" },
   ];

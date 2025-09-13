@@ -75,7 +75,7 @@
                 "$ref": "./admin/update-round.json#/paths/~1api~1admin~1update-round/post"
             }
         },
-        "/api/leaderboard/leaderboard": {
+        "/api/leaderboard/": {
             "get": {
                 "$ref": "./leaderboard/leaderboard.json#/paths/~1api~1leaderboard/get"
             }
@@ -95,7 +95,7 @@
                 "$ref": "./round-one/validate-answer.json#/paths/~1api~1round-one~1validate-answer/post"
             }
         },
-        "/api/submission-history/submission-history": {
+        "/api/submission-history": {
             "get": {
                 "$ref": "./submission-history/submission-history.json#/paths/~1api~1submission-history/get"
             }

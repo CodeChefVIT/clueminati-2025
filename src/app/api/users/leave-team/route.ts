@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
-import { getUserFromToken } from "@/app/utils/getUserFromToken";
+import { getUserFromToken } from "@/utils/getUserFromToken";
 import User from "@/lib/models/user";
 import Team from "@/lib/models/team";
 import { IEvent } from "@/lib/interfaces";
-import { getCurrentRound } from "@/app/utils/getRound";
+import { getCurrentRound } from "@/utils/getRound";
 
 connectToDatabase();
 

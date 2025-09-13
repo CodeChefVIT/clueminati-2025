@@ -1,5 +1,5 @@
-import { generateJoinCode } from "@/app/utils/generateJoinCode";
-import { getUserFromToken } from "@/app/utils/getUserFromToken";
+import { generateJoinCode } from "@/utils/generateJoinCode";
+import { getUserFromToken } from "@/utils/getUserFromToken";
 import { connectToDatabase } from "@/lib/db";
 import { TeamSchema } from "@/lib/interfaces";
 import Team from "@/lib/models/team";

@@ -2,11 +2,11 @@
 
 export default function Instructions() {
     return (
-        <div className="w-full flex flex-col items-center justify-start text-white min-h-screen p-4">
+        <div className="w-full flex flex-col items-center justify-start text-white  p-4">
             <div className="relative w-[100%] max-w-md bg-center bg-contain bg-no-repeat flex flex-col items-center justify-center text-white aspect-[3/4]"
                 style={{ backgroundImage: "url('/assets/instructions_bg.svg')" }}
             >
-                <h2 className="text-lg sm:text-xl font-bold mb-4 mt-12 text-[#A5A5A5]">Instructions</h2>
+                <h2 className="text-2xl font-bold mb-4  text-[#A5A5A5]">Instructions</h2>
 
                 <ul className="space-y-2 text-center text-[#A5A5A5] text-sm sm:text-base">
                     <li>Instructions</li>

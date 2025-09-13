@@ -1,5 +1,5 @@
-import { getUserFromToken } from "@/app/utils/getUserFromToken";
-import { normalizeAnswer } from "@/app/utils/normalizeAnswer";
+import { getUserFromToken } from "@/utils/getUserFromToken";
+import { normalizeAnswer } from "@/utils/normalizeAnswer";
 import { connectToDatabase } from "@/lib/db";
 import { ValidateQuestionSchema } from "@/lib/interfaces";
 import Question from "@/lib/models/question";

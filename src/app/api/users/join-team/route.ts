@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import User from "@/lib/models/user";
 import Team from "@/lib/models/team";
-import { getUserFromToken } from "@/app/utils/getUserFromToken";
+import { getUserFromToken } from "@/utils/getUserFromToken";
 
 
 

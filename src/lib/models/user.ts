@@ -23,7 +23,7 @@ const userSchema = new Schema<IUser>({
   },
   region: {
     type: String,
-    enum: ["indoor", "outdoor"],
+    enum: ["hell", "earth"],
     required: false,
   },
   teamId: { 
