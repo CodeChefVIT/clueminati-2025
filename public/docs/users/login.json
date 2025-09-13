@@ -102,43 +102,5 @@
                 }
             }
         }
-    },
-    "components": {
-        "schemas": {
-            "LoginRequest": {
-                "type": "object",
-                "properties": {
-                    "email": {
-                        "type": "string",
-                        "format": "email"
-                    },
-                    "password": {
-                        "type": "string",
-                        "format": "password"
-                    }
-                },
-                "required": [
-                    "email",
-                    "password"
-                ]
-            },
-            "LoginResponse": {
-                "type": "object",
-                "properties": {
-                    "message": {
-                        "type": "string"
-                    },
-                    "jwt": {
-                        "type": "string"
-                    },
-                    "success": {
-                        "type": "boolean"
-                    },
-                    "redirect": {
-                        "type": "string"
-                    }
-                }
-            }
-        }
     }
 }

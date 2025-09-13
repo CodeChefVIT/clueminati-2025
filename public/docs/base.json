@@ -12,91 +12,163 @@
     "paths": {
         "/api/users/create-team": {
             "post": {
+                "summary": "Create a new team",
+                "tags": [
+                    "users"
+                ],
                 "$ref": "./users/create-team.json#/paths/~1api~1users~1create-team/post"
             }
         },
         "/api/users/join-team": {
             "post": {
+                "summary": "Join a team using join code",
+                "tags": [
+                    "users"
+                ],
                 "$ref": "./users/join-team.json#/paths/~1api~1users~1join-team/post"
             }
         },
         "/api/users/leave-team": {
             "post": {
+                "summary": "Leave a team",
+                "tags": [
+                    "users"
+                ],
                 "$ref": "./users/leave-team.json#/paths/~1api~1users~1leave-team/post"
             }
         },
         "/api/users/login": {
             "post": {
+                "summary": "Login a user",
+                "tags": [
+                    "users"
+                ],
                 "$ref": "./users/login.json#/paths/~1api~1users~1login/post"
             }
         },
         "/api/users/logout": {
             "get": {
+                "summary": "Logout a user",
+                "tags": [
+                    "users"
+                ],
                 "$ref": "./users/logout.json#/paths/~1api~1users~1logout/get"
             }
         },
         "/api/users/profile": {
             "post": {
+                "summary": "Get authenticated user profile",
+                "tags": [
+                    "users"
+                ],
                 "$ref": "./users/profile.json#/paths/~1api~1users~1profile/post"
             }
         },
         "/api/users/verifyemail": {
             "post": {
+                "summary": "Verify a user's email",
+                "tags": [
+                    "users"
+                ],
                 "$ref": "./users/verifyemail.json#/paths/~1api~1users~1verifyemail/post"
             }
         },
         "/api/users/signup": {
             "post": {
+                "summary": "signup a user's email",
+                "tags": [
+                    "users"
+                ],
                 "$ref": "./users/signup.json#/paths/~1api~1users~1signup/post"
             }
         },
         "/api/ping/ping": {
             "get": {
+                "summary": "Check API status",
+                "tags": [
+                    "pong"
+                ],
                 "$ref": "./ping/ping.json#/paths/~1api~1ping/get"
             }
         },
         "/api/admin/create-question": {
             "post": {
+                "summary": "Create a new question",
+                "tags": [
+                    "admin"
+                ],
                 "$ref": "./admin/create-question.json#/paths/~1api~1admin~1create-question/post"
             }
         },
         "/api/admin/create-station": {
             "post": {
+                "summary": "Create a new station",
+                "tags": [
+                    "admin"
+                ],
                 "$ref": "./admin/create-station.json#/paths/~1api~1admin~1create-station/post"
             }
         },
         "/api/admin/create-user": {
             "post": {
+                "summary": "Create a new user (Admin)",
+                "tags": [
+                    "admin"
+                ],
                 "$ref": "./admin/create-user.json#/paths/~1api~1admin~1create-user/post"
             }
         },
         "/api/admin/update-round": {
             "post": {
+                "summary": "Create or update game statistics",
+                "tags": [
+                    "admin"
+                ],
                 "$ref": "./admin/update-round.json#/paths/~1api~1admin~1update-round/post"
             }
         },
         "/api/leaderboard/leaderboard": {
             "get": {
+                "summary": "Get the game leaderboard",
+                "tags": [
+                    "leaderboard"
+                ],
                 "$ref": "./leaderboard/leaderboard.json#/paths/~1api~1leaderboard/get"
             }
         },
         "/api/round-one/get-question-by-id": {
             "get": {
+                "summary": "Get a question by its ID",
+                "tags": [
+                    "round-one"
+                ],
                 "$ref": "./round-one/get-question-by-id.json#/paths/~1api~1round-one~1get-question-by-id/get"
             }
         },
         "/api/round-one/serve-question": {
             "get": {
+                "summary": "Serve a question to a team",
+                "tags": [
+                    "round-one"
+                ],
                 "$ref": "./round-one/serve-question.json#/paths/~1api~1round-one~1serve-question/get"
             }
         },
         "/api/round-one/validate-answer": {
             "post": {
+                "summary": "Validate a user's answer for a Round 1 question",
+                "tags": [
+                    "round-one"
+                ],
                 "$ref": "./round-one/validate-answer.json#/paths/~1api~1round-one~1validate-answer/post"
             }
         },
         "/api/submission-history/submission-history": {
             "get": {
+                "summary": "Get a team's submission history",
+                "tags": [
+                    "submission-history"
+                ],
                 "$ref": "./submission-history/submission-history.json#/paths/~1api~1submission-history/get"
             }
         }
@@ -217,6 +289,108 @@
                     },
                     "success": {
                         "type": "boolean"
+                    }
+                }
+            },
+            "Station": {
+                "type": "object",
+                "properties": {
+                    "station_name": {
+                        "type": "string",
+                        "description": "The name of the station."
+                    },
+                    "difficulty": {
+                        "type": "string",
+                        "enum": [
+                            "easy",
+                            "medium",
+                            "hard"
+                        ],
+                        "description": "The difficulty level of the station."
+                    },
+                    "members": {
+                        "type": "array",
+                        "description": "An array of user IDs who are members of the station.",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": [
+                    "station_name"
+                ]
+            },
+            "GameStat": {
+                "type": "object",
+                "properties": {
+                    "r1StartTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "r1EndTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "r2StartTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "r2EndTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                "r1StartTime",
+                "r1EndTime",
+                "r2StartTime",
+                "r2EndTime"
+                ]
+            },
+            "LeaderboardEntry": {
+                "type": "object",
+                "properties": {
+                    "rank": {
+                        "type": "integer",
+                        "description": "The team's rank on the leaderboard."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The name of the team."
+                    },
+                    "total_score": {
+                        "type": "integer",
+                        "description": "The team's total score."
+                    },
+                    "members": {
+                        "type": "array",
+                        "description": "An array of user IDs who are members of the team.",
+                        "items": {
+                        "type": "string"
+                        }
+                    }
+                }
+            },
+            "SolvedQuestion": {
+                "type": "object",
+                "properties": {
+                    "questionId": {
+                        "type": "string",
+                        "description": "The unique ID of the solved question."
+                    },
+                    "difficulty": {
+                        "type": "string",
+                        "enum": [
+                        "easy",
+                        "medium",
+                        "hard"
+                        ],
+                        "description": "The difficulty level of the solved question."
+                    },
+                    "questionDescription": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The description of the solved question, if found."
                     }
                 }
             },

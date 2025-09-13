@@ -141,53 +141,5 @@
         }
       }
     }
-  },
-  "components": {
-    "securitySchemes": {
-      "BearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    },
-    "schemas": {
-      "Question": {
-        "type": "object",
-        "properties": {
-          "question_text": {
-            "type": "string",
-            "description": "The text of the question."
-          },
-          "difficulty": {
-            "type": "string",
-            "enum": [
-              "easy",
-              "medium",
-              "hard"
-            ],
-            "description": "The difficulty level of the question."
-          },
-          "answer": {
-            "type": "string",
-            "example": "codechef",
-            "description": "The correct answer to the question."
-          },
-          "round": {
-            "type": "string",
-            "enum": [
-              "1",
-              "2"
-            ],
-            "description": "The round in which the question can show up in."
-          }
-        },
-        "required": [
-          "question_text",
-          "difficulty",
-          "answer",
-          "round"
-        ]
-      }
-    }
   }
 }

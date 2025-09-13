@@ -61,20 +61,5 @@
                 }
             }
         }
-    },
-    "components": {
-        "schemas": {
-            "LogoutResponse": {
-                "type": "object",
-                "properties": {
-                    "message": {
-                        "type": "string"
-                    },
-                    "success": {
-                        "type": "boolean"
-                    }
-                }
-            }
-        }
     }
 }

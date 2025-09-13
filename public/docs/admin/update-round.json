@@ -149,43 +149,5 @@
         }
       }
     }
-  },
-  "components": {
-    "securitySchemes": {
-      "BearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    },
-    "schemas": {
-        "GameStat": {
-            "type": "object",
-            "properties": {
-            "r1StartTime": {
-                "type": "string",
-                "format": "date-time"
-            },
-            "r1EndTime": {
-                "type": "string",
-                "format": "date-time"
-            },
-            "r2StartTime": {
-                "type": "string",
-                "format": "date-time"
-            },
-            "r2EndTime": {
-                "type": "string",
-                "format": "date-time"
-            }
-            },
-            "required": [
-            "r1StartTime",
-            "r1EndTime",
-            "r2StartTime",
-            "r2EndTime"
-            ]
-        }
-    }
   }
 }

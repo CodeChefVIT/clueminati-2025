@@ -72,44 +72,5 @@
                 }
             }
         }
-    },
-    "components": {
-        "schemas": {
-            "User": {
-                "type": "object",
-                "properties": {
-                    "_id": {
-                        "type": "string",
-                        "example": "64a7c4e8f9b1e2a345678901"
-                    },
-                    "fullname": {
-                        "type": "string",
-                        "example": "John Doe"
-                    },
-                    "email": {
-                        "type": "string",
-                        "example": "john@example.com"
-                    },
-                    "role": {
-                        "type": "string",
-                        "example": "participant"
-                    },
-                    "teamId": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "example": "64a7c5f1f9b1e2a345678902"
-                    }
-                }
-            }
-        },
-        "securitySchemes": {
-            "bearerAuth": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
-            }
-        }
     }
 }

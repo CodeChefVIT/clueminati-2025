@@ -130,44 +130,5 @@
         }
       }
     }
-  },
-  "components": {
-    "securitySchemes": {
-      "BearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    },
-    "schemas": {
-      "Station": {
-        "type": "object",
-        "properties": {
-          "station_name": {
-            "type": "string",
-            "description": "The name of the station."
-          },
-          "difficulty": {
-            "type": "string",
-            "enum": [
-              "easy",
-              "medium",
-              "hard"
-            ],
-            "description": "The difficulty level of the station."
-          },
-          "members": {
-            "type": "array",
-            "description": "An array of user IDs who are members of the station.",
-            "items": {
-              "type": "string"
-            }
-          }
-        },
-        "required": [
-          "station_name"
-        ]
-      }
-    }
   }
 }

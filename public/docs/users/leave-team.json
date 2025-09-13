@@ -1,15 +1,4 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-        "title": "Leave Team API",
-        "version": "1.0.0",
-        "description": "Endpoint for a user to leave their current team. Requires authentication via Bearer token."
-    },
-    "servers": [
-        {
-            "url": "http://localhost:3000"
-        }
-    ],
     "paths": {
         "/api/users/leave-team": {
             "post": {
@@ -111,15 +100,6 @@
                         }
                     }
                 }
-            }
-        }
-    },
-    "components": {
-        "securitySchemes": {
-            "bearerAuth": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
             }
         }
     }
