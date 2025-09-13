@@ -17,6 +17,7 @@ interface User {
 interface Team {
   teamname: string;
   joinCode: string;
+  teamId: string; 
   total_score: number;
 }
 
@@ -79,7 +80,7 @@ export default function ProfileScreen() {
   const profilePic = "/assets/profile-pic.svg";
   const teamCode = team?.joinCode || "N/A";
   const teamName = team?.teamname || "No Team";
-  const teamIdForQR = team?.joinCode || "No-Team";
+  const teamIdForQR = team?.teamId || "No-Team"; 
 
   return (
     <div className="w-full flex flex-col items-center justify-start text-white min-h-[calc(100vh-7rem)] p-4 sm:p-8 pt-4">
@@ -143,19 +144,16 @@ export default function ProfileScreen() {
               Team QR Code
             </h2>
             <QRCode
-              value={teamIdForQR}
+              value={teamIdForQR} 
               size={260}
               bgColor="#3b2f2f"
               fgColor="#22c55e"
             />
-            <p className="text-green-300 font-semibold mt-4 text-sm break-all text-center">
-              {teamIdForQR}
-            </p>
 
             <Button
               label="Close"
               onClick={() => setShowQR(false)}
-              className="w-40 sm:w-44 text-lg sm:text-xl"
+              className="w-40 sm:w-44 text-lg sm:text-xl mt-4"
             />
           </div>
         </div>
