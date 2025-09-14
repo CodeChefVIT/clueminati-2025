@@ -25,6 +25,7 @@ const Round1Schema = z.object({
   questions_solved: QuestionTrackingSchema,
   questions_encountered: QuestionTrackingSchema,
   score: z.number().min(0).default(0),
+  game_score: z.number().min(0).default(0)
 });
 
 const Round2Schema = Round1Schema.extend({

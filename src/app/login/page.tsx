@@ -32,9 +32,8 @@ export default function Login() {
         email,
         password
       })
-      console.log("Pushing")
       toast.success("Login successful!")
-      router.push("/profile")
+      router.push("/")
       
       
     } catch (error: any) {

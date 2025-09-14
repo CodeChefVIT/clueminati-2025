@@ -3,8 +3,7 @@ import { connectToDatabase } from "@/lib/db";
 import User from "@/lib/models/user";
 import Team from "@/lib/models/team";
 import { getUserFromToken } from "@/utils/getUserFromToken";
-
-
+import jwt from "jsonwebtoken";
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,7 +18,10 @@ export async function POST(req: NextRequest) {
     const { joinCode } = await req.json();
 
     if (!joinCode) {
-      return NextResponse.json({ error: "Join code is required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Join code is required" },
+        { status: 400 }
+      );
     }
 
     const team = await Team.findOne({ joinCode });
@@ -32,11 +34,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
     if (user.teamId) {
-      return NextResponse.json({ error: "User already in a team" }, { status: 400 });
+      return NextResponse.json(
+        { error: "User already in a team" },
+        { status: 400 }
+      );
     }
-    if(team.members.length===5){
-      return NextResponse.json({ error: "The Team Already has 5 members" }, { status: 400 });
-
+    if (team.members.length === 5) {
+      return NextResponse.json(
+        { error: "The Team Already has 5 members" },
+        { status: 400 }
+      );
     }
 
     user.teamId = team._id.toString();
@@ -44,11 +51,31 @@ export async function POST(req: NextRequest) {
 
     team.members.push(user._id.toString());
     await team.save();
+    const tokenData = {
+      id: user._id,
+      fullname: user.fullname,
+      email: user.email,
+      role: user.role,
+      teamId: user.teamId ?? null,
+      region: user.region ?? null,
+    };
 
-    return NextResponse.json(
+    const token = jwt.sign(tokenData, process.env.TOKEN_SECRET!, {
+      expiresIn: "1d",
+    });
+
+    const res = NextResponse.json(
       { message: "Successfully joined the team", team },
       { status: 200 }
     );
+    res.cookies.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24,
+      path: "/",
+    });
+    return res;
   } catch (err) {
     console.error("Error joining team:", err);
     return NextResponse.json(

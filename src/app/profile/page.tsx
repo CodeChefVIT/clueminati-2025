@@ -36,6 +36,7 @@ export default function ProfileScreen() {
         const response = await axios.post("/api/users/profile"); 
         setUser(response.data.data.user);
         setTeam(response.data.data.team);
+        console.log(response)
       } catch (error: any) {
         console.error(
           "Error fetching profile:",

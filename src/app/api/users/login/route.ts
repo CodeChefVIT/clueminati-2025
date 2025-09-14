@@ -32,6 +32,7 @@ export async function POST(request: NextRequest){
       email: user.email,
       role: user.role,
       teamId: user.teamId ?? null,
+      region: user.region ?? null
     }
 
     const token = jwt.sign(tokenData, process.env.TOKEN_SECRET!, {expiresIn: '1d'})
