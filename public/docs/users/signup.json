@@ -4,7 +4,6 @@
       "post": {
         "summary": "signup a user's email",
         "description": "Validates a verification token and marks the user's email as verified. This is a one-time use token.",
-        "operationId": "verifyEmail",
         "tags": [
           "users"
         ],

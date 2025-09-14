@@ -7,7 +7,6 @@
         "tags": [
           "admin"
         ],
-        "operationId": "updateRound",
         "security": [
           {
             "BearerAuth": []

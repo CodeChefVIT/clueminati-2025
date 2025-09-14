@@ -4,7 +4,6 @@
       "get": {
         "summary": "Get a question by its ID",
         "description": "Fetches a specific question document from the database by its ID. Requires authentication.",
-        "operationId": "getQuestionById",
         "tags": [
           "round-one"
         ],

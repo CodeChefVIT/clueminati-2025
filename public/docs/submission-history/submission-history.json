@@ -4,7 +4,6 @@
       "get": {
         "summary": "Get a team's submission history",
         "description": "Fetches a list of all questions a team has successfully solved in Round 1.",
-        "operationId": "getSubmissionHistory",
         "tags": [
           "submission-history"
         ],

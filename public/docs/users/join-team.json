@@ -4,7 +4,6 @@
             "post": {
                 "summary": "Join a team using join code",
                 "description": "Allows an authenticated user to join a team by providing a valid join code. The team cannot exceed 5 members.",
-                "operationId": "joinTeam",
                 "tags": [
                     "users"
                 ],

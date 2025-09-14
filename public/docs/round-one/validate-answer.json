@@ -4,7 +4,6 @@
       "post": {
         "summary": "Validate a user's answer for a Round 1 question",
         "description": "Checks if the provided answer is correct, updates the team's score, and marks the question as solved. Requires authentication.",
-        "operationId": "validateAnswer",
         "tags": [
           "round-one"
         ],

@@ -7,7 +7,6 @@
         "tags": [
           "admin"
         ],
-        "operationId": "createUser",
         "security": [
           {
             "BearerAuth": []

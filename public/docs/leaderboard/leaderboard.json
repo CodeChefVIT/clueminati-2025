@@ -4,7 +4,6 @@
       "get": {
         "summary": "Get the game leaderboard",
         "description": "Fetches a sorted list of all teams and their total scores.",
-        "operationId": "getLeaderboard",
         "tags": [
           "leaderboard"
         ],

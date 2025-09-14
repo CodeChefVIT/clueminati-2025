@@ -4,7 +4,6 @@
       "get": {
         "summary": "Serve a question to a team",
         "description": "Retrieves a question for a specific team based on the requested difficulty. Requires authentication.",
-        "operationId": "serveQuestion",
         "tags": [
           "round-one"
         ],

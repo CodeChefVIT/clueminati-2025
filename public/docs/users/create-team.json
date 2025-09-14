@@ -4,7 +4,6 @@
             "post": {
                 "summary": "Create a new team",
                 "description": "Creates a new team with a unique join code. The user creating the team is automatically added as a member. Requires authentication via Bearer token.",
-                "operationId": "createTeam",
                 "tags": [
                     "users"
                 ],
