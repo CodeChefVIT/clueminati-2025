@@ -17,7 +17,7 @@ interface User {
 interface Team {
   teamname: string;
   joinCode: string;
-  teamId: string; 
+  teamId: string;
   total_score: number;
 }
 
@@ -28,22 +28,22 @@ export default function ProfileScreen() {
   const [team, setTeam] = useState<Team | null>(null);
   const [loading, setLoading] = useState(true);
   const [showQR, setShowQR] = useState(false);
+  const [leaving, setLeaving] = useState(false);
 
   // fetch profile
   useEffect(() => {
     async function fetchProfile() {
       try {
-        const response = await axios.post("/api/users/profile"); 
+        const response = await axios.post("/api/users/profile");
         setUser(response.data.data.user);
         setTeam(response.data.data.team);
-        console.log(response)
       } catch (error: any) {
         console.error(
           "Error fetching profile:",
           error.response?.data || error.message
         );
         if (error.response?.status === 401) {
-          router.push("/login"); 
+          router.push("/login");
         }
       } finally {
         setLoading(false);
@@ -59,6 +59,25 @@ export default function ProfileScreen() {
       router.push("/login");
     } catch (error: any) {
       console.error("Logout failed:", error.response?.data || error.message);
+    }
+  }
+
+  async function leaveTeam() {
+    setLeaving(true);
+    try {
+      const res = await axios.post("/api/users/leave-team");
+      console.log("Leave team response:", res.data);
+
+     
+      router.push("/join-team");
+    } catch (error: any) {
+      console.error(
+        "Error leaving team:",
+        error.response?.data || error.message
+      );
+      alert(error.response?.data?.error || "Failed to leave team");
+    } finally {
+      setLeaving(false);
     }
   }
 
@@ -81,7 +100,7 @@ export default function ProfileScreen() {
   const profilePic = "/assets/profile-pic.svg";
   const teamCode = team?.joinCode || "N/A";
   const teamName = team?.teamname || "No Team";
-  const teamIdForQR = team?.teamId || "No-Team"; 
+  const teamIdForQR = team?.teamId || "No-Team";
 
   return (
     <div className="w-full flex flex-col items-center justify-start text-white min-h-[calc(100vh-7rem)] p-4 sm:p-8 pt-4">
@@ -126,11 +145,17 @@ export default function ProfileScreen() {
 
         {/* Buttons */}
         <div className="flex flex-col space-y-1 items-center w-full max-w-xs">
-          <Button
-            label="Leave Team"
-            onClick={() => alert("Leave Team clicked")}
-          />
+          {team && (
+            <Button
+              label={leaving ? "Leaving..." : "Leave Team"}
+              onClick={() => {
+                if (!leaving) leaveTeam();
+              }}
+            />
+          )}
+
           <Button label="Log Out" onClick={logout} />
+
           {team && (
             <Button label="Show Team QR" onClick={() => setShowQR(true)} />
           )}
@@ -145,7 +170,7 @@ export default function ProfileScreen() {
               Team QR Code
             </h2>
             <QRCode
-              value={teamIdForQR} 
+              value={teamIdForQR}
               size={260}
               bgColor="#3b2f2f"
               fgColor="#22c55e"
