@@ -1,87 +1,5 @@
 {
   "paths": {
-    "/api/users/signup": {
-      "post": {
-        "summary": "signup a user's email",
-        "description": "Validates a verification token and marks the user's email as verified. This is a one-time use token.",
-        "tags": [
-          "users"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "token": {
-                    "type": "string",
-                    "description": "The unique verification token sent to the user's email."
-                  }
-                },
-                "required": [
-                  "token"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Email verified successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Email Verified Successfully"
-                    },
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request (invalid or expired token).",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string",
-                      "example": "Invalid Token"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string",
-                      "example": "Internal Server Error"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/user/signup": {
       "post": {
         "summary": "User registration",
@@ -95,28 +13,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "fullname": {
-                    "type": "string",
-                    "description": "The full name of the user."
-                  },
-                  "email": {
-                    "type": "string",
-                    "format": "email",
-                    "description": "The user's email address."
-                  },
-                  "password": {
-                    "type": "string",
-                    "format": "password",
-                    "description": "The user's password (will be hashed)."
-                  }
-                },
-                "required": [
-                  "fullname",
-                  "email",
-                  "password"
-                ]
+                "$ref": "#/components/schemas/UserSignup"
               }
             }
           }
@@ -136,6 +33,9 @@
                     "success": {
                       "type": "boolean",
                       "example": true
+                    },
+                    "savedUser": {
+                      "$ref": "#/components/schemas/User"
                     }
                   }
                 }
@@ -177,6 +77,55 @@
                 }
               }
             }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "UserSignup": {
+        "type": "object",
+        "properties": {
+          "fullname": {
+            "type": "string",
+            "description": "The user's full name."
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "The user's email address."
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "description": "The user's password."
+          }
+        },
+        "required": [
+          "fullname",
+          "email",
+          "password"
+        ]
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "fullname": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "isVerified": {
+            "type": "boolean"
           }
         }
       }
