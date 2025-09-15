@@ -19,7 +19,7 @@ const rethinkSansMedium = localFont({
 });
 export default function JoinTeam() {
   const router = useRouter();
-  const [teamCode, setTeamCode] = useState('');
+  const [teamCode, setTeamCode] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,6 +33,11 @@ export default function JoinTeam() {
         router.push(`/role-selection?teamId=${response.data.team._id}`);
       }
     } catch (error: any) {
+      console.error(
+        "Error joining team:",
+        error.response?.data || error.message
+      );
+      alert(error.response?.data?.message || "Failed to join team");
       toast.error(error.response?.data?.error || 'Failed to join team.');
     } finally {
       setLoading(false);

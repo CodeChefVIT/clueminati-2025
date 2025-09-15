@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
+import localFont from "next/font/local";
 import toast from "react-hot-toast";
 import axios from "axios";
-import localFont from "next/font/local";
+
 
 const rethinkSansBold = localFont({
   src: "../../../public/assets/RethinkSans-Bold.ttf",
@@ -39,14 +40,14 @@ export default function CreateTeam() {
       const { success, team, redirect } = response.data;
 
       if (redirect) {
-        // ✅ User already has a team — redirect
+        // User already has a team — redirect
         router.push(redirect);
       } else if (success && team) {
-        // ✅ New team created — redirect with teamId
+        // New team created — redirect with teamId
         toast.success("Team created successfully!");
         router.push(`/role-selection?teamId=${team._id}`);
       } else {
-        // ❌ Unexpected structure
+        // Unexpected structure
         toast.error("Unexpected server response.");
       }
     } catch (error: any) {

@@ -7,7 +7,7 @@ import User from "@/lib/models/user";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 
-// Ensure DB connection is established
+// i made some changes to the file; if theres any probs lemme know - ayman
 connectToDatabase();
 
 export async function POST(req: NextRequest) {
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
     do {
       code = generateJoinCode();
       existing = await Team.findOne({ joinCode: code });
-    } while (existing);
+    } while (existing); //(highly unlikely but just in case)
 
     // Create new team
     const newTeam = await Team.create({

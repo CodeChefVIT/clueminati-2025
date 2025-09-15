@@ -55,7 +55,6 @@ export const config = {
     '/signup',
     '/verifyemail',
     '/join-team', 
-    '/create-team',
-    
+    '/create-team',    
   ]
 }

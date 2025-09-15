@@ -8,10 +8,10 @@ connectToDatabase();
 
 export async function GET(
   _request: NextRequest,
-  context: { params: Promise<{ teamId: string }> } // 👈 Make sure this matches how Next.js passes params
+  context: { params: Promise<{ teamId: string }> } 
 ) {
   try {
-    const { teamId } = await context.params; // ✅ await the params
+    const { teamId } = await context.params; 
     console.log("Fetching members for team:", teamId);
 
     const team = await Team.findById(teamId).populate("members", "fullname _id");
@@ -20,7 +20,6 @@ export async function GET(
       return NextResponse.json({ error: "Team not found" }, { status: 404 });
     }
 
-    // 👇 Confirm team.members is an array before mapping
     if (!Array.isArray(team.members)) {
       return NextResponse.json({ error: "Team members not found" }, { status: 500 });
     }
