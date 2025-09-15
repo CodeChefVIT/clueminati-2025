@@ -4,7 +4,6 @@
       "get": {
         "summary": "Get a team's submission history",
         "description": "Fetches a list of all questions a team has successfully solved in Round 1.",
-        "operationId": "getSubmissionHistory",
         "tags": [
           "submission-history"
         ],
@@ -85,40 +84,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "securitySchemes": {
-      "BearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    },
-    "schemas": {
-      "SolvedQuestion": {
-        "type": "object",
-        "properties": {
-          "questionId": {
-            "type": "string",
-            "description": "The unique ID of the solved question."
-          },
-          "difficulty": {
-            "type": "string",
-            "enum": [
-              "easy",
-              "medium",
-              "hard"
-            ],
-            "description": "The difficulty level of the solved question."
-          },
-          "questionDescription": {
-            "type": "string",
-            "nullable": true,
-            "description": "The description of the solved question, if found."
           }
         }
       }

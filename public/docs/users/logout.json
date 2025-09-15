@@ -1,10 +1,4 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-        "title": "Auth API",
-        "version": "1.0.0",
-        "description": "API for user authentication (logout)"
-    },
     "paths": {
         "/api/users/logout": {
             "get": {
@@ -57,21 +51,6 @@
                                 }
                             }
                         }
-                    }
-                }
-            }
-        }
-    },
-    "components": {
-        "schemas": {
-            "LogoutResponse": {
-                "type": "object",
-                "properties": {
-                    "message": {
-                        "type": "string"
-                    },
-                    "success": {
-                        "type": "boolean"
                     }
                 }
             }
