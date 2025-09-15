@@ -5,7 +5,9 @@ export const UserSchema = z.object({
   email: z.email("Invalid email format"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   role: z.enum(["admin", "core_member", "participant"]).default("participant"),
-  region: z.enum(["hell", "earth"]).optional(),
+  region: z.enum(["indoor", "outdoor"]).optional(),
+  gameRole: z.enum(["liar", "role1", "role2", "role3", "role4"]).optional(),
+  regno: z.string().min(9,"Registration Number is required."),
   teamId: z.string().optional(),
   isVerified: z.boolean().default(false),
   verifyToken: z.string().optional(),
@@ -14,6 +16,14 @@ export const UserSchema = z.object({
   forgotPasswordTokenExpiry: z.date().optional(),
 
 });
+
+export const RoleAssignmentSchema = z.object({
+  userId: z.string(),
+  teamId: z.string(),
+  gameRole: z.enum(["liar", "role1", "role2", "role3", "role4"])
+})
+
+export type RoleAssignment = z.infer<typeof RoleAssignmentSchema>
 
 const QuestionTrackingSchema = z.object({
   easy: z.array(z.string()).default([]), // questionId[]

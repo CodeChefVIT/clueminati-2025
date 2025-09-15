@@ -6,6 +6,11 @@ const userSchema = new Schema<IUser>({
     type: String,
     required: [true, "Please provide a full name"],
   },
+  regno: {
+    type: String,
+    required: [true, "Registration Number is required"],
+    minlength: [9, "Registration Number must be at least 9 characters"],
+  },
   email: { 
     type: String, 
     required: [true, "Please provide an email"], 
@@ -20,6 +25,11 @@ const userSchema = new Schema<IUser>({
     enum: ["admin", "core_member", "participant"],
     default: "participant",
     required: true,
+  },
+  gameRole: {
+    type: String,
+    enum: ["liar", "role1", "role2", "role3", "role4"],
+    required: false,
   },
   region: {
     type: String,
@@ -40,6 +50,6 @@ const userSchema = new Schema<IUser>({
   verifyTokenExpiry: Date
 });
 
-const User: Model<IUser> = models.User || model<IUser>("User", userSchema);
+const User: Model<IUser> = models.User ?? model<IUser>("User", userSchema);
 
 export default User;

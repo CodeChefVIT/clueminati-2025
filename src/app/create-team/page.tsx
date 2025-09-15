@@ -1,12 +1,12 @@
 "use client";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
-import localFont from "next/font/local";
+import toast from "react-hot-toast";
 import axios from "axios";
+import localFont from "next/font/local";
 
 const rethinkSansBold = localFont({
   src: "../../../public/assets/RethinkSans-Bold.ttf",
@@ -21,24 +21,36 @@ export default function CreateTeam() {
   const router = useRouter();
   const [teamName, setTeamName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!teamName.trim()) {
+      toast.error("Team name cannot be empty.");
+      return;
+    }
+
     setLoading(true);
-    setError(null);
-
     try {
-      const res = await axios.post(
-        "/api/users/create-team",
-        { teamname: teamName },
-      );
+      const response = await axios.post("/api/users/create-team", {
+        teamname: teamName,
+      });
 
+      const { success, team, redirect } = response.data;
 
-      router.push("/");
-    } catch (err: any) {
-      console.error("Error creating team:", err);
-      setError(err.response?.data?.error || "Something went wrong.");
+      if (redirect) {
+        // ✅ User already has a team — redirect
+        router.push(redirect);
+      } else if (success && team) {
+        // ✅ New team created — redirect with teamId
+        toast.success("Team created successfully!");
+        router.push(`/role-selection?teamId=${team._id}`);
+      } else {
+        // ❌ Unexpected structure
+        toast.error("Unexpected server response.");
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.error || "Failed to create team.");
     } finally {
       setLoading(false);
     }
@@ -83,9 +95,9 @@ export default function CreateTeam() {
               />
             </div>
 
-            {error && (
+            {/* {error && (
               <p className="text-red-500 text-center text-sm">{error}</p>
-            )}
+            )} */}
 
             <div className="text-right">
               <span className="text-white font-medium text-base mr-1.5">

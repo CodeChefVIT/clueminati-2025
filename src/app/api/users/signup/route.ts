@@ -11,17 +11,31 @@ export async function POST(request: NextRequest){   //took request as parameter 
   try {                                                       /// try-catch block for error handling
     const reqBody = await request.json()   
     const parsed = UserSchema.parse(reqBody)        
-    const {fullname, email, password} = parsed     // destructuring json data to get fullname, email, password
+    const {fullname, regno, email, password} = parsed     // destructuring json data to get fullname, email, password
     
     console.log("Starting signup process for:", email);      
     
     // Input validation
-    if (!fullname || !email || !password) {         // Check for missing fields
+    if (!fullname || !email || !password || !regno) {         // Check for missing fields
       console.log("Missing required fields");               
       return NextResponse.json(
         { error: "Please provide all required fields" },
         { status: 400 }
       );
+    }
+    if (regno.length < 9) {
+      return NextResponse.json(
+        { error: "Registration Number must be at least 9 characters" },
+        { status: 400 }
+      );
+    }
+
+    const existingRegno = await User.findOne({ regno });
+    if (existingRegno) {
+      return NextResponse.json({
+        error: "registration number exists",
+        message: "This Registration Number is already registered."
+      }, { status: 400 });
     }
 
     // Check if user already exists by email
@@ -47,7 +61,8 @@ export async function POST(request: NextRequest){   //took request as parameter 
     const newUser = new User({        // creating new user object consisting of username, email, hashed password
       fullname,           
       email,
-      password:hashedPassword
+      password:hashedPassword,
+      regno
     })
 
     const savedUser = await newUser.save()                           // saving new user to db

@@ -40,10 +40,7 @@ export async function POST(req: NextRequest) {
       );
     }
     if (team.members.length === 5) {
-      return NextResponse.json(
-        { error: "The Team Already has 5 members" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "The Team Already has 5 members" }, { status: 400 });
     }
 
     user.teamId = team._id.toString();

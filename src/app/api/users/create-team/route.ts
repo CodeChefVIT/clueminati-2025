@@ -6,74 +6,73 @@ import Team from "@/lib/models/team";
 import User from "@/lib/models/user";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
-import jwt from 'jsonwebtoken'
 
-
+// Ensure DB connection is established
 connectToDatabase();
 
 export async function POST(req: NextRequest) {
   try {
+    // Authenticate user
     const tUser = await getUserFromToken(req);
     if (!tUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    // Parse request body
     const data = await req.json();
     const parsed = TeamSchema.parse(data);
 
+    // Fetch full user record
+    const user = await User.findById(tUser.id);
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // If user already has a team, redirect
+    if (user.teamId) {
+      return NextResponse.json({ redirect: "/role-selection" }, { status: 200 });
+    } 
+
+    // Generate a unique join code
     let code: string;
     let existing;
 
     do {
       code = generateJoinCode();
       existing = await Team.findOne({ joinCode: code });
-    } while (existing); //to check whether a team already exists with the joincode (highly unlikely)
+    } while (existing);
+
+    // Create new team
     const newTeam = await Team.create({
       ...parsed,
       joinCode: code,
       members: [tUser.id],
     });
-    const user = await User.findById(tUser.id);
-    if (!user) {
-      return NextResponse.json(
-        { error: "User not found", data: tUser },
-        { status: 404 }
-      );
-    }
+
+    // Assign team to user and save
     user.teamId = newTeam._id.toString();
     await user.save();
-    const tokenData = {
-      id: user._id,
-      fullname: user.fullname,
-      email: user.email,
-      role: user.role,
-      teamId: user.teamId ?? null,
-      region: user.region ?? null,
-    };
 
-    const token = jwt.sign(tokenData, process.env.TOKEN_SECRET!, {
-      expiresIn: "1d",
-    });
-
-    const res = NextResponse.json(
-      { message: "Successfully created the team", newTeam },
-      { status: 200 }
+    // Success response
+    return NextResponse.json(
+      {
+        message: "Team Created Successfully",
+        success: true,
+        team: newTeam,
+      },
+      { status: 201 }
     );
-    res.cookies.set("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24,
-      path: "/",
-    });
-    return res;
   } catch (err) {
+    // Validation error
     if (err instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Validation failed", details: err.message },
         { status: 400 }
       );
     }
-    console.error("error creating team", err);
+
+    // General error
+    console.error("Error creating team:", err);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

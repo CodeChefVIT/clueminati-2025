@@ -31,9 +31,16 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // 🔑 extra check for participants
-  if (payload.role === 'participant' && !payload.teamId && path !== '/join-team') {
+  if (payload.role === 'participant' && !payload.teamId && !['/join-team', '/create-team'].includes(path)) {
     return NextResponse.redirect(new URL('/join-team', request.url))
+  }
+
+  // if (payload.role === 'participant' && payload.teamId && ['/join-team', '/create-team'].includes(path)) {
+  //   return NextResponse.redirect(new URL('/profile', request.url))
+  // }
+
+  if (path === '/create-team' && payload.teamId) {
+    return NextResponse.redirect(new URL('/role-selection', request.url))
   }
 
   return NextResponse.next()
@@ -47,6 +54,8 @@ export const config = {
     '/login',
     '/signup',
     '/verifyemail',
-    '/join-team', // add this if needed
+    '/join-team', 
+    '/create-team',
+    
   ]
 }

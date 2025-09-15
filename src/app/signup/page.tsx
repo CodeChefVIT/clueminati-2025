@@ -22,7 +22,7 @@ const rethinkSansMedium = localFont({
 export default function SignupPage() {
   const router = useRouter();
   const [fullname, setFullname] = useState("");
-  const [regno, setregno] = useState("");
+  const [regno, setRegno] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,12 +30,12 @@ export default function SignupPage() {
   const [buttonDisabled, setButtonDisabled] = useState(true);
 
   useEffect(() => {
-    if (fullname && email && password) {
+    if (fullname && email && password && regno) {
       setButtonDisabled(false);
     } else {
       setButtonDisabled(true);
     }
-  }, [fullname, email, password]);
+  }, [fullname, regno, email, password]);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,6 +46,7 @@ export default function SignupPage() {
         fullname,
         email,
         password,
+        regno
       });
       console.log("Signup success", response.data);
       toast.success(
@@ -106,16 +107,16 @@ export default function SignupPage() {
 
             <div className="space-y-1">
               <Label
-                htmlFor="fullname"
+                htmlFor="regno"
                 className="text-white font-medium text-lg"
               >
                 Registration Number
               </Label>
               <Input
-                id="fullname"
+                id="regno"
                 type="text"
                 value={regno}
-                onChange={(e) => setFullname(e.target.value)}
+                onChange={(e) => setRegno(e.target.value)}
                 className="h-[60px] w-[100%] bg-[#D3D5D7] border border-black/20 rounded-lg text-black mb-2"
                 required
               />
