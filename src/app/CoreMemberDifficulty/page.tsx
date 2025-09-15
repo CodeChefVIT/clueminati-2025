@@ -23,7 +23,7 @@ export default function CoreMemberDifficulty() {
       {/* Team Name Display */}
       <div className="relative flex items-center justify-center">
         <Image
-          src="/assets/brick.png"
+          src="/assets/brick.svg"
           alt="Team Name Panel"
           width={320}
           height={76}
@@ -37,7 +37,7 @@ export default function CoreMemberDifficulty() {
       {/* Score Display */}
       <div className="relative flex items-center justify-center">
         <Image
-          src="/assets/brick.png"
+          src="/assets/brick.svg"
           alt="Score Panel"
           width={238}
           height={60}
@@ -57,7 +57,7 @@ export default function CoreMemberDifficulty() {
           className="relative flex items-center justify-center"
         >
           <Image
-            src="/assets/brick.png"
+            src="/assets/brick.svg"
             alt="Pick Difficulty background"
             width={320}
             height={76}
@@ -73,7 +73,7 @@ export default function CoreMemberDifficulty() {
           <div className="absolute top-full mt-2 w-full z-20">
             <div className="relative flex flex-col items-center justify-center">
               <Image
-                src="/assets/brick.png" // Using your asset as a background
+                src="/assets/brick.svg" // Using your asset as a background
                 alt="Dropdown Menu Background"
                 width={320}
                 height={120} // Adjusted height for 3 options
@@ -103,7 +103,7 @@ export default function CoreMemberDifficulty() {
         className="group hover:scale-105 transition"
       >
         <Image
-          src="/assets/generate.png"
+          src="/assets/generate.svg"
           alt="Generate Button"
           width={145}
           height={60}

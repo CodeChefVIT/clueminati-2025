@@ -54,7 +54,7 @@ export default function ScannerPage() {
         </div>
 
         <Image
-          src="/assets/scanner screen.png"
+          src="/assets/scanner screen.svg"
           alt="Scanner Frame Overlay"
           fill
           className="pointer-events-none object-contain absolute top-0 left-0 z-20"
@@ -65,7 +65,7 @@ export default function ScannerPage() {
       {useManual && (
         <div className="relative w-[360px] h-[78px] z-10">
           <Image
-            src="/assets/mannual entry.png"
+            src="/assets/mannual entry.svg"
             alt="Manual Entry Frame"
             fill
             className="object-contain pointer-events-none"
@@ -92,7 +92,7 @@ export default function ScannerPage() {
         className="group z-10 hover:scale-105 transition"
       >
         <Image
-          src="/assets/close.png"
+          src="/assets/close.svg"
           alt="Close Button"
           width={145}
           height={60}
