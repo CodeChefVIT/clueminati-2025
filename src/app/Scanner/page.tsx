@@ -1,36 +1,52 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
-// v2.3.1 of @yudiel/react-qr-scanner
 import { Scanner } from "@yudiel/react-qr-scanner";
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation";
 import axios from "axios";
+import GamePopup from "@/components/gamePopup";
 
 export default function ScannerPage() {
   const [scannedResult, setScannedResult] = useState("");
   const [isScanning, setIsScanning] = useState(true);
   const [manualCode, setManualCode] = useState("");
   const [useManual, setUseManual] = useState(true);
+  const [showPopup, setShowPopup] = useState(false); // <-- popup state
+  const [message, setMessage] = useState('');
 
   const router = useRouter();
 
   const handleManualSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Manual Code Entered:", manualCode);
     try {
-      const response = await axios.get('/api/get-question-by-id', {
+      const response = await axios.get("/api/round-one/get-question-by-id", {
         params: { id: manualCode },
       });
-      router.push('/question/' + manualCode);
+      router.push("/question/" + manualCode);
     } catch (error: any) {
-      if (axios.isAxiosError(error) && error.response?.status === 404) {
-        // show popup
-      } else {
-        console.error("Unexpected error:", error);
-      }
+      console.error(error);
+      setMessage(error.response.data.error);
+      setShowPopup(true);
     }
   };
+
+  const handleScan = async (result: string) => {
+    try {
+      const response = await axios.get("/api/round-one/get-question-by-id", {
+        params: { id: result },
+      });
+      setScannedResult(result);
+      setIsScanning(false);
+      router.push("/question/" + result);
+    } catch (error: any) {
+      console.error(error);
+      setMessage(error.response.data.error);
+      setShowPopup(true);
+      setIsScanning(true);
+    }
+  };
+
   return (
     <main className="relative h-screen w-full flex flex-col items-center justify-start overflow-hidden no-scrollbar">
       {/* Header */}
@@ -52,9 +68,7 @@ export default function ScannerPage() {
                 if (detectedCodes.length > 0) {
                   const result = detectedCodes[0].rawValue;
                   console.log("QR Code Result:", result);
-                  setScannedResult(result);
-                  setIsScanning(false);
-                  router.push('/question/' + result);
+                  handleScan(result);
                 }
               }}
               onError={(error) => {
@@ -80,14 +94,12 @@ export default function ScannerPage() {
       {/* Manual Input box */}
       {useManual && (
         <div className="mt-[30px] relative w-[360px] h-[78px] z-10">
-          {/* Frame */}
           <Image
             src="/assets/mannual entry.svg"
             alt="Manual Entry Frame"
             fill
             className="object-contain pointer-events-none"
           />
-          {/* Input */}
           <form
             className="absolute inset-0 flex items-center justify-center"
             onSubmit={handleManualSubmit}
@@ -109,6 +121,8 @@ export default function ScannerPage() {
           {useManual ? `Manual: ${manualCode}` : `Scanned: ${scannedResult}`}
         </div>
       )}
+      <GamePopup isOpen={showPopup} onClose={() => setShowPopup(false)} message={message} />
+
     </main>
   );
 }

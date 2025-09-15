@@ -4,38 +4,39 @@ import Button from "@/components/Button";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-
-
+import GamePopup from "@/components/gamePopup";
 
 const questionBox = "/assets/Question_Box.svg";
 const answerBox = "/assets/Answer_Box.svg";
 
 export default function QuestionScreen() {
   const params = useParams();
-  const [question, setQuestion] = useState('');
+  const [question, setQuestion] = useState("");
   const [inputValue, setInputValue] = useState("");
   const id = params.id;
   const [loading, setLoading] = useState(false);
+  const [showPopup, setShowPopup] = useState(false); // <-- popup state
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const getQuestionById = async () => {
       try {
-        setLoading(true)
+        setLoading(true);
         const response = await axios.get("/api/round-one/get-question-by-id", {
-          params: {
-            id: id
-          }
-        })
-        setQuestion(response.data.data.question_description);
+          params: { id },
+        });
 
+        setQuestion(response.data.data.question_description);
       } catch (error: any) {
-        console.log(error);
+        console.error(error);
+        // setMessage(error.response.data.error);
+        // setShowPopup(true);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
     getQuestionById();
-  }, [])
+  }, [id]);
 
   const handleSubmit = async () => {
     if (!inputValue.trim()) return;
@@ -44,12 +45,17 @@ export default function QuestionScreen() {
       setLoading(true);
       const response = await axios.post("/api/round-one/validate-answer", {
         questionId: id,
-        userAnswer: inputValue
+        userAnswer: inputValue,
       });
-      // show popup 
+      if (response.status == 200 && response.data.message != "correct") {
+        setMessage(response.data.message);
+        setShowPopup(true);
+      }
       setInputValue("");
     } catch (error: any) {
       console.error(error);
+      setMessage(error.response.data.error);
+      setShowPopup(true);
     } finally {
       setLoading(false);
     }
@@ -74,6 +80,7 @@ export default function QuestionScreen() {
         />
         <input
           type="text"
+          value={inputValue}
           placeholder="Answer"
           onChange={(e) => setInputValue(e.target.value)}
           className="absolute inset-0 bg-transparent text-center text-xl sm:text-2xl text-white font-semibold focus:outline-none px-6"
@@ -89,10 +96,13 @@ export default function QuestionScreen() {
         />
         <Button
           label="Submit"
-          onClick={() => handleSubmit()}
+          onClick={handleSubmit}
           className="!w-full !text-3xl sm:!text-4xl !font-extrabold"
         />
       </div>
+
+      {/* Wrong Answer Popup */}
+      <GamePopup isOpen={showPopup} onClose={() => setShowPopup(false)} message={message} />
     </div>
   );
 }
