@@ -29,8 +29,12 @@ const Round1Schema = z.object({
 });
 
 const Round2Schema = Round1Schema.extend({
-  secret_string: z.string().optional().default(""),
-  path: z.array(z.string()).default([]), // stationId[]
+  secret_string: z.string().min(6).max(6), // required, 6 letters
+  path: z.array(z.string()).default([]),   // stationId[]
+  currentStation: z.string().optional().default(""),
+  solvedStations: z.array(z.string()).default([]), // stationId[]
+  lettersFound: z.array(z.string()).default([]),   // revealed letters
+  questionsSolved: z.number().min(0).default(0),   // count of solved questions
 });
 
 export const TeamSchema = z.object({
