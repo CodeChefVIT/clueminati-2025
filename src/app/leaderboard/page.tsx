@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import axios from "axios";
 
 type Team = {
   rank: number;
@@ -13,7 +14,6 @@ type Team = {
 const placeholderTeams: Team[] = [
   { rank: 1, name: "Platypus" },
   { rank: 2, name: "Perry" },
-  
 ];
 
 export default function Leaderboard() {
@@ -32,11 +32,10 @@ export default function Leaderboard() {
     const fetchLeaderboard = async () => {
       try {
         setLoading(true);
-        const res = await fetch("/api/leaderboard");
-        if (!res.ok) throw new Error("Failed to fetch");
-        const data = await res.json();
+        const res = await axios.get("/api/leaderboard");
 
-        setTeams(data?.data && data.data.length > 0 ? data.data : placeholderTeams);
+        // If API returns data array, use it; otherwise, use placeholders
+        setTeams(res.data?.data && res.data.data.length > 0 ? res.data.data : placeholderTeams);
       } catch (err) {
         console.error(err);
         setError("Failed to fetch leaderboard. Showing placeholders.");
@@ -48,6 +47,7 @@ export default function Leaderboard() {
 
     fetchLeaderboard();
   }, []);
+
 
   if (loading) {
     return <p className="text-center py-6 text-white">Loading leaderboard...</p>;
