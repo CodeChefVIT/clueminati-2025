@@ -5,13 +5,14 @@ export const UserSchema = z.object({
   email: z.email("Invalid email format"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   role: z.enum(["admin", "core_member", "participant"]).default("participant"),
-  region: z.enum(["indoor", "outdoor"]).optional(),
+  region: z.enum(["hell", "earth"]).optional(),
   teamId: z.string().optional(),
   isVerified: z.boolean().default(false),
   verifyToken: z.string().optional(),
   verifyTokenExpiry: z.date().optional(),
   forgotPasswordToken: z.string().optional(),
-  forgotPasswordTokenExpiry: z.date().optional()
+  forgotPasswordTokenExpiry: z.date().optional(),
+
 });
 
 const QuestionTrackingSchema = z.object({
@@ -24,6 +25,7 @@ const Round1Schema = z.object({
   questions_solved: QuestionTrackingSchema,
   questions_encountered: QuestionTrackingSchema,
   score: z.number().min(0).default(0),
+  game_score: z.number().min(0).default(0)
 });
 
 const Round2Schema = Round1Schema.extend({

@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import Team from "@/lib/models/team";
-import { getUserFromToken } from "@/app/utils/getUserFromToken";
+import { getUserFromToken } from "@/utils/getUserFromToken";
 
 export async function GET(req: NextRequest) {
   try {
@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
     }
     await connectToDatabase();
 
-    const teams = await Team.find({}).sort({ total_score: -1 }).lean();
+    const teams = await Team.find({}).sort({ total_score: -1 }).limit(10).lean();
 
     const leaderboard = teams.map((team: any, index: number) => ({
       rank: index + 1,

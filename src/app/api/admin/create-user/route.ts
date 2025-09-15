@@ -1,6 +1,6 @@
 //this is a temp route just to create dummy users please delete this once signup and login are done
 
-import { getUserFromToken } from "@/app/utils/getUserFromToken";
+import { getUserFromToken } from "@/utils/getUserFromToken";
 import { connectToDatabase } from "@/lib/db";
 import { UserSchema } from "@/lib/interfaces";
 import User from "@/lib/models/user";

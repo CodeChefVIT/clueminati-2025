@@ -1,5 +1,5 @@
-import { getUserFromToken } from "@/app/utils/getUserFromToken";
-import { giveQuestion } from "@/app/utils/giveQuestion";
+import { getUserFromToken } from "@/utils/getUserFromToken";
+import { giveQuestion } from "@/utils/giveQuestion";
 import { connectToDatabase } from "@/lib/db";
 import User from "@/lib/models/user";
 import { NextRequest, NextResponse } from "next/server";

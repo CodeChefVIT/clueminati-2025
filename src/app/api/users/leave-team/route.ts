@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
-import { getUserFromToken } from "@/app/utils/getUserFromToken";
+import { getUserFromToken } from "@/utils/getUserFromToken";
 import User from "@/lib/models/user";
 import Team from "@/lib/models/team";
 import { IEvent } from "@/lib/interfaces";
-import { getCurrentRound } from "@/app/utils/getRound";
+import { getCurrentRound } from "@/utils/getRound";
+import jwt from "jsonwebtoken";
 
 connectToDatabase();
 
@@ -49,11 +50,32 @@ export async function POST(req: NextRequest) {
 
     user.teamId = undefined;
     await user.save();
+    const tokenData = {
+      id: user._id,
+      fullname: user.fullname,
+      email: user.email,
+      role: user.role,
+      teamId: user.teamId ?? null,
+      region: user.region ?? null,
+    };
 
-    return NextResponse.json(
+    const token = jwt.sign(tokenData, process.env.TOKEN_SECRET!, {
+      expiresIn: "1d",
+    });
+
+    const res = NextResponse.json(
       { message: "You have left the team successfully" },
+
       { status: 200 }
     );
+    res.cookies.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24,
+      path: "/",
+    });
+    return res;
   } catch (err) {
     console.error("Error leaving team:", err);
     return NextResponse.json(

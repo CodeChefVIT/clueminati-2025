@@ -1,4 +1,4 @@
-import { getUserFromToken } from "@/app/utils/getUserFromToken";
+import { getUserFromToken } from "@/utils/getUserFromToken";
 import { connectToDatabase } from "@/lib/db";
 import { GameStatSchema } from "@/lib/interfaces";
 import GameStat from "@/lib/models/gameStat";

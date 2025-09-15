@@ -1,6 +1,7 @@
-import { getUserFromToken } from "@/app/utils/getUserFromToken";
+import { getUserFromToken } from "@/utils/getUserFromToken";
 import { connectToDatabase } from "@/lib/db";
 import Question from "@/lib/models/question";
+import Team from "@/lib/models/team";
 import { NextRequest, NextResponse } from "next/server";
 
 connectToDatabase();
@@ -26,6 +27,29 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(
         { error: "Question not found" },
         { status: 404 }
+      );
+    }
+
+    const team = await Team.findById(tUser.teamId);
+    if (!team) {
+      return NextResponse.json(
+        { error: "Team not found" },
+        { status: 404 }
+      );
+    }
+
+    const difficulty = question.difficulty; 
+    const encounteredQuestions =
+      team.round1?.questions_encountered?.[difficulty] || [];
+
+    const isEncountered = encounteredQuestions.some(
+      (q: string) => q.toString() === questionId
+    );
+
+    if (!isEncountered) {
+      return NextResponse.json(
+        { error: "Question not encountered by this team" },
+        { status: 403 }
       );
     }
 

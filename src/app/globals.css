@@ -131,7 +131,9 @@ body {
 .font-pixel {
   font-family: var(--font-pixel);
 }
-
+::-webkit-scrollbar {
+  display: none;
+}
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;

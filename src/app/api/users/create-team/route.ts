@@ -1,11 +1,13 @@
-import { generateJoinCode } from "@/app/utils/generateJoinCode";
-import { getUserFromToken } from "@/app/utils/getUserFromToken";
+import { generateJoinCode } from "@/utils/generateJoinCode";
+import { getUserFromToken } from "@/utils/getUserFromToken";
 import { connectToDatabase } from "@/lib/db";
 import { TeamSchema } from "@/lib/interfaces";
 import Team from "@/lib/models/team";
 import User from "@/lib/models/user";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
+import jwt from 'jsonwebtoken'
+
 
 connectToDatabase();
 
@@ -32,15 +34,38 @@ export async function POST(req: NextRequest) {
     });
     const user = await User.findById(tUser.id);
     if (!user) {
-      return NextResponse.json({ error: "User not found", data: tUser}, { status: 404 });
+      return NextResponse.json(
+        { error: "User not found", data: tUser },
+        { status: 404 }
+      );
     }
     user.teamId = newTeam._id.toString();
     await user.save();
+    const tokenData = {
+      id: user._id,
+      fullname: user.fullname,
+      email: user.email,
+      role: user.role,
+      teamId: user.teamId ?? null,
+      region: user.region ?? null,
+    };
 
-    return NextResponse.json(
-      { message: "Team Created Successfully", data: newTeam },
-      { status: 201 }
+    const token = jwt.sign(tokenData, process.env.TOKEN_SECRET!, {
+      expiresIn: "1d",
+    });
+
+    const res = NextResponse.json(
+      { message: "Successfully created the team", newTeam },
+      { status: 200 }
     );
+    res.cookies.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24,
+      path: "/",
+    });
+    return res;
   } catch (err) {
     if (err instanceof z.ZodError) {
       return NextResponse.json(
