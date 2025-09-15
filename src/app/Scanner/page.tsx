@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 // v2.3.1 of @yudiel/react-qr-scanner
 import { Scanner } from "@yudiel/react-qr-scanner";
+import { useRouter } from "next/navigation"
+import axios from "axios";
 
 export default function ScannerPage() {
   const [scannedResult, setScannedResult] = useState("");
@@ -11,11 +13,24 @@ export default function ScannerPage() {
   const [manualCode, setManualCode] = useState("");
   const [useManual, setUseManual] = useState(true);
 
-  const handleManualSubmit = (e: React.FormEvent) => {
+  const router = useRouter();
+
+  const handleManualSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Manual Code Entered:", manualCode);
+    try {
+      const response = await axios.get('/api/get-question-by-id', {
+        params: { id: manualCode },
+      });
+      router.push('/question/' + manualCode);
+    } catch (error: any) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        // show popup
+      } else {
+        console.error("Unexpected error:", error);
+      }
+    }
   };
-
   return (
     <main className="relative h-screen w-full flex flex-col items-center justify-start overflow-hidden no-scrollbar">
       {/* Header */}
@@ -39,6 +54,7 @@ export default function ScannerPage() {
                   console.log("QR Code Result:", result);
                   setScannedResult(result);
                   setIsScanning(false);
+                  router.push('/question/' + result);
                 }
               }}
               onError={(error) => {

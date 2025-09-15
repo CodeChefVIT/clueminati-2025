@@ -1,6 +1,9 @@
 "use client";
 
 import Button from "@/components/Button";
+import axios from "axios";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 
 
@@ -8,19 +11,62 @@ const questionBox = "/assets/Question_Box.svg";
 const answerBox = "/assets/Answer_Box.svg";
 
 export default function QuestionScreen() {
+  const params = useParams();
+  const [question, setQuestion] = useState('');
+  const [inputValue, setInputValue] = useState("");
+  const id = params.id;
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const getQuestionById = async () => {
+      try {
+        setLoading(true)
+        const response = await axios.get("/api/round-one/get-question-by-id", {
+          params: {
+            id: id
+          }
+        })
+        setQuestion(response.data.data.question_description);
+
+      } catch (error: any) {
+        console.log(error);
+      } finally {
+        setLoading(false)
+      }
+    }
+    getQuestionById();
+  }, [])
+
+  const handleSubmit = async () => {
+    if (!inputValue.trim()) return;
+
+    try {
+      setLoading(true);
+      const response = await axios.post("/api/round-one/validate-answer", {
+        questionId: id,
+        userAnswer: inputValue
+      });
+      // show popup 
+      setInputValue("");
+    } catch (error: any) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="w-full flex flex-col items-center justify-start text-white px-4 sm:px-8">
-      
+    <div className="h-[100%] flex flex-col items-center justify-start text-white px-4 sm:px-8 overflow-hidden gap-4">
       {/* Question Box */}
-      <div className="relative w-full max-w-2xl mb-8 sm:mb-12">
+      <div className="relative w-full max-w-2xl">
         <img src={questionBox} alt="Question Box" className="w-full" />
         <span className="absolute inset-0 flex items-center justify-center px-6 text-center text-lg sm:text-xl font-bold">
-          ---The question appears here---
+          {question}
         </span>
       </div>
 
       {/* Answer Box */}
-      <div className="relative w-full max-w-lg h-44 sm:h-52 mb-6 sm:mb-10">
+      <div className="relative w-full max-w-lg h-44 sm:h-52">
         <img
           src={answerBox}
           alt="Answer Box"
@@ -29,19 +75,24 @@ export default function QuestionScreen() {
         <input
           type="text"
           placeholder="Answer"
+          onChange={(e) => setInputValue(e.target.value)}
           className="absolute inset-0 bg-transparent text-center text-xl sm:text-2xl text-white font-semibold focus:outline-none px-6"
         />
       </div>
 
-      {/* Submit Button */}
-      <div className="flex flex-col items-center w-full max-w-[16rem] sm:max-w-[18rem] mt-auto mb-4 sm:mb-6">
+      {/* Buttons Column */}
+      <div className="flex flex-col items-center w-full max-w-[16rem] sm:max-w-[18rem]">
+        <Button
+          label="Skip"
+          onClick={() => { }}
+          className="!w-full !text-3xl sm:!text-4xl !font-extrabold"
+        />
         <Button
           label="Submit"
-          onClick={() => alert("Submit clicked")}
-          className="!w-full !py-6 sm:!py-8 !text-3xl sm:!text-4xl !font-extrabold"
+          onClick={() => handleSubmit()}
+          className="!w-full !text-3xl sm:!text-4xl !font-extrabold"
         />
       </div>
-
     </div>
   );
 }
