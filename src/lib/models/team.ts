@@ -37,7 +37,6 @@ const TeamSchema = new Schema<ITeam>({
     solvedStations: { type: [String], default: [] },
     secretString: { type: String, required: false },
     lettersFound: { type: [String], default: [] },
-    questionsSolved: { type: Number, default: 0 },
   },
   total_score: { type: Number, default: 0, required: true },
 });

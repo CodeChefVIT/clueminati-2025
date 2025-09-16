@@ -34,7 +34,6 @@ const Round2Schema = Round1Schema.extend({
   currentStation: z.string().optional().default(""),
   solvedStations: z.array(z.string()).default([]), // stationId[]
   lettersFound: z.array(z.string()).default([]),   // revealed letters
-  questionsSolved: z.number().min(0).default(0),   // count of solved questions
 });
 
 export const TeamSchema = z.object({
