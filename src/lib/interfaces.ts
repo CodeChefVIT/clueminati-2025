@@ -40,6 +40,7 @@ const Round1Schema = z.object({
 const Round2Schema = Round1Schema.extend({
   secret_string: z.string().optional().default(''),
   path: z.array(z.string()).default([]), // stationId[]
+  secret_char_revealed: z.number().min(0).default(0)
 });
 
 export const TeamSchema = z.object({

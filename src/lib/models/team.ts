@@ -36,6 +36,8 @@ const TeamSchema = new Schema<ITeam>({
         indoor_score: { type: Number, default: 0 },
         path: { type: [String], required: true, default: [] },
         secretString: { type: String , required: false },
+        secretCharsRevealed: { type: Number, default: 0 },
+        solvedCount: { type: Number, default: 0 }
     },
     total_score: { type: Number, default: 0, required: true },
 })

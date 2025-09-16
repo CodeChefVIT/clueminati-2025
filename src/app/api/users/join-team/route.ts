@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    if (team.members.length === 5) {
+    if (team.members.length >= 5) {
       return NextResponse.json({ error: "The Team Already has 5 members" }, { status: 400 });
     }
 
@@ -51,6 +51,7 @@ export async function POST(req: NextRequest) {
     const tokenData = {
       id: user._id,
       fullname: user.fullname,
+      regno: user.regno,
       email: user.email,
       role: user.role,
       teamId: user.teamId ?? null,
@@ -74,7 +75,7 @@ export async function POST(req: NextRequest) {
     });
     return res;
   } catch (err) {
-    console.error("Error joining team:", err);
+    console.error("Error joining team:", err instanceof Error ? err.message : err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

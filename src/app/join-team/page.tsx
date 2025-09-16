@@ -37,7 +37,7 @@ export default function JoinTeam() {
         "Error joining team:",
         error.response?.data || error.message
       );
-      alert(error.response?.data?.message || "Failed to join team");
+      alert(error.response?.data?.error || "Failed to join team");
       toast.error(error.response?.data?.error || 'Failed to join team.');
     } finally {
       setLoading(false);
@@ -52,7 +52,7 @@ export default function JoinTeam() {
           backgroundImage: "url('/assets/loginbg.png')",
           filter: "brightness(0.55)",
         }}
-      />
+      />  
 
       <div className="relative z-10 min-h-screen flex items-center justify-center p-9">
         <div className="w-full max-w-sm mx-auto mb-25">
@@ -103,8 +103,9 @@ export default function JoinTeam() {
                 style={{
                   backgroundImage: "url('/assets/proceedbuttonlogin.svg')",
                 }}
-                disabled={loading}
-              />
+                disabled={loading}>
+                  {loading ? 'Joining...' : 'Proceed'}
+              </Button>
             </div>
           </form>
         </div>
