@@ -7,52 +7,65 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 
 function VerifyEmailContent() {
-  const [token, setToken] = useState("")
   const [verified, setVerified] = useState(false)
   const [error, setError] = useState("")
+  const [loading, setLoading] = useState(true)
   const searchParams = useSearchParams()
 
   useEffect(() => {
     const urlToken = searchParams.get('token')
     if (urlToken) {
-      setToken(urlToken)
       verifyUserEmail(urlToken)
+    } else {
+      setError("Verification token is missing or invalid.")
+      setLoading(false)
     }
   }, [searchParams])
 
   const verifyUserEmail = async (token: string) => {
     try {
-      const response = await axios.post('/api/users/verifyemail', { token })
+      await axios.post('/api/users/verifyemail', { token })
       setVerified(true)
     } catch (error: any) {
-      setError(error.response.data.error)
+      setError(error.response?.data?.error || "Failed to verify email.")
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <h1 className="text-4xl">Verify Email</h1>
-      <h2 className="p-2 bg-orange-500 text-black">
-        {token ? `${token}` : "no token"}
-      </h2>
+    <div className="relative flex h-screen justify-center w-full overflow-hidden">
+      <div
+        className="absolute inset-0 bg-center bg-cover bg-no-repeat"
+ 
+      />
+      <div className="relative z-10 flex flex-col items-center justify-center  p-4 text-center text-white">
+        <h1 className="text-4xl font-bold mb-8">Email Verification</h1>
 
-      {verified && (
-        <div>
-          <h2 className="text-2xl">Email Verified Successfully</h2>
-          <Link href="/login" className="text-blue-500">
-            Login
-          </Link>
-        </div>
-      )}
-      
-      {error && (
-        <div>
-          <h2 className="text-2xl bg-red-500 text-black">{error}</h2>
-          <Link href="/login" className="text-blue-500">
-            Login
-          </Link>
-        </div>
-      )}
+        {loading && <p className="text-xl">Verifying your email...</p>}
+
+        {verified && (
+          <div className="flex flex-col items-center gap-4">
+            <h2 className="text-2xl text-green-400">
+              Email Verified Successfully!
+            </h2>
+            <p>You can now log in to your account.</p>
+            <Link href="/login" className="text-[#24CCFF] hover:underline">
+              Go to Login
+            </Link>
+          </div>
+        )}
+
+        {error && (
+          <div className="flex flex-col items-center gap-4">
+            <h2 className="text-2xl text-red-500">Verification Failed</h2>
+            <p>{error}</p>
+            <Link href="/signup" className="text-[#24CCFF] hover:underline">
+              Try signing up again
+            </Link>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

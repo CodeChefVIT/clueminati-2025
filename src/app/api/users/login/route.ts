@@ -21,7 +21,7 @@ export async function POST(request: NextRequest){
       return NextResponse.json({error:"Please verify your email before logging in"},{status:400})
     }
 
-    const validPassword = await bcryptjs.compare(password,user.password)
+    const validPassword = await bcryptjs.compare(password,user.password!)
     if(!validPassword){
       return NextResponse.json({error:"Check your credentials"},{status:400})
     }

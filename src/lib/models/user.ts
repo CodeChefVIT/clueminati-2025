@@ -2,18 +2,18 @@ import { model, Schema, type Document, type Model, models } from "mongoose";
 import { IUser } from "../interfaces";
 
 const userSchema = new Schema<IUser>({
-  fullname: { 
+  fullname: {
     type: String,
     required: [true, "Please provide a full name"],
   },
-  email: { 
-    type: String, 
-    required: [true, "Please provide an email"], 
-    unique: true 
+  email: {
+    type: String,
+    required: [true, "Please provide an email"],
+    unique: true,
   },
-  password: { 
-    type: String, 
-    required: [true, "Please provide a password"],
+  password: {
+    type: String,
+    required: false,
   },
   role: {
     type: String,
@@ -26,18 +26,19 @@ const userSchema = new Schema<IUser>({
     enum: ["hell", "earth"],
     required: false,
   },
-  teamId: { 
-    type: String, 
-    required: false 
+  teamId: {
+    type: String,
+    required: false,
   },
   isVerified: {
     type: Boolean,
-    default: false
+    default: false,
   },
-  forgotPasswordToken: String,
-  forgotPasswordTokenExpiry: Date,
-  verifyToken: String,
-  verifyTokenExpiry: Date
+  reg_num: {
+    type: String,
+    required: true,
+    unique: true,
+  }
 });
 
 const User: Model<IUser> = models.User || model<IUser>("User", userSchema);

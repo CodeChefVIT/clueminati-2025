@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import axios from "axios"
 import { useRouter } from "next/navigation"
 import { toast } from "react-hot-toast"
+import Link from "next/link"
 import localFont from "next/font/local";
 
 const rethinkSansBold = localFont({
@@ -102,16 +103,7 @@ export default function Login() {
               />
             </div>
 
-            { <div className="text-right">
-              <button
-                type="button"
-                className="text-[#EAEBED] font-medium text-lg mb-1 mr-3"
-              >
-                Forget Password?
-              </button>
-            </div> }
-
-            <div className="flex justify-center mt-4">
+            <div className="flex justify-center mt-8">
               <Button
                 type="submit"
   className="w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover flex items-center justify-center "
@@ -120,6 +112,12 @@ export default function Login() {
               </Button>
             </div>
           </form>
+          <p className="text-center font-medium text-base text-white mt-5">
+            Don't have an account?{" "}
+            <Link href="/signup" className="text-[#24CCFF]">
+              Sign up
+            </Link>
+          </p>
         </div>
       </div>
     </div>

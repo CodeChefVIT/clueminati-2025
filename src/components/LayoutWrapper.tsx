@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 
 export default function LayoutClientWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const rethinkPages = ["/login", "/create-team", "/join-team", "/role-selection", "/signup"];
+  const rethinkPages = ["/login", "/create-team", "/join-team", "/role-selection", "/signup", "/verifyemail"];
   const docsPage = pathname.startsWith("/docs");
   const isRethinkPage = rethinkPages.some((page) => pathname.startsWith(page));
   const [isDesktop, setIsDesktop] = useState(false);
