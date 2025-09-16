@@ -48,7 +48,7 @@ export default function ScannerPage() {
   };
 
   return (
-    <main className="relative h-screen w-full flex flex-col items-center justify-start overflow-hidden no-scrollbar">
+    <main className="relative  w-full flex flex-col items-center justify-start overflow-hidden no-scrollbar">
       {/* Header */}
       <div className="mt-[60px] relative z-10">
         <Image
@@ -84,14 +84,14 @@ export default function ScannerPage() {
         </div>
 
         <Image
-          src="/assets/scanner screen.svg"
+          src="/assets/scanner-screen.svg"
           alt="Scanner Frame Overlay"
           fill
           className="pointer-events-none object-contain absolute top-0 left-0 z-20"
         />
       </div>
 
-      {/* Manual Input box */}
+      {/* Manual Input box
       {useManual && (
         <div className="mt-[30px] relative w-[360px] h-[78px] z-10">
           <Image
@@ -113,7 +113,7 @@ export default function ScannerPage() {
             />
           </form>
         </div>
-      )}
+      )} */}
 
       {/* Debug output */}
       {(scannedResult || manualCode) && (

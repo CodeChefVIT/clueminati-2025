@@ -33,7 +33,12 @@ export default function Login() {
         password
       })
       toast.success("Login successful!")
-      router.push("/")
+      if(response.data.role==="core_member"){
+        router.push("/core-member")
+      } else {
+        router.push("/")
+      }
+      console.log(response)
       
       
     } catch (error: any) {

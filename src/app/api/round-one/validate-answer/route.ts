@@ -54,6 +54,8 @@ export async function POST(req: NextRequest) {
 
     const difficulty = theQuestion.difficulty;
     if (team.round1?.questions_solved[difficulty].includes(questionId)) {
+      console.log("the question is : "+theQuestion._id)
+      console.log("the team is : "+team.round1.questions_solved[difficulty])
       return NextResponse.json(
         { message: 'Question already solved' },
         { status: 200 }

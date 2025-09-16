@@ -40,6 +40,7 @@ export async function POST(request: NextRequest){
     // prepare response
     const responsePayload: any = {
       message: "Logged in successfully",
+      role: user.role,
       jwt: token,
       success: true,
     }
