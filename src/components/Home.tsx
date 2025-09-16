@@ -46,7 +46,7 @@ export default function Home() {
       />
 
       {/* Scan Button */}
-      <Link href="/Scanner" aria-label="Navigate to another page">
+      <Link href="/scanner" aria-label="Navigate to another page">
         <Image
           src="/assets/scan.svg"
           alt="Scan Button"

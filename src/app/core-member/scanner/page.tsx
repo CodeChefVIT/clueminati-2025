@@ -1,19 +1,39 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Scanner } from "@yudiel/react-qr-scanner";
 import Link from "next/link";
+import GamePopup from "@/components/gamePopup";
 
 export default function ScannerPage() {
   const [scannedResult, setScannedResult] = useState("");
   const [isScanning, setIsScanning] = useState(true);
   const [manualCode, setManualCode] = useState("");
   const [useManual, setUseManual] = useState(true);
+  const [showPopup, setShowPopup] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const router = useRouter();
 
   const handleManualSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Manual Code Entered:", manualCode);
+  };
+
+  const handleScan = (result: string) => {
+    // MongoDB ObjectId validation regex
+    const objectIdRegex = /^[0-9a-fA-F]{24}$/;
+
+    if (objectIdRegex.test(result)) {
+      setScannedResult(result);
+      setIsScanning(false);
+      router.push(`/core-member/difficulty/${result}`);
+    } else {
+      setMessage("Invalid QR Code. Not a valid Team ID.");
+      setShowPopup(true);
+    }
   };
 
   return (
@@ -36,9 +56,7 @@ export default function ScannerPage() {
               onScan={(detectedCodes) => {
                 if (detectedCodes.length > 0) {
                   const result = detectedCodes[0].rawValue;
-                  console.log("QR Code Result:", result);
-                  setScannedResult(result);
-                  setIsScanning(false);
+                  handleScan(result);
                 }
               }}
               onError={(error) => {
@@ -54,7 +72,7 @@ export default function ScannerPage() {
         </div>
 
         <Image
-          src="/assets/scanner screen.svg"
+          src="/assets/scanner-screen.svg"
           alt="Scanner Frame Overlay"
           fill
           className="pointer-events-none object-contain absolute top-0 left-0 z-20"
@@ -106,6 +124,7 @@ export default function ScannerPage() {
           {useManual ? `Manual: ${manualCode}` : `Scanned: ${scannedResult}`}
         </div>
       )}
+      <GamePopup isOpen={showPopup} onClose={() => setShowPopup(false)} message={message} />
     </main>
   );
 }
