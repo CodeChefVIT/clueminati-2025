@@ -5,7 +5,7 @@ export const UserSchema = z.object({
   email: z.email("Invalid email format"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   role: z.enum(["admin", "core_member", "participant"]).default("participant"),
-  region: z.enum(["indoor", "outdoor"]).optional(),
+  region: z.enum(["hell", "heaven"]).optional(),
   gameRole: z.enum(["liar", "role1", "role2", "role3", "role4"]).optional(),
   regno: z.string().min(9,"Registration Number is required."),
   teamId: z.string().optional(),
