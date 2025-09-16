@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import localFont from "next/font/local";
 import axios from "axios";
-import TeamCreatedModal from "@/components/TeamCreatedModal";
+import Popup from "@/components/Popup";
 
 const rethinkSansBold = localFont({
   src: "../../../public/assets/RethinkSans-Bold.ttf",
@@ -134,7 +134,7 @@ export default function CreateTeam() {
 
 
       {createdTeam && (
-        <TeamCreatedModal
+        <Popup
           isOpen={showModal}
           teamName={createdTeam.name}
           joinCode={createdTeam.joinCode}
