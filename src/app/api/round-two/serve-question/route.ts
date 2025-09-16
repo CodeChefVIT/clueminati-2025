@@ -8,6 +8,7 @@ import { giveQuestionRoundTwo } from "@/utils/giveQuestionRoundTwo";
 
 connectToDatabase();
 
+
 export async function GET(req: NextRequest) {
   try {
     const tUser = await getUserFromToken(req);
