@@ -1,10 +1,4 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-        "title": "Auth API",
-        "version": "1.0.0",
-        "description": "API for user login and authentication"
-    },
     "paths": {
         "/api/users/login": {
             "post": {
@@ -98,44 +92,6 @@
                                 }
                             }
                         }
-                    }
-                }
-            }
-        }
-    },
-    "components": {
-        "schemas": {
-            "LoginRequest": {
-                "type": "object",
-                "properties": {
-                    "email": {
-                        "type": "string",
-                        "format": "email"
-                    },
-                    "password": {
-                        "type": "string",
-                        "format": "password"
-                    }
-                },
-                "required": [
-                    "email",
-                    "password"
-                ]
-            },
-            "LoginResponse": {
-                "type": "object",
-                "properties": {
-                    "message": {
-                        "type": "string"
-                    },
-                    "jwt": {
-                        "type": "string"
-                    },
-                    "success": {
-                        "type": "boolean"
-                    },
-                    "redirect": {
-                        "type": "string"
                     }
                 }
             }

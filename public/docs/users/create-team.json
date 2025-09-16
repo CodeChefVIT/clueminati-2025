@@ -4,7 +4,6 @@
             "post": {
                 "summary": "Create a new team",
                 "description": "Creates a new team with a unique join code. The user creating the team is automatically added as a member. Requires authentication via Bearer token.",
-                "operationId": "createTeam",
                 "tags": [
                     "users"
                 ],
@@ -111,61 +110,6 @@
                                     }
                                 }
                             }
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "components": {
-        "securitySchemes": {
-            "bearerAuth": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
-            }
-        },
-        "schemas": {
-            "TeamInput": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "example": "Code Masters"
-                    },
-                    "description": {
-                        "type": "string",
-                        "example": "A team for competitive programming"
-                    }
-                },
-                "required": [
-                    "name"
-                ]
-            },
-            "Team": {
-                "type": "object",
-                "properties": {
-                    "_id": {
-                        "type": "string",
-                        "example": "64c1234abc5678def9012345"
-                    },
-                    "name": {
-                        "type": "string",
-                        "example": "Code Masters"
-                    },
-                    "description": {
-                        "type": "string",
-                        "example": "A team for competitive programming"
-                    },
-                    "joinCode": {
-                        "type": "string",
-                        "example": "XYZ123"
-                    },
-                    "members": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "example": "64c9876def5432abc1098765"
                         }
                     }
                 }

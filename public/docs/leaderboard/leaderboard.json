@@ -4,7 +4,6 @@
       "get": {
         "summary": "Get the game leaderboard",
         "description": "Fetches a sorted list of all teams and their total scores.",
-        "operationId": "getLeaderboard",
         "tags": [
           "leaderboard"
         ],
@@ -61,41 +60,6 @@
                   }
                 }
               }
-            }
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "securitySchemes": {
-      "BearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    },
-    "schemas": {
-      "LeaderboardEntry": {
-        "type": "object",
-        "properties": {
-          "rank": {
-            "type": "integer",
-            "description": "The team's rank on the leaderboard."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the team."
-          },
-          "total_score": {
-            "type": "integer",
-            "description": "The team's total score."
-          },
-          "members": {
-            "type": "array",
-            "description": "An array of user IDs who are members of the team.",
-            "items": {
-              "type": "string"
             }
           }
         }
