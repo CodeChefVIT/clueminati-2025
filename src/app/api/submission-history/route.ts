@@ -4,7 +4,6 @@ import Team from "@/lib/models/team";
 import Question from "@/lib/models/question";
 import { getUserFromToken } from "@/utils/getUserFromToken";
 import User from "@/lib/models/user";
-import mongoose from "mongoose";
 
 export async function GET(req: NextRequest) {
   const tUser = await getUserFromToken(req);
@@ -34,38 +33,23 @@ export async function GET(req: NextRequest) {
   const r1Solved = (team.round1?.questions_solved as Record<
     Difficulty,
     string[]
-  >) || {
-    easy: [],
-    medium: [],
-    hard: [],
-  };
-
+  >) || { easy: [], medium: [], hard: [] };
   const difficulties: Difficulty[] = ["easy", "medium", "hard"];
 
-  // Build list of all solved questionIds with difficulty
-  const allSolvedInfo = difficulties.flatMap((difficulty) =>
-    (r1Solved[difficulty] || []).map((questionId) => ({
-      questionId,
-      difficulty,
-    }))
+  const allSolvedInfo = difficulties.flatMap(
+    (difficulty) =>
+      (r1Solved[difficulty] || []).filter(Boolean).map((questionId) => ({
+        questionId,
+        difficulty,
+      }))
   );
 
-  // ✅ Filter invalid ObjectIds
-  const allQuestionIds = allSolvedInfo
-    .map((info) => info.questionId)
-    .filter((id) => mongoose.Types.ObjectId.isValid(id));
-
-  // Fetch questions
-  const questions = await Question.find({
-    _id: { $in: allQuestionIds },
-  }).lean();
-
-  // Map questionId -> description
+  const allQuestionIds = allSolvedInfo.map((info) => info.questionId);
+  const questions = await Question.find({ _id: { $in: allQuestionIds } }).lean();
   const questionsMap = new Map(
     questions.map((q) => [q._id.toString(), q.question_description])
   );
 
-  // Build final solved list
   const solved = allSolvedInfo.map((info) => ({
     ...info,
     questionDescription: questionsMap.get(info.questionId) || null,
@@ -73,5 +57,6 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({
     solved,
+    total_score: team.total_score
   });
 }
