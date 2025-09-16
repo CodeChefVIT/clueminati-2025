@@ -14,32 +14,19 @@ export default function History() {
   const [loading, setLoading] = useState(true);
   const [score, setScore] = useState<number>(0);
 
-  // ✅ Fetch profile to get total_score
-  useEffect(() => {
-    async function fetchProfile() {
-      try {
-        const response = await axios.post("/api/users/profile");
-        const team = response.data.data.team;
-        if (team?.total_score !== undefined) {
-          setScore(team.total_score);
-        }
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-      }
-    }
-    fetchProfile();
-  }, []);
 
-  // ✅ Fetch submissions (API already uses token → no teamId needed)
+
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {
-        const res = await fetch(`/api/submission-history`);
-        const data = await res.json();
-        if (res.ok) {
+        const res = await axios.get(`/api/submission-history`);
+        const data = res.data;
+        if (data.solved) {
           setSubmissions(data.solved);
-        } else {
-          console.error("Error fetching history:", data.error);
+        }
+
+        if (data.total_score !== undefined) {
+          setScore(data.total_score);
         }
       } catch (err) {
         console.error("Fetch failed:", err);
@@ -51,7 +38,6 @@ export default function History() {
     fetchSubmissions();
   }, []);
 
-  // ✅ Difficulty → points mapping
   const getPoints = (difficulty: string) => {
     switch (difficulty) {
       case "easy":

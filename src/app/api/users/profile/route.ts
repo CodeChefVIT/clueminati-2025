@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     // fetch team details if user has a teamId
     let teamData = null
     if (user.teamId) {
-      const team = await Team.findById(user.teamId).select('teamname joinCode _id')
+      const team = await Team.findById(user.teamId)
       if (team) {
         teamData = {
 

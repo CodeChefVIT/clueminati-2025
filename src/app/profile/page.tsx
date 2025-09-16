@@ -68,7 +68,6 @@ export default function ProfileScreen() {
       const res = await axios.post("/api/users/leave-team");
       console.log("Leave team response:", res.data);
 
-     
       router.push("/join-team");
     } catch (error: any) {
       console.error(
@@ -126,8 +125,8 @@ export default function ProfileScreen() {
         {/* Team Info */}
         <div className="text-white text-xl sm:text-2xl max-w-xs w-full mb-8 space-y-6">
           <div className="flex justify-between">
-            <span>Team Name:</span>
-            <span>{teamName}</span>
+            <span>Team:</span>
+            <span>{" " + teamName}</span>
           </div>
           <div className="flex justify-between">
             <span>Team Code:</span>
@@ -137,14 +136,13 @@ export default function ProfileScreen() {
             <span>Region:</span>
             <span>{user.region || "N/A"}</span>
           </div>
-          <div className="flex justify-between">
-            <span>Role:</span>
-            <span>{user.role}</span>
-          </div>
         </div>
 
         {/* Buttons */}
         <div className="flex flex-col space-y-1 items-center w-full max-w-xs">
+          {team && (
+            <Button label="Show Team QR" onClick={() => setShowQR(true)} />
+          )}
           {team && (
             <Button
               label={leaving ? "Leaving..." : "Leave Team"}
@@ -155,10 +153,6 @@ export default function ProfileScreen() {
           )}
 
           <Button label="Log Out" onClick={logout} />
-
-          {team && (
-            <Button label="Show Team QR" onClick={() => setShowQR(true)} />
-          )}
         </div>
       </div>
 
@@ -176,11 +170,13 @@ export default function ProfileScreen() {
               fgColor="#22c55e"
             />
 
-            <Button
-              label="Close"
-              onClick={() => setShowQR(false)}
-              className="w-40 sm:w-44 text-lg sm:text-xl mt-4"
-            />
+            <div className="mt-6">
+              <Button
+                label="Close"
+                onClick={() => setShowQR(false)}
+                className="w-40 sm:w-44 text-lg sm:text-xl "
+              />
+            </div>
           </div>
         </div>
       )}
