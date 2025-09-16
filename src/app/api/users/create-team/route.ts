@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
     const data = await req.json();
     const parsed = TeamSchema.parse(data);
 
+
     let code: string;
     let existing;
 

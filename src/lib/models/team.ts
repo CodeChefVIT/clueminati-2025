@@ -1,6 +1,5 @@
 import { model, Schema, type Model, models } from "mongoose";
 import { ITeam } from "../interfaces";
-import { number } from "zod";
 
 const TeamSchema = new Schema<ITeam>({
   teamname: { type: String, required: true, unique: true },
@@ -33,8 +32,12 @@ const TeamSchema = new Schema<ITeam>({
     },
     score: { type: Number, default: 0 },
     indoor_score: { type: Number, default: 0 },
-    path: { type: [String], required: true, default: [] },
+    path: { type: [String], required: false, default: [] },
+    currentStation: { type: String, required: false },
+    previousStation: { type: String, required: false },
+    solvedStations: { type: [String], default: [] },
     secretString: { type: String, required: false },
+    lettersFound: { type: [String], default: [] },
   },
   total_score: { type: Number, default: 0, required: true },
 });
