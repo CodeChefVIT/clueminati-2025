@@ -31,6 +31,7 @@ const Round2Schema = Round1Schema.extend({
   secret_string: z.string().min(6).max(6), // required, 6 letters
   path: z.array(z.string()).default([]),   // stationId[]
   currentStation: z.string().optional().default(""),
+  previousStation: z.string().optional().default(""),
   solvedStations: z.array(z.string()).default([]), // stationId[]
   lettersFound: z.array(z.string()).default([]),   // revealed letters
 });
