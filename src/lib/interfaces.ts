@@ -18,6 +18,12 @@ export const UserSchema = z.object({
     .transform((val: string) => val.toUpperCase()),
 });
 
+export const RegionSelectionSchema = z.object({
+  region: z.enum(["hell", "earth"])
+});
+
+export type RegionSelection = z.infer<typeof RegionSelectionSchema>;
+
 const QuestionTrackingSchema = z.object({
   easy: z.array(z.string()).default([]), //questionId[]
   medium: z.array(z.string()).default([]),

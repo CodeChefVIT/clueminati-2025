@@ -112,7 +112,7 @@ export default function SignupPage() {
                 id="regno"
                 type="text"
                 value={regno}
-                onChange={(e) => setFullname(e.target.value)}
+                onChange={(e) => setRegno(e.target.value)}
                 className="h-[60px] w-[100%] bg-[#D3D5D7] border border-black/20 rounded-lg text-black mb-2"
                 required
               />

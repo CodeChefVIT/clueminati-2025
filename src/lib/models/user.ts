@@ -9,7 +9,7 @@ const userSchema = new Schema<IUser>({
   reg_num: {
     type: String,
     required: [true, "Registration Number is required"],
-    minlength: [9, "Registration Number must be at least 9 characters"],
+    unique: true,
   },
   email: { 
     type: String, 
@@ -38,6 +38,22 @@ const userSchema = new Schema<IUser>({
   isVerified: {
     type: Boolean,
     default: false,
+  },
+  verifyToken: {
+    type: String,
+    required: false,
+  },
+  verifyTokenExpiry: {
+    type: Date,
+    required: false,
+  },
+  forgotPasswordToken: {
+    type: String,
+    required: false,
+  },
+  forgotPasswordTokenExpiry: {
+    type: Date,
+    required: false,
   },
 });
 

@@ -4,6 +4,7 @@ import { sendEmail } from '@/lib/mailer'
 import { connectToDatabase } from '@/lib/db'
 import User from '@/lib/models/user'
 import { UserSchema } from '@/lib/interfaces'
+import crypto from 'crypto';
 
 connectToDatabase()
 
@@ -11,26 +12,20 @@ export async function POST(request: NextRequest){   //took request as parameter 
   try {                                                       /// try-catch block for error handling
     const reqBody = await request.json()   
     const parsed = UserSchema.parse(reqBody)        
-    const {fullname, regno, email, password} = parsed     // destructuring json data to get fullname, email, password
+    const {fullname, reg_num, email} = parsed     // destructuring json data to get fullname, email, reg_num
     
     console.log("Starting signup process for:", email);      
     
     // Input validation
-    if (!fullname || !email || !password || !regno) {         // Check for missing fields
+    if (!fullname || !email || !reg_num) {         // Check for missing fields
       console.log("Missing required fields");               
       return NextResponse.json(
         { error: "Please provide all required fields" },
         { status: 400 }
       );
     }
-    if (regno.length < 9) {
-      return NextResponse.json(
-        { error: "Registration Number must be at least 9 characters" },
-        { status: 400 }
-      );
-    }
 
-    const existingRegno = await User.findOne({ regno });
+    const existingRegno = await User.findOne({ reg_num });
     if (existingRegno) {
       return NextResponse.json({
         error: "registration number exists",
@@ -47,14 +42,11 @@ export async function POST(request: NextRequest){   //took request as parameter 
           error: "user already exists",
           message: "This email is already registered. Please login or use a different email."
         }, {status: 400})
-      } else {
-        return NextResponse.json({
-          error: "user already exists",
-          message: "This email is registered but not verified. Please check your email for verification link."
-        }, {status: 400})
       }
     }
 
+    // Generate random password
+    const password = crypto.randomBytes(8).toString('hex');
     const salt = await bcryptjs.genSalt(10);     // hashing password for security
     const hashedPassword = await bcryptjs.hash(password,salt)     // hashed password
 
@@ -62,14 +54,15 @@ export async function POST(request: NextRequest){   //took request as parameter 
       fullname,           
       email,
       password:hashedPassword,
-      regno
+      reg_num,
+      isVerified: true
     })
 
     const savedUser = await newUser.save()                           // saving new user to db
     console.log(savedUser);        
 
-    //send verification email
-    await sendEmail({email, emailType: "VERIFY",userId: savedUser._id})     // sending email for verification
+    //send verification email with password
+    await sendEmail({email, emailType: "VERIFY", userId: savedUser._id, password})     // sending email for verification
 
     console.log("Signup process completed for:", email);   
 
