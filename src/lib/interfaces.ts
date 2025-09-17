@@ -1,25 +1,22 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const UserSchema = z.object({
   fullname: z.string().min(1, "Full name is required"),
   email: z.email("Invalid email format"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  password: z.string().optional(),
   role: z.enum(["admin", "core_member", "participant"]).default("participant"),
   region: z.enum(["hell", "earth"]).optional(),
-  regno: z.string().min(9,"Registration Number is required."),
   teamId: z.string().optional(),
   isVerified: z.boolean().default(false),
   verifyToken: z.string().optional(),
   verifyTokenExpiry: z.date().optional(),
   forgotPasswordToken: z.string().optional(),
   forgotPasswordTokenExpiry: z.date().optional(),
+  reg_num: z.string().regex(/^\d{2}[A-Z]{3}\d{4}$/, {
+      message: "Invalid registration number format. Example: 23BCX1234",
+    })
+    .transform((val: string) => val.toUpperCase()),
 });
-
-export const RegionSelectionSchema = z.object({
-  region: z.enum(["hell", "earth"])
-})
-
-export type RegionSelection = z.infer<typeof RegionSelectionSchema>
 
 const QuestionTrackingSchema = z.object({
   easy: z.array(z.string()).default([]), //questionId[]
@@ -45,7 +42,7 @@ const Round2Schema = Round1Schema.extend({
 });
 
 export const TeamSchema = z.object({
-  teamname: z.string().min(1, 'Team name is required'),
+  teamname: z.string().min(1, "Team name is required"),
   joinCode: z.string().optional(),
   members: z.array(z.string()).default([]), //userId[]
   round1: Round1Schema.optional(),
@@ -56,14 +53,14 @@ export const TeamSchema = z.object({
 export const QuestionSchema = z.object({
   question_description: z.string(),
   answer: z.string(),
-  difficulty: z.enum(['easy', 'medium', 'hard']),
-  round: z.enum(['1', '2']),
+  difficulty: z.enum(["easy", "medium", "hard"]),
+  round: z.enum(["1", "2"]),
 });
 
 export const StationSchema = z.object({
   station_name: z.string(),
-  difficulty: z.enum(['easy', 'medium', 'hard']).optional(),
-  members: z.array(z.string()).default([]), //userId[]
+  difficulty: z.enum(["easy", "medium", "hard"]).optional(),
+  members: z.array(z.string()).default([]), // userId[]
 });
 
 export const GameStatSchema = z.object({
@@ -79,11 +76,11 @@ export const RoundSchema = z
     endTime: z.coerce.date(),
   })
   .refine((data) => data.startTime < data.endTime, {
-    message: 'startTime must be before endTime',
+    message: "startTime must be before endTime",
   });
 
 export const EventSchema = z.object({
-  name: z.string().default('Clueminati'),
+  name: z.string().default("Clueminati"),
   rounds: z.array(RoundSchema).min(1),
   currentRound: z.number().int().nonnegative().default(0),
   createdAt: z.coerce.date().optional(),

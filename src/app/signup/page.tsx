@@ -9,6 +9,9 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import localFont from "next/font/local";
 import Link from "next/link";
+import Modal from "@/components/Modal";
+const questionBox = "/assets/Question_Box.svg";
+
 
 const rethinkSansBold = localFont({
   src: "../../../public/assets/RethinkSans-Bold.ttf",
@@ -24,18 +27,18 @@ export default function SignupPage() {
   const [fullname, setFullname] = useState("");
   const [regno, setRegno] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(true);
 
   useEffect(() => {
-    if (fullname && email && password && regno) {
+    if (fullname && regno && email) {
       setButtonDisabled(false);
     } else {
       setButtonDisabled(true);
     }
-  }, [fullname, regno, email, password]);
+  }, [fullname, regno, email]);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,15 +47,11 @@ export default function SignupPage() {
       setEmailError("");
       const response = await axios.post("/api/users/signup", {
         fullname,
+        reg_num: regno,
         email,
-        password,
-        regno
       });
       console.log("Signup success", response.data);
-      toast.success(
-        "Signup successful! Please check your email to verify your account."
-      );
-      router.push("/login");
+      setShowSuccessModal(true);
     } catch (error: any) {
       console.log("Signup failed", error);
       if (error.response?.data?.error === "user already exists") {
@@ -106,17 +105,14 @@ export default function SignupPage() {
             </div>
 
             <div className="space-y-1">
-              <Label
-                htmlFor="regno"
-                className="text-white font-medium text-lg"
-              >
+              <Label htmlFor="regno" className="text-white font-medium text-lg">
                 Registration Number
               </Label>
               <Input
                 id="regno"
                 type="text"
                 value={regno}
-                onChange={(e) => setRegno(e.target.value)}
+                onChange={(e) => setFullname(e.target.value)}
                 className="h-[60px] w-[100%] bg-[#D3D5D7] border border-black/20 rounded-lg text-black mb-2"
                 required
               />
@@ -143,38 +139,19 @@ export default function SignupPage() {
                 <p className="text-red-500 text-sm mb-2">{emailError}</p>
               )}
             </div>
-
-            <div className="space-y-1">
-              <Label
-                htmlFor="password"
-                className="text-white font-medium text-lg"
-              >
-                Password
-              </Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="h-[60px] w-[100%] bg-[#D3D5D7] border border-black/20 rounded-lg text-black mb-6"
-                required
-              />
-            </div>
-
             <div className="flex justify-center mt-6">
               <Button
                 type="submit"
                 disabled={buttonDisabled || loading || !!emailError}
                 className={`w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover flex items-center justify-center
-      ${
-        buttonDisabled || loading || !!emailError
-          ? "pointer-events-none"
-          : "pointer-events-auto"
-      }
-    `}
+                  ${
+                    buttonDisabled || loading || !!emailError
+                      ? "pointer-events-none opacity-50"
+                      : "pointer-events-auto"
+                  }
+                `}
                 style={{
                   backgroundImage: "url('/assets/proceedbuttonlogin.svg')",
-                  opacity: 1, 
                 }}
               ></Button>
             </div>
@@ -188,6 +165,29 @@ export default function SignupPage() {
           </p>
         </div>
       </div>
+      <Modal
+        isOpen={showSuccessModal}
+        onClose={() => router.push("/login")}
+        showCloseButton={false}
+        backgroundSvg={questionBox}
+
+      >
+        <div className="text-center space-y-6 px-4 text-white">
+        
+          <h2 className="text-2xl font-bold mb-4">Account Created!</h2>
+          <p className="text-white/80 mb-8">
+            Please check your email for your password and login details.
+          </p>
+          <button
+            onClick={() => router.push("/login")}
+            className="w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover"
+            style={{
+              backgroundImage: "url('/assets/proceedbuttonlogin.svg')",
+            }}
+            aria-label="Proceed to Login"
+          />
+        </div>
+      </Modal>
     </div>
   );
 }

@@ -3,8 +3,8 @@
 import Button from "@/components/Button";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import GamePopup from "@/components/gamePopup";
+import { useEffect, useState, useCallback } from "react";
+import Modal from "@/components/Modal";
 
 const questionBox = "/assets/Question_Box.svg";
 const answerBox = "/assets/Answer_Box.svg";
@@ -15,8 +15,8 @@ export default function QuestionScreen() {
   const [question, setQuestion] = useState("");
   const [inputValue, setInputValue] = useState("");
   const id = params.id;
-  const [loading, setLoading] = useState(false);
-  const [showPopup, setShowPopup] = useState(false); // <-- popup state
+  const [loading, setLoading] = useState(true);
+  const [showPopup, setShowPopup] = useState(false);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -30,8 +30,6 @@ export default function QuestionScreen() {
         setQuestion(response.data.data.question_description);
       } catch (error: any) {
         console.error(error);
-        // setMessage(error.response.data.error);
-        // setShowPopup(true);
       } finally {
         setLoading(false);
       }
@@ -39,7 +37,7 @@ export default function QuestionScreen() {
     getQuestionById();
   }, [id]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (!inputValue.trim()) return;
 
     try {
@@ -68,7 +66,7 @@ export default function QuestionScreen() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, inputValue, router]);
 
   const handleSkip = () => {
     setMessage("answer skipped!!");
@@ -79,8 +77,7 @@ export default function QuestionScreen() {
   };
 
   return (
-    <div className=" flex flex-col items-center justify-start text-white px-4 sm:px-8 overflow-hidden gap-4">
-      {/* Question Box */}
+    <div className="flex flex-col items-center justify-start text-white px-4 sm:px-8 overflow-hidden gap-4">
       <div className="relative w-full max-w-2xl">
         <img src={questionBox} alt="Question Box" className="w-full" />
         <span className="absolute inset-0 flex items-center justify-center px-6 text-center text-lg sm:text-xl font-bold">
@@ -88,7 +85,6 @@ export default function QuestionScreen() {
         </span>
       </div>
 
-      {/* Answer Box */}
       <div className="relative w-full max-w-lg h-44 sm:h-52">
         <img
           src={answerBox}
@@ -104,7 +100,6 @@ export default function QuestionScreen() {
         />
       </div>
 
-      {/* Buttons Column */}
       <div className="flex flex-col items-center w-full max-w-[16rem] sm:max-w-[18rem]">
         <Button
           label="Skip"
@@ -118,8 +113,17 @@ export default function QuestionScreen() {
         />
       </div>
 
-      {/* Wrong Answer Popup */}
-      <GamePopup isOpen={showPopup} onClose={() => setShowPopup(false)} message={message} />
+      <Modal
+        isOpen={showPopup}
+        onClose={() => setShowPopup(false)}
+        backgroundSvg={questionBox}
+      >
+        <div className="text-center space-y-6 px-4">
+          <div className="font-bold text-2xl leading-tight tracking-wide" style={{ color: "#B9B9B9" }}>
+            {message}
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
