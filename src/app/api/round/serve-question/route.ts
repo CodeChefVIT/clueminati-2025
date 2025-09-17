@@ -127,7 +127,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(
       { 
         message: "successfully fetched question", 
-        data: result.question,
+        data: result.question || result,
         round: currentRound,
         ...(currentRound === "2" ? { 
           currentStation: (await Team.findById(teamId))?.round2?.currentStation 

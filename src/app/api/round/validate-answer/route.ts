@@ -70,6 +70,11 @@ export async function POST(req: NextRequest) {
     const difficulty = theQuestion.difficulty;
     const roundKey = currentRound === "1" ? "round1" : "round2";
 
+    // Initialize round data if it doesn't exist
+    if (!team[roundKey]) {
+      return NextResponse.json({ error: `Team is not participating in Round ${currentRound}` }, { status: 400 });
+    }
+
     // Check if question already solved
     if (team[roundKey]?.questions_solved[difficulty].includes(questionId)) {
       return NextResponse.json(
@@ -88,16 +93,14 @@ export async function POST(req: NextRequest) {
     }
 
     // ✅ Correct Answer → Update team progress
-    team[roundKey]?.questions_solved[difficulty].push(questionId);
-
     const points =
       difficulty === 'easy' ? 10 : 
       difficulty === 'medium' ? 40 : 
       70;
 
-    // Update scores
     if (team[roundKey]) {
-      team[roundKey].score += points;
+      team[roundKey]!.questions_solved[difficulty].push(questionId);
+      team[roundKey]!.score += points;
     }
     team.total_score += points;
 

@@ -118,7 +118,7 @@ export default function RegionSelection() {
       setLoading(true);
       console.log('Attempting to confirm region:', selectedRegion);
       
-      const response = await axios.post('/api/team-selection', {
+      const response = await axios.post('/api/region-selection', {
         region: selectedRegion
       });
 
