@@ -6,6 +6,7 @@ import localFont from "next/font/local";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const rethinkSansBold = localFont({
   src: "../../../public/assets/RethinkSans-Bold.ttf", 
@@ -17,110 +18,171 @@ const rethinkSansMedium = localFont({
 });
 
 interface TeamMember {
-  userId: string
-  name: string
+  _id: string
+  fullname: string
+  region?: 'hell' | 'earth'
 }
 
-interface Role {
-  id: string
-  name: string
-  image?: string
-}
-
-export default function RoleSelection() {
+export default function RegionSelection() {
   const router = useRouter()
-  const [selectedRole, setSelectedRole] = useState<string | null>(null)
-  const [assignments, setAssignments] = useState<{[key: string]: string}>({})
+  const [selectedRegion, setSelectedRegion] = useState<'hell' | 'earth' | null>(null)
   const [loading, setLoading] = useState(false)
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([])
-  const [teamId, setTeamId] = useState<string>('')
+  const [currentUser, setCurrentUser] = useState<TeamMember | null>(null)
+  const [hellCount, setHellCount] = useState(0)
+  const [earthCount, setEarthCount] = useState(0)
+  const [showConfirm, setShowConfirm] = useState(false)
+  const [countdown, setCountdown] = useState(10)
+  const [isConfirmActive, setIsConfirmActive] = useState(false)
 
-  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
-
-  // Fetch current user
+  // Countdown timer effect
   useEffect(() => {
-    axios.get('/api/current-user').then(res => {
-      setCurrentUserId(res.data.userId)
-    }).catch(() => {
-      toast.error("Failed to fetch current user")
-    })
-  }, [])
-
-  // Fetch team members
-  useEffect(() => {
-    const teamIdParam = new URLSearchParams(window.location.search).get('teamId');
-    if (teamIdParam) {
-      setTeamId(teamIdParam);
-      const fetchTeamMembers = async () => {
-        try {
-          const response = await axios.get(`/api/teams/${teamIdParam}/members`);
-          if (response.data.success) {
-            setTeamMembers(response.data.members);
-          }
-        } catch {
-          const mockTeamData = {
-            members: [
-              { userId: 'user-id-1', name: 'idk-man' },
-              { userId: 'user-id-2', name: 'James' },
-              { userId: 'user-id-3', name: 'John' },
-              { userId: 'user-id-4', name: 'Doe' },
-              { userId: 'user-id-5', name: 'Jane' },
-            ]
-          };
-          setTeamMembers(mockTeamData.members);
-        }
-      };
-      fetchTeamMembers();
-    } else {
-      toast.error("No team ID found");
-      router.push('/create-team');
+    let timer: NodeJS.Timeout;
+    if (showConfirm && countdown > 0) {
+      timer = setTimeout(() => {
+        setCountdown(prev => prev - 1);
+      }, 1000);
+    } else if (countdown === 0) {
+      setIsConfirmActive(true);
     }
-  }, [router]);
+    return () => clearTimeout(timer);
+  }, [showConfirm, countdown]);
 
-  const roles: Role[] = [
-    { id: 'liar', name: 'liar', image: '/assets/role1.svg' },
-    { id: 'role1', name: 'Role', image: '/assets/role2.svg' },
-    { id: 'role2', name: 'Role', image: '/assets/role3.svg' },
-    { id: 'role3', name: 'Role', image: '/assets/role4.svg' },
-    { id: 'role4', name: 'Role', image: '/assets/role5.svg' }
-  ]
+  // Fetch current user and team data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const profileResponse = await axios.post('/api/users/profile');
+        const userData = profileResponse.data.data.user;
+        const teamData = profileResponse.data.data.team;
+        
+        setCurrentUser(userData);
 
-  const handleRoleClick = (roleId: string) => {
-    setSelectedRole(selectedRole === roleId ? null : roleId)
-  }
+        if (teamData?.teamId) {
+          try {
+            const membersResponse = await axios.get(`/api/teams/${teamData.teamId}/members`);
+            if (membersResponse.data.success) {
+              setTeamMembers(membersResponse.data.members);
+              // Count current hell and earth members
+              const hellMembers = membersResponse.data.members.filter((m: TeamMember) => m.region === 'hell');
+              const earthMembers = membersResponse.data.members.filter((m: TeamMember) => m.region === 'earth');
+              setHellCount(hellMembers.length);
+              setEarthCount(earthMembers.length);
+            }
+          } catch (error) {
+            console.log('Could not fetch team members, using current user only');
+            setTeamMembers([userData]);
+          }
+        }
+      } catch (error: any) {
+        console.error("Error fetching data:", error);
+        toast.error("Failed to load user data");
+      }
+    };
+    fetchData();
+  }, []);
 
-  const handleAssignRole = async (userId: string, gameRole: string) => {
-    if (!teamId || !currentUserId) return;
-    if (userId !== currentUserId) {
-      toast.error("You can only assign a role to yourself!");
+  const handleRegionSelect = async (region: 'hell' | 'earth') => {
+    if (!currentUser) {
+      toast.error("User data not loaded");
       return;
     }
+
+    // Check if hell or earth is full (excluding current user if they already have that region)
+    const currentUserHasHell = currentUser.region === 'hell';
+    const currentUserHasEarth = currentUser.region === 'earth';
+    const effectiveHellCount = currentUserHasHell ? hellCount - 1 : hellCount;
+    const effectiveEarthCount = currentUserHasEarth ? earthCount - 1 : earthCount;
+    
+    if (region === 'hell' && effectiveHellCount >= 2) {
+      toast.error("Hell region is full! Maximum 2 members allowed.");
+      return;
+    }
+
+    if (region === 'earth' && effectiveEarthCount >= 3) {
+      toast.error("Earth region is full! Maximum 3 members allowed.");
+      return;
+    }
+
+    // Set selected region and show confirm button
+    setSelectedRegion(region);
+    setShowConfirm(true);
+    setCountdown(10);
+    setIsConfirmActive(false);
+  };
+
+  const handleConfirm = async () => {
+    if (!selectedRegion || !isConfirmActive) return;
+
     try {
-      setLoading(true)
-      const response = await axios.post('/api/role-selection', {
-        userId,
-        teamId,
-        gameRole
-      })
-      if (response.data.success) {
-        toast.success('Role assigned successfully')
-        setAssignments(prev => ({ ...prev, [userId]: gameRole }))
+      setLoading(true);
+      console.log('Attempting to confirm region:', selectedRegion);
+      
+      const response = await axios.post('/api/team-selection', {
+        region: selectedRegion
+      });
+
+      console.log('API Response:', response.data);
+
+      // Check for success response
+      if (response.data.success || response.data.message) {
+        toast.success(`Region confirmed: ${selectedRegion.toUpperCase()}`);
+        // Update current user state
+        setCurrentUser(prev => prev ? {...prev, region: selectedRegion} : null);
+        
+        // Update hell and earth count
+        if (selectedRegion === 'hell' && currentUser && currentUser.region !== 'hell') {
+          setHellCount(prev => prev + 1);
+        } else if (selectedRegion === 'earth' && currentUser && currentUser.region !== 'earth') {
+          setEarthCount(prev => prev + 1);
+        }
+        
+        // Decrease count if switching from a region
+        if (currentUser && currentUser.region === 'hell' && selectedRegion !== 'hell') {
+          setHellCount(prev => prev - 1);
+        } else if (currentUser && currentUser.region === 'earth' && selectedRegion !== 'earth') {
+          setEarthCount(prev => prev - 1);
+        }
+        
+        // Immediate redirect to profile
+        console.log('Redirecting to profile...');
+        
+        // Add a small delay to ensure the token is updated on the server side
+        setTimeout(async () => {
+          try {
+            await router.push('/profile');
+          } catch (routerError) {
+            console.log('Router failed, using window.location');
+            window.location.href = '/profile';
+          }
+        }, 500);
+      } else {
+        throw new Error('Unexpected response format');
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Failed to assign role')
+      console.error('Region confirmation error:', error);
+      toast.error(error.response?.data?.error || 'Failed to assign region');
+      // Reset confirm state on error
+      setShowConfirm(false);
+      setSelectedRegion(null);
     } finally {
-      setLoading(false)
-      setSelectedRole(null)
+      setLoading(false);
     }
-  }
+  };
 
-  const handleMemberClick = async (memberIndex: number) => {
-    if (selectedRole && !loading) {
-      const member = teamMembers[memberIndex];
-      if (!member) return;
-      await handleAssignRole(member.userId, selectedRole)
-    }
-  }
+  const isHellDisabled = () => {
+    if (!currentUser) return true;
+    const currentUserHasHell = currentUser.region === 'hell';
+    const effectiveHellCount = currentUserHasHell ? hellCount - 1 : hellCount;
+    return effectiveHellCount >= 2;
+  };
+
+  const isEarthDisabled = () => {
+    if (!currentUser) return true;
+    const currentUserHasEarth = currentUser.region === 'earth';
+    const effectiveEarthCount = currentUserHasEarth ? earthCount - 1 : earthCount;
+    return effectiveEarthCount >= 3;
+  };
 
   return (
     <div className={`min-h-screen relative overflow-hidden w-full ${rethinkSansBold.variable} ${rethinkSansMedium.variable}`}>
@@ -129,69 +191,143 @@ export default function RoleSelection() {
         style={{backgroundImage:"url('/assets/loginbg.png')", filter: 'brightness(0.55)'}}
       />
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center p-4">
-        <div className="w-full max-w-sm mx-auto">
-          <h1 className="text-4xl font-bold text-white text-center mb-10">Role Selection</h1>
+        <div className="w-full max-w-md mx-auto">
+          <h1 className="text-4xl font-bold text-white text-center mb-4">Region Selection</h1>
+          <p className="text-white text-center mb-10 text-lg">Choose your region to play in</p>
 
-          <div className="grid grid-cols-2 gap-3 mb-8">
-            {roles.slice(0, 4).map((role) => (
-              <div
-                key={role.id}
-                onClick={() => handleRoleClick(role.id)}
-                className={`bg-[#D9D9D9] rounded-lg p-4 text-center cursor-pointer
-                          ${selectedRole === role.id ? 'border-2 border-yellow-400' : ''}`}
+          {/* Current User Info */}
+          {currentUser && (
+            <div className="text-center mb-8">
+              <p className="text-white text-xl mb-2">Welcome, {currentUser.fullname}!</p>
+              {currentUser.region && (
+                <p className="text-yellow-400 text-lg">Current Region: {currentUser.region.toUpperCase()}</p>
+              )}
+            </div>
+          )}
+
+          {/* Region Selection */}
+          <div className="grid grid-cols-1 gap-6 mb-8">
+            
+            {/* Hell Region */}
+            <div className="flex flex-col items-center">
+              <Button
+                onClick={() => handleRegionSelect('hell')}
+                disabled={loading || isHellDisabled()}
+                className={`w-full h-32 bg-gradient-to-br from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 
+                          border-2 border-red-400 text-white font-bold text-2xl rounded-xl shadow-lg
+                          ${selectedRegion === 'hell' ? 'ring-4 ring-yellow-400' : ''}
+                          ${isHellDisabled() ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 transition-transform'}`}
               >
-                <div 
-                  className="w-16 h-16 mx-auto mb-5 bg-cover bg-center rounded"
-                  style={{backgroundImage: `url('${role.image || '/assets/default-role.svg'}')`}}
-                />
-                <p className="text-[#200606] font-medium text-base">{role.name}</p>
-              </div>
-            ))}
-          </div>
+                <div className="flex flex-col items-center">
+                  <span className="text-3xl mb-2">🔥</span>
+                  <span>HELL</span>
+                  <span className="text-sm mt-1">({hellCount}/2 slots filled)</span>
+                </div>
+              </Button>
+              {isHellDisabled() && (
+                <p className="text-red-400 text-sm mt-2">Hell region is full</p>
+              )}
+            </div>
 
-          <div className="flex justify-center mb-15">
-            <div
-              onClick={() => handleRoleClick(roles[4].id)}
-              className={`bg-gray-200/90 rounded-lg p-4 text-center cursor-pointer w-24
-                        ${selectedRole === roles[4].id ? 'border-2 border-yellow-400' : ''}`}
-            >
-              <div 
-                className="w-16 h-16 mx-auto mb-2 bg-cover bg-center rounded"
-                style={{backgroundImage: `url('${roles[4].image || '/assets/default-role.svg'}')`}}
-              />
-              <p className="text-gray-800 font-medium text-sm">{roles[4].name}</p>
+            {/* Earth Region */}
+            <div className="flex flex-col items-center">
+              <Button
+                onClick={() => handleRegionSelect('earth')}
+                disabled={loading || isEarthDisabled()}
+                className={`w-full h-32 bg-gradient-to-br from-green-600 to-green-800 hover:from-green-700 hover:to-green-900 
+                          border-2 border-green-400 text-white font-bold text-2xl rounded-xl shadow-lg
+                          ${selectedRegion === 'earth' ? 'ring-4 ring-yellow-400' : ''}
+                          ${isEarthDisabled() ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 transition-transform'}`}
+              >
+                <div className="flex flex-col items-center">
+                  <span className="text-3xl mb-2">🌍</span>
+                  <span>EARTH</span>
+                  <span className="text-sm mt-1">({earthCount}/3 slots filled)</span>
+                </div>
+              </Button>
+              {isEarthDisabled() && (
+                <p className="text-green-400 text-sm mt-2">Earth region is full</p>
+              )}
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 mb-6">
-            {teamMembers.slice(0, 4).map((member, index) => (
-              <Button
-                key={index}
-                onClick={() => handleMemberClick(index)}
-                disabled={loading || member.userId !== currentUserId}
-                className={`h-12 bg-gray-800/90 hover:bg-gray-700/95 border border-gray-600/30 text-yellow-400 font-bold rounded-lg
-                            ${member.userId !== currentUserId ? 'opacity-50 cursor-not-allowed' : ''}`}
-              >
-                {assignments[member.userId] ? roles.find(r => r.id === assignments[member.userId])?.name || member.name : member.name}
-              </Button>
-            ))}
-          </div>
+          {/* Confirm Button with Timer */}
+          {showConfirm && (
+            <div className="flex flex-col items-center mb-8">
+              <div className="bg-black/40 rounded-lg p-6 w-full max-w-sm">
+                <h3 className="text-white text-xl font-bold text-center mb-4">
+                  Confirm Region Selection
+                </h3>
+                <p className="text-white text-center mb-4">
+                  You selected: <span className={`font-bold ${selectedRegion === 'hell' ? 'text-red-400' : 'text-green-400'}`}>
+                    {selectedRegion?.toUpperCase()}
+                  </span>
+                </p>
+                
+                {countdown > 0 ? (
+                  <div className="text-center mb-4">
+                    <p className="text-gray-300 text-sm mb-2">Please wait to confirm</p>
+                    <div className="text-4xl font-bold text-yellow-400">
+                      {countdown}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center mb-4">
+                    <p className="text-green-400 text-sm">Ready to confirm!</p>
+                  </div>
+                )}
 
-          <div className="flex justify-center mb-8">
-            <Button
-              onClick={() => handleMemberClick(4)}
-              disabled={loading || teamMembers[4]?.userId !== currentUserId}
-              className="w-35 h-10 bg-no-repeat bg-center rounded-xl bg-cover flex items-center justify-center text-yellow-400 font-bold rounded-lg"
-              style={{backgroundImage:"url('/assets/namebox.svg')"}}
-            >
-              {teamMembers[4] && assignments[teamMembers[4].userId]
-                ? roles.find(r => r.id === assignments[teamMembers[4].userId])?.name || teamMembers[4]?.name
-                : teamMembers[4]?.name}
-            </Button>
-          </div>
+                <Button
+                  onClick={handleConfirm}
+                  disabled={!isConfirmActive || loading}
+                  className={`w-full h-14 text-xl font-bold rounded-xl transition-all duration-300 ${
+                    isConfirmActive 
+                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg hover:scale-105' 
+                      : 'bg-gray-600 text-gray-400 cursor-not-allowed opacity-50'
+                  }`}
+                >
+                  {loading ? 'Confirming...' : isConfirmActive ? 'CONFIRM SELECTION' : 'PLEASE WAIT...'}
+                </Button>
+                
+                <button
+                  onClick={() => {
+                    setShowConfirm(false);
+                    setSelectedRegion(null);
+                    setCountdown(10);
+                    setIsConfirmActive(false);
+                  }}
+                  className="w-full mt-3 text-gray-400 hover:text-white text-sm underline"
+                >
+                  Cancel and choose again
+                </button>
+              </div>
+            </div>
+          )}
 
-          <p className="text-white text-center font-medium text-base mt-15">
-            Click a role, then click your own member to assign.
+          {/* Team Members Status */}
+          {teamMembers.length > 0 && (
+            <div className="bg-black/30 rounded-lg p-4 mb-6">
+              <h3 className="text-white text-lg font-bold mb-3">Team Status:</h3>
+              <div className="space-y-2">
+                {teamMembers.map((member) => (
+                  <div key={member._id} className="flex justify-between text-white">
+                    <span className={member._id === currentUser?._id ? 'font-bold text-yellow-400' : ''}>
+                      {member.fullname} {member._id === currentUser?._id ? '(You)' : ''}
+                    </span>
+                    <span className={`px-2 py-1 rounded text-sm ${
+                      member.region === 'hell' ? 'bg-red-600' : 
+                      member.region === 'earth' ? 'bg-green-600' : 'bg-gray-600'
+                    }`}>
+                      {member.region ? member.region.toUpperCase() : 'Not Selected'}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <p className="text-white text-center font-medium text-base">
+            Choose wisely! Hell region: max 2 members, Earth region: max 3 members per team.
           </p>
         </div>
       </div>

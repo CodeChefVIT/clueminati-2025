@@ -40,14 +40,15 @@ export async function POST(request: NextRequest){
     // prepare response
     const responsePayload: any = {
       message: "Logged in successfully",
+      role: user.role,
       jwt: token,
       success: true,
     }
 
     // Special check for participants
     if(user.role === "participant" && !user.teamId){
-      responsePayload.message = "Logged in succesfully but team not selected"
-      responsePayload.redirect = "/team-selection"
+      responsePayload.message = "Logged in successfully but team not selected"
+      responsePayload.redirect = "/join-team"
     }
 
     const response = NextResponse.json(responsePayload)

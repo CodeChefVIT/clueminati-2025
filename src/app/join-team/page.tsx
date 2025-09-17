@@ -27,7 +27,7 @@ export default function JoinTeam() {
     setLoading(true);
 
     try {
-      const response = await axios.post('/api/join-team', { joinCode: teamCode });
+      const response = await axios.post('/api/users/join-team', { joinCode: teamCode });
       if (response.data.message) {
         toast.success(response.data.message);
         router.push(`/role-selection?teamId=${response.data.team._id}`);

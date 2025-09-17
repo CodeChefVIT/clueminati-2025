@@ -5,8 +5,7 @@ export const UserSchema = z.object({
   email: z.email("Invalid email format"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   role: z.enum(["admin", "core_member", "participant"]).default("participant"),
-  region: z.enum(["hell", "heaven"]).optional(),
-  gameRole: z.enum(["liar", "role1", "role2", "role3", "role4"]).optional(),
+  region: z.enum(["hell", "earth"]).optional(),
   regno: z.string().min(9,"Registration Number is required."),
   teamId: z.string().optional(),
   isVerified: z.boolean().default(false),
@@ -16,13 +15,11 @@ export const UserSchema = z.object({
   forgotPasswordTokenExpiry: z.date().optional(),
 });
 
-export const RoleAssignmentSchema = z.object({
-  userId: z.string(),
-  teamId: z.string(),
-  gameRole: z.enum(["liar", "role1", "role2", "role3", "role4"])
+export const RegionSelectionSchema = z.object({
+  region: z.enum(["hell", "earth"])
 })
 
-export type RoleAssignment = z.infer<typeof RoleAssignmentSchema>
+export type RegionSelection = z.infer<typeof RegionSelectionSchema>
 
 const QuestionTrackingSchema = z.object({
   easy: z.array(z.string()).default([]), // questionId[]
@@ -38,9 +35,13 @@ const Round1Schema = z.object({
 });
 
 const Round2Schema = Round1Schema.extend({
-  secret_string: z.string().optional().default(''),
-  path: z.array(z.string()).default([]), // stationId[]
-  secret_char_revealed: z.number().min(0).default(0)
+  secret_string: z.string().min(6).max(6), // required, 6 letters
+  secret_chars_revealed: z.number().min(0).default(0), // number of letters revealed
+  path: z.array(z.string()).default([]),   // stationId[]
+  currentStation: z.string().optional().default(""),
+  previousStation: z.string().optional().default(""),
+  solvedStations: z.array(z.string()).default([]), // stationId[]
+  letters_found: z.array(z.string()).default([]),   // Changed from lettersFound
 });
 
 export const TeamSchema = z.object({

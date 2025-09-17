@@ -26,11 +26,6 @@ const userSchema = new Schema<IUser>({
     default: "participant",
     required: true,
   },
-  gameRole: {
-    type: String,
-    enum: ["liar", "role1", "role2", "role3", "role4"],
-    required: false,
-  },
   region: {
     type: String,
     enum: ["hell", "earth"],

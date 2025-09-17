@@ -20,29 +20,64 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value || ''
   const payload = token ? await verifyToken(token) : null
 
-  if (isPublicPath) {
-    if (payload) {
-      return NextResponse.redirect(new URL('/profile', request.url))
-    }
-    return NextResponse.next()
+  // Debug logging for role-selection issues // bugs suck 
+  if (path === '/role-selection') {
+    console.log('role-selection access attempt:', {
+      path,
+      hasToken: !!token,
+      payload: payload ? {
+        role: payload.role,
+        teamId: payload.teamId,
+        id: payload.id
+      } : null
+    });
   }
 
-  if (!payload) {
+  // If user is logged in
+  if (payload) {
+    // and tries to access a public path, redirect them to their dashboard
+    if (isPublicPath) {
+      if (payload.role === 'core_member') {
+        return NextResponse.redirect(new URL('/core-member', request.url))
+      }
+      return NextResponse.redirect(new URL('/', request.url))
+    }
+
+    // Role-based access control for core_member
+    if (payload.role === 'core_member') {
+      // If a core_member is not on a core-member path, redirect them.
+      if (!path.startsWith('/core-member')) {
+        return NextResponse.redirect(new URL('/core-member', request.url))
+      }
+    } else {
+      // If any other logged-in user tries to access a core-member path, redirect them.
+      if (path.startsWith('/core-member')) {
+        return NextResponse.redirect(new URL('/', request.url))
+      }
+    }
+
+    // Special flow for participants
+    if (payload.role === 'participant') {
+      // Step 1: Must have a team
+      if (!payload.teamId) {
+        const allowedPaths = ['/join-team', '/create-team'];
+        if (!allowedPaths.includes(path)) {
+          return NextResponse.redirect(new URL('/join-team', request.url))
+        }
+      }
+      // Step 2: Must have a region selected
+      else if (!payload.region) {
+        if (path !== '/role-selection') {
+          return NextResponse.redirect(new URL('/role-selection', request.url))
+        }
+      }
+    }
+  }
+
+  // If user is not logged in and tries to access a private path, redirect to login
+  if (!payload && !isPublicPath) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
-
-  if (payload.role === 'participant' && !payload.teamId && !['/join-team', '/create-team'].includes(path)) {
-    return NextResponse.redirect(new URL('/join-team', request.url))
-  }
-
-  // if (payload.role === 'participant' && payload.teamId && ['/join-team', '/create-team'].includes(path)) {
-  //   return NextResponse.redirect(new URL('/profile', request.url))
-  // }
-
-  if (path === '/create-team' && payload.teamId) {
-    return NextResponse.redirect(new URL('/role-selection', request.url))
-  }
-
   return NextResponse.next()
 }
 
@@ -54,7 +89,10 @@ export const config = {
     '/login',
     '/signup',
     '/verifyemail',
-    '/join-team', 
-    '/create-team',    
+    '/join-team',
+    '/create-team',
+    '/role-selection',
+    '/core-member',
+    '/core-member/:path*',
   ]
 }

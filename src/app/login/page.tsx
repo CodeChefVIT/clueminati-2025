@@ -33,7 +33,17 @@ export default function Login() {
         password
       })
       toast.success("Login successful!")
-      router.push("/")
+      
+      // Check the redirect suggestion from the API
+      if (response.data.redirect) {
+        router.push(response.data.redirect);
+      } else if (response.data.role === "core_member") {
+        router.push("/core-member")
+      } else {
+        // For participants, let middleware handle the routing
+        router.push("/")
+      }
+      console.log(response)
       
       
     } catch (error: any) {

@@ -39,13 +39,13 @@ export async function GET(req: NextRequest) {
     const encounteredQuestions =
       team.round1?.questions_encountered?.[difficulty] || [];
 
-    const isEncountered = encounteredQuestions.some(
-      (q: string) => q.toString() === questionId
-    );
-
-    if (!isEncountered) {
+    if (
+      encounteredQuestions.length === 0 ||
+      encounteredQuestions[encounteredQuestions.length - 1].toString() !==
+        questionId
+    ) {
       return NextResponse.json(
-        { error: 'Question not encountered by this team' },
+        { error: 'This is not the latest question for your team.' },
         { status: 403 }
       );
     }
