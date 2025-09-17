@@ -36,8 +36,9 @@ const TeamSchema = new Schema<ITeam>({
     currentStation: { type: String, required: false },
     previousStation: { type: String, required: false },
     solvedStations: { type: [String], default: [] },
-    secretString: { type: String, required: false },
-    lettersFound: { type: [String], default: [] },
+    secret_string: { type: String, required: false },
+    secret_chars_revealed: { type: Number, default: 0 },
+    letters_found: { type: [String], default: [] },
   },
   total_score: { type: Number, default: 0, required: true },
 });
