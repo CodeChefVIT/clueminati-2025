@@ -7,7 +7,7 @@ async function verifyToken(token: string) {
   try {
     const secret = new TextEncoder().encode(process.env.TOKEN_SECRET)
     const { payload } = await jwtVerify(token, secret)
-    return payload // return decoded payload
+    return payload //return decoded payload
   } catch (err) {
     return null
   }
@@ -20,7 +20,7 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value || ''
   const payload = token ? await verifyToken(token) : null
 
-  // Debug logging for role-selection issues // bugs suck 
+  //debug logging for role-selection issues 
   if (path === '/role-selection') {
     console.log('role-selection access attempt:', {
       path,
@@ -33,9 +33,9 @@ export async function middleware(request: NextRequest) {
     });
   }
 
-  // If user is logged in
+  //if user is logged in
   if (payload) {
-    // and tries to access a public path, redirect them to their dashboard
+    //and tries to access a public path, redirect them to their dashboard
     if (isPublicPath) {
       if (payload.role === 'core_member') {
         return NextResponse.redirect(new URL('/core-member', request.url))
@@ -43,29 +43,29 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/', request.url))
     }
 
-    // Role-based access control for core_member
+    //role-based access control for core_member
     if (payload.role === 'core_member') {
-      // If a core_member is not on a core-member path, redirect them.
+      //if a core_member is not on a core-member path, redirect them
       if (!path.startsWith('/core-member')) {
         return NextResponse.redirect(new URL('/core-member', request.url))
       }
     } else {
-      // If any other logged-in user tries to access a core-member path, redirect them.
+      //if any other logged-in user tries to access a core-member path, redirect them
       if (path.startsWith('/core-member')) {
         return NextResponse.redirect(new URL('/', request.url))
       }
     }
 
-    // Special flow for participants
+    //special flow for participants
     if (payload.role === 'participant') {
-      // Step 1: Must have a team
+      //step 1: must have a team
       if (!payload.teamId) {
         const allowedPaths = ['/join-team', '/create-team'];
         if (!allowedPaths.includes(path)) {
           return NextResponse.redirect(new URL('/join-team', request.url))
         }
       }
-      // Step 2: Must have a region selected
+      //step 2: must have a region selected
       else if (!payload.region) {
         if (path !== '/role-selection') {
           return NextResponse.redirect(new URL('/role-selection', request.url))
@@ -74,7 +74,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // If user is not logged in and tries to access a private path, redirect to login
+  //if user is not logged in and tries to access a private path, redirect to login
   if (!payload && !isPublicPath) {
     return NextResponse.redirect(new URL('/login', request.url))
   }

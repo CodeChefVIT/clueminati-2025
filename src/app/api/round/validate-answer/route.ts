@@ -13,7 +13,6 @@ connectToDatabase();
 
 export async function POST(req: NextRequest) {
   try {
-    // Parse and validate request body
     const body = await req.json();
     const parsed = ValidateQuestionSchema.safeParse(body);
     
@@ -23,13 +22,11 @@ export async function POST(req: NextRequest) {
 
     const { questionId, userAnswer } = parsed.data;
 
-    // Get user from token
     const tUser = await getUserFromToken(req);
     if (!tUser) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get user details with teamId
     const user = await User.findOne({ _id: tUser.id }).select(
       '-password -isVerified -verifyToken -verifyTokenExpiry'
     );
@@ -38,7 +35,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'User not found or not in a team' }, { status: 404 });
     }
 
-    // Get current round
     const currentRound = await getCurrentRound();
     if (currentRound === "not_started" || currentRound === "finished") {
       return NextResponse.json(
@@ -47,19 +43,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Get team
     const team = await Team.findById(user.teamId);
     if (!team) {
       return NextResponse.json({ error: 'Team not found' }, { status: 404 });
     }
 
-    // Get question
     const theQuestion = await Question.findById(questionId);
     if (!theQuestion) {
       return NextResponse.json({ error: 'Question not found' }, { status: 404 });
     }
 
-    // Validate question belongs to current round
+    //validating question belongs to current round
     if (theQuestion.round !== currentRound) {
       return NextResponse.json(
         { error: `This question does not belong to Round ${currentRound}` },
@@ -70,12 +64,10 @@ export async function POST(req: NextRequest) {
     const difficulty = theQuestion.difficulty;
     const roundKey = currentRound === "1" ? "round1" : "round2";
 
-    // Initialize round data if it doesn't exist
     if (!team[roundKey]) {
       return NextResponse.json({ error: `Team is not participating in Round ${currentRound}` }, { status: 400 });
     }
 
-    // Check if question already solved
     if (team[roundKey]?.questions_solved[difficulty].includes(questionId)) {
       return NextResponse.json(
         { message: 'Question already solved' },
@@ -83,7 +75,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check answer correctness
+    //checking answer correctness
     const isCorrect =
       normalizeAnswer(userAnswer as string) ===
       normalizeAnswer(theQuestion.answer as string);
@@ -92,7 +84,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'incorrect' }, { status: 200 });
     }
 
-    // ✅ Correct Answer → Update team progress
+    //updating team progress on correct answer
     const points =
       difficulty === 'easy' ? 10 : 
       difficulty === 'medium' ? 40 : 
@@ -104,14 +96,13 @@ export async function POST(req: NextRequest) {
     }
     team.total_score += points;
 
-    // Round 2 specific logic: Secret character reveal and station management
+    //round 2 specific logic for secret character reveal and station management
     let revealChar: string | null = null;
     let nextStation: any = null;
 
     if (currentRound === "2" && team.round2) {
-      // Calculate total questions solved across all difficulties
       const totalSolved = Object.values(team.round2.questions_solved).flat().length;
-      const revealSteps = [3, 5, 7]; // Reveal at 3rd, 5th, and 7th question
+      const revealSteps = [3, 5, 7];
 
       if (revealSteps.includes(totalSolved)) {
         const idx = team.round2.secret_chars_revealed || 0;
@@ -121,24 +112,20 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      // Assign next station using utility function (replacing next-station route)
       try {
         const stationResult = await assignNextStation(user.teamId);
         if ('error' in stationResult) {
           console.warn('Station assignment failed:', stationResult.error);
-          // Don't fail the entire request, just log the warning
         } else {
           nextStation = stationResult;
         }
       } catch (stationError) {
         console.error('Error assigning next station:', stationError);
-        // Continue without failing the request
       }
     }
 
     await team.save();
 
-    //
     const response = {
       message: 'correct',
       data: theQuestion,

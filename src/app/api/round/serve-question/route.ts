@@ -25,7 +25,6 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
-    // Get current round
     const currentRound = await getCurrentRound();
     if (currentRound === "not_started" || currentRound === "finished") {
       return NextResponse.json(
@@ -52,10 +51,8 @@ export async function GET(req: NextRequest) {
     let result;
 
     if (currentRound === "1") {
-      // Round 1 logic - use unified giveQuestion function
       result = await giveQuestion(teamId, difficulty);
     } else if (currentRound === "2") {
-      // Round 2 logic - requires stationId and additional validations
       const stationId = searchParams.get("stationId");
       
       if (!stationId) {
@@ -82,7 +79,7 @@ export async function GET(req: NextRequest) {
         );
       }
 
-      // Check if this station is the team's current assigned station
+      //checking if this station is the team's current assigned station
       if (team.round2.currentStation !== stationId) {
         return NextResponse.json(
           { 
@@ -94,7 +91,7 @@ export async function GET(req: NextRequest) {
         );
       }
 
-      // Additional check: Verify station hasn't been completed already
+      //verifying station hasn't been completed already
       if (team.round2.solvedStations && team.round2.solvedStations.includes(stationId)) {
         return NextResponse.json(
           { 
@@ -105,11 +102,10 @@ export async function GET(req: NextRequest) {
         );
       }
 
-      // Use unified giveQuestion function for Round 2 as well
       result = await giveQuestion(teamId, difficulty);
     }
 
-    // Check if result exists and handle error cases
+    //checking if result exists and handling error cases
     if (!result) {
       return NextResponse.json(
         { error: "No question available" },

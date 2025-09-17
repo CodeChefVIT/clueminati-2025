@@ -35,7 +35,7 @@ export default function RegionSelection() {
   const [countdown, setCountdown] = useState(10)
   const [isConfirmActive, setIsConfirmActive] = useState(false)
 
-  // Countdown timer effect
+  //countdown timer effect
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (showConfirm && countdown > 0) {
@@ -48,7 +48,7 @@ export default function RegionSelection() {
     return () => clearTimeout(timer);
   }, [showConfirm, countdown]);
 
-  // Fetch current user and team data
+  //fetch current user and team data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -63,7 +63,7 @@ export default function RegionSelection() {
             const membersResponse = await axios.get(`/api/teams/${teamData.teamId}/members`);
             if (membersResponse.data.success) {
               setTeamMembers(membersResponse.data.members);
-              // Count current hell and earth members
+              //count current hell and earth members
               const hellMembers = membersResponse.data.members.filter((m: TeamMember) => m.region === 'hell');
               const earthMembers = membersResponse.data.members.filter((m: TeamMember) => m.region === 'earth');
               setHellCount(hellMembers.length);
@@ -88,7 +88,7 @@ export default function RegionSelection() {
       return;
     }
 
-    // Check if hell or earth is full (excluding current user if they already have that region)
+    //check if hell or earth is full excluding current user if they already have that region
     const currentUserHasHell = currentUser.region === 'hell';
     const currentUserHasEarth = currentUser.region === 'earth';
     const effectiveHellCount = currentUserHasHell ? hellCount - 1 : hellCount;
@@ -104,7 +104,7 @@ export default function RegionSelection() {
       return;
     }
 
-    // Set selected region and show confirm button
+    //set selected region and show confirm button
     setSelectedRegion(region);
     setShowConfirm(true);
     setCountdown(10);
@@ -124,30 +124,30 @@ export default function RegionSelection() {
 
       console.log('API Response:', response.data);
 
-      // Check for success response
+      //check for success response
       if (response.data.success || response.data.message) {
         toast.success(`Region confirmed: ${selectedRegion.toUpperCase()}`);
-        // Update current user state
+        //update current user state
         setCurrentUser(prev => prev ? {...prev, region: selectedRegion} : null);
         
-        // Update hell and earth count
+        //update hell and earth count
         if (selectedRegion === 'hell' && currentUser && currentUser.region !== 'hell') {
           setHellCount(prev => prev + 1);
         } else if (selectedRegion === 'earth' && currentUser && currentUser.region !== 'earth') {
           setEarthCount(prev => prev + 1);
         }
         
-        // Decrease count if switching from a region
+        //decrease count if switching from a region
         if (currentUser && currentUser.region === 'hell' && selectedRegion !== 'hell') {
           setHellCount(prev => prev - 1);
         } else if (currentUser && currentUser.region === 'earth' && selectedRegion !== 'earth') {
           setEarthCount(prev => prev - 1);
         }
         
-        // Immediate redirect to profile
+        //immediate redirect to profile
         console.log('Redirecting to profile...');
         
-        // Add a small delay to ensure the token is updated on the server side
+        //add a small delay to ensure the token is updated on the server side
         setTimeout(async () => {
           try {
             await router.push('/profile');
@@ -162,7 +162,7 @@ export default function RegionSelection() {
     } catch (error: any) {
       console.error('Region confirmation error:', error);
       toast.error(error.response?.data?.error || 'Failed to assign region');
-      // Reset confirm state on error
+      //reset confirm state on error
       setShowConfirm(false);
       setSelectedRegion(null);
     } finally {

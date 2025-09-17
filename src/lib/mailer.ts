@@ -5,7 +5,7 @@ import bcryptjs from 'bcryptjs';
 interface SendEmailParams {  
   email: string;
   emailType: 'VERIFY' | 'RESET';
-  userId: string | any; // Support for MongoDB ObjectId
+  userId: string | any; //support for MongoDB ObjectId
 }
 
 export const sendEmail = async({email, emailType, userId}: SendEmailParams)=>{

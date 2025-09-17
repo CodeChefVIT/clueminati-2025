@@ -23,7 +23,6 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
-    // Get current round
     const currentRound = await getCurrentRound();
     if (currentRound === "not_started" || currentRound === "finished") {
       return NextResponse.json(
@@ -32,7 +31,6 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Get questionId from query params
     const { searchParams } = new URL(req.url);
     const questionId = searchParams.get("id");
 
@@ -43,13 +41,12 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Fetch the specific question by ID
     const question = await Question.findById(questionId);
     if (!question) {
       return NextResponse.json({ error: "Question not found" }, { status: 404 });
     }
 
-    // Verify question belongs to current round
+    //verifying question belongs to current round
     if (question.round !== currentRound) {
       return NextResponse.json(
         { 

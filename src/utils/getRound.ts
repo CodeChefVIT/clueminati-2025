@@ -14,29 +14,29 @@ export async function getCurrentRound(): Promise<"not_started" | "1" | "2" | "fi
     const r2Start = gameStat.r2StartTime?.getTime();
     const r2End = gameStat.r2EndTime?.getTime();
 
-    // Before round 1 starts
+    //before round 1 starts
     if (now < r1Start) {
       return "not_started";
     }
 
-    // During round 1
+    //during round 1
     if (now >= r1Start && now <= r1End) {
       return "1";
     }
 
-    // During round 2
+    //during round 2
     if (r2Start && now >= r2Start) {
-      // If r2EndTime exists and we're past it, game is finished
+      //if r2EndTime exists and we're past it, game is finished
       if (r2End && now > r2End) {
         return "finished";
       }
-      // Otherwise, we're in round 2
+      //otherwise, we're in round 2
       return "2";
     }
 
-    // Between rounds or after round 1 but before round 2
+    //between rounds or after round 1 but before round 2
     if (now > r1End && (!r2Start || now < r2Start)) {
-      return "finished"; // Or return "between_rounds" if you have that state
+      return "finished"; //or return "between_rounds" if you have that state
     }
 
   return "finished";

@@ -10,7 +10,6 @@ connectToDatabase()
 
 export async function POST(request: NextRequest) {
   try {
-    // Get user from JWT token
     const tUser = await getUserFromToken(request);
     if (!tUser) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -28,24 +27,22 @@ export async function POST(request: NextRequest) {
 
     const { region } = parsedBody.data
 
-    // Get user and team data
     const user = await User.findById(tUser.id);
     if (!user || !user.teamId) {
       return NextResponse.json({ error: "User not found or not in a team" }, { status: 404 });
     }
 
-    // Check region constraints
     if (region === "hell") {
       const team = await Team.findById(user.teamId).populate('members');
       if (!team) {
         return NextResponse.json({ error: "Team not found" }, { status: 404 });
       }
 
-      // Count current hell region members (excluding current user if already assigned)
+      //counting current hell region members excluding current user if already assigned
       const hellMembers = await User.countDocuments({
         teamId: user.teamId,
         region: "hell",
-        _id: { $ne: user._id } // Exclude current user
+        _id: { $ne: user._id }
       });
 
       if (hellMembers >= 2) {
@@ -55,12 +52,11 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Check earth region constraint (max 3 people in earth per team)
     if (region === "earth") {
       const earthMembers = await User.countDocuments({
         teamId: user.teamId,
         region: "earth",
-        _id: { $ne: user._id } // Exclude current user
+        _id: { $ne: user._id }
       });
 
       if (earthMembers >= 3) {
@@ -70,7 +66,6 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Update the authenticated user's region
     const updatedUser = await User.findByIdAndUpdate(
       tUser.id,
       { region },
@@ -81,7 +76,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 })
     }
 
-    // Create updated JWT token with the new region
     const tokenData = {
       id: updatedUser._id,
       fullname: updatedUser.fullname,
@@ -99,7 +93,6 @@ export async function POST(request: NextRequest) {
       user: updatedUser
     })
 
-    // Update the cookie with new token
     response.cookies.set({
       name: 'token',
       value: token,
