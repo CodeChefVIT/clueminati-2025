@@ -1,11 +1,11 @@
 "use client";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import localFont from "next/font/local";
+import toast from "react-hot-toast";
 import axios from "axios";
 import Modal from "@/components/Modal";
 
@@ -31,9 +31,13 @@ export default function CreateTeam() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
 
+    if (!teamName.trim()) {
+      toast.error("Team name cannot be empty.");
+      return;
+    }
+
+    setLoading(true);
     try {
       const response = await axios.post(
         "/api/users/create-team",
@@ -59,7 +63,7 @@ export default function CreateTeam() {
 
   const handleProceed = () => {
     setShowModal(false);
-    router.push("/join-team");
+    router.push("/");
   };
 
   return (

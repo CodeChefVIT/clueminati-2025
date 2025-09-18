@@ -3,7 +3,7 @@ import React, { FC } from "react";
 interface ButtonProps {
   label: string;
   onClick: () => void;
-  className?: string; // optional to override size
+  className?: string; //optional to override size
 }
 
 const roundBox = "/assets/round-box.svg";

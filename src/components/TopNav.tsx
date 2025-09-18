@@ -17,23 +17,23 @@ function TopNav() {
       const r2End = new Date(data.r2EndTime).getTime();
 
       if (now < r1Start) {
-        // Before round 1
+        //before round 1
         setRound("Not Started");
         setTimeLeft(r1Start - now);
       } else if (now >= r1Start && now <= r1End) {
-        // During round 1
+        //during round 1
         setRound("Round 1");
         setTimeLeft(r1End - now);
       } else if (now > r1End && now < r2Start) {
-        // Gap between round 1 and round 2
+        //gap between round 1 and round 2
         setRound("Half Time");
         setTimeLeft(r2Start - now);
       } else if (now >= r2Start && now <= r2End) {
-        // During round 2
+        //during round 2
         setRound("Round 2");
         setTimeLeft(r2End - now);
       } else {
-        // After round 2
+        //after round 2
         setRound("Finished");
         setTimeLeft(null);
       }

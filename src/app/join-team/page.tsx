@@ -6,7 +6,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import toast from "react-hot-toast";
+import localFont from "next/font/local";
 
+const rethinkSansBold = localFont({
+  src: "../../../public/assets/RethinkSans-Bold.ttf",
+  variable: "--font-rethinkSansBold",
+});
+const rethinkSansMedium = localFont({
+  src: "../../../public/assets/RethinkSans-Medium.ttf",
+  variable: "--font-rethinkSansMedium",
+});
 export default function JoinTeam() {
   const router = useRouter();
   const [teamCode, setTeamCode] = useState("");
@@ -17,33 +27,32 @@ export default function JoinTeam() {
     setLoading(true);
 
     try {
-      const res = await axios.post("/api/users/join-team", {
-        joinCode: teamCode,
-      });
-
-      console.log("Team join response:", res.data);
-
-      router.push("/");
+      const response = await axios.post('/api/users/join-team', { joinCode: teamCode });
+      if (response.data.message) {
+        toast.success(response.data.message);
+        router.push(`/role-selection?teamId=${response.data.team._id}`);
+      }
     } catch (error: any) {
       console.error(
         "Error joining team:",
         error.response?.data || error.message
       );
-      alert(error.response?.data?.message || "Failed to join team");
+      alert(error.response?.data?.error || "Failed to join team");
+      toast.error(error.response?.data?.error || 'Failed to join team.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="{`min-h-screen relative overflow-hidden w-full ${rethinkSansBold.variable} ${rethinkSansMedium.variable}`}">
+    <div className={`min-h-screen relative overflow-hidden w-full`}>
       <div
         className="absolute inset-0 bg-center bg-cover bg-no-repeat flex items-center justify-center"
         style={{
           backgroundImage: "url('/assets/loginbg.png')",
           filter: "brightness(0.55)",
         }}
-      />
+      />  
 
       <div className="relative z-10 min-h-screen flex items-center justify-center p-9">
         <div className="w-full max-w-sm mx-auto mb-25">
@@ -90,13 +99,12 @@ export default function JoinTeam() {
             <div className="flex justify-center mt-30">
               <Button
                 type="submit"
-                disabled={loading}
                 className="w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover flex items-center justify-center"
                 style={{
                   backgroundImage: "url('/assets/proceedbuttonlogin.svg')",
                 }}
-              >
-                {loading ? "Joining..." : ""}
+                disabled={loading}>
+                  {loading ? 'Joining...' : 'Proceed'}
               </Button>
             </div>
           </form>
