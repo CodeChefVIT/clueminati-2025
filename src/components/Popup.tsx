@@ -1,99 +1,72 @@
 "use client";
 import React from "react";
-import { Copy, Check } from "lucide-react";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 
-interface TeamPopUp {
+interface CodeModal {
   isOpen: boolean;
-  teamName: string;
-  joinCode: string;
-  onProceed: () => void;
+  onClose: () => void;
+  children: React.ReactNode;
+  backgroundSvg?: string;
+  showCloseButton?: boolean
 }
 
-const Popup: React.FC<TeamPopUp> = ({
-  isOpen,
-  teamName,
+const TeamCode: React.FC<CodeModal> = ({
   joinCode,
   onProceed,
+  backgroundSvg,
+  isOpen,
+  onClose,
+  children,
+  showCloseButton = true,
 }) => {
-  const [copied, setCopied] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const copyToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy: ", err);
-    }
+  const copyCode = () => {
+    navigator.clipboard.writeText(joinCode);
+    alert("Code copied to clipboard!");
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
-      <div className="bg-[#D3D5D7] rounded-lg p-6 w-full max-w-md mx-auto">
-        <div className="text-center mb-5">
-          <h2 className="text-xl font-bold text-black mb-2">
-            Team Created Successfully!
-          </h2>
-          <p className="text-black">
-            Your team has been created. Share the join code with others to let
-            them join.
-          </p>
-        </div>
+    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center p-4">
+      <div className="relative max-w-md w-full">
+        <div
+          className="relative bg-cover bg-center bg-no-repeat p-8 min-h-[260px] flex flex-col items-center justify-center"
+          style={{
+            backgroundImage: backgroundSvg ? `url(${backgroundSvg})` : "none",
+            backgroundColor: !backgroundSvg ? "#1C1C1C" : "transparent",
+            border: !backgroundSvg ? "1px solid #4A4A4A" : "none",
+            borderRadius: !backgroundSvg ? "1rem" : "0",
+          }}
+        >
+          <div className="text-center space-y-4 px-4">
+            <h2 className="font-bold text-2xl" style={{ color: "#fcfcfcff" }}>
+              Team Successfully Created!
+            </h2>
 
-        <div className="space-y-4 mb-6">
-          <div className="rounded-lg p-4">
-            <label className="block text-sm font-medium text-black mb-2">
-              Team Name
-            </label>
-            <div className="text-lg font-base text-black ">{teamName}</div>
-          </div>
-
-          <div className="bg-[#D3D5D7] rounded-lg p-4">
-            <label className="block text-sm font-sm text-black mb-2">
-              Join Code
-            </label>
-            <div className="flex items-center justify-between bg-white border rounded-lg px-3 py-2">
-              <span className="text-lg font-base text-[#24CCFF]">
+            <p className="text-lg text-gray-300">
+              Join Code:{" "}
+              <span className="font-mono bg-gray-700 px-2 py-1 rounded">
                 {joinCode}
               </span>
               <button
-                onClick={() => copyToClipboard(joinCode)}
-                className="ml-2 p-2 text-gray-500 rounded-lg"
-                title="Copy join code"
+                onClick={copyCode}
+                className="ml-2 text-blue-400 underline"
               >
-                {copied ? (
-                  <Check className="w-5 h-5 text-green-600" />
-                ) : (
-                  <Copy className="w-5 h-5" />
-                )}
+                Copy
               </button>
-            </div>
-            {copied && (
-              <p className="text-sm text-black mt-1">Copied to clipboard!</p>
-            )}
-          </div>
-        </div>
+            </p>
 
-        <div className="flex justify-center mt-30">
-          <Button
-            type="submit"
-            disabled={loading}
-            className="w-38 h-9 bg-no-repeat bg-center rounded-xl bg-cover flex items-center justify-center"
-            style={{
-              backgroundImage: "url('/assets/proceedbuttonlogin.svg')",
-            }}
-          >
-            {loading ? "Creating..." : ""}
-          </Button>
+            <button
+              onClick={onProceed}
+              className="mt-6 w-full h-12 bg-cover bg-center bg-no-repeat text-white font-bold flex items-center justify-center"
+              style={{
+                backgroundImage: "url(/assets/X.svg)",
+              }}
+            >
+              Proceed
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Popup;
+export default TeamCode;

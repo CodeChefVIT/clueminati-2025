@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import localFont from "next/font/local";
 import axios from "axios";
-import Popup from "@/components/Popup";
+import Modal from "@/components/Modal";
 
 const rethinkSansBold = localFont({
   src: "../../../public/assets/RethinkSans-Bold.ttf",
@@ -35,19 +35,23 @@ export default function CreateTeam() {
     setError(null);
 
     try {
-      const res = await axios.post(
+      const response = await axios.post(
         "/api/users/create-team",
-        { teamname: teamName },
+        {
+          teamname: teamName,
+        },
+        { withCredentials: true }
       );
 
       setCreatedTeam({
-        name: res.data.teamname || teamName,
-        joinCode: res.data.joinCode || "TEAM123", 
+        name: response.data.newTeam.teamname,
+        joinCode: response.data.newTeam.joinCode,
       });
       setShowModal(true);
     } catch (err: any) {
-      console.error("Error creating team:", err);
-      setError(err.response?.data?.error || "Something went wrong.");
+      setError(
+        err.response?.data?.error || "Failed to create team. Try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -55,7 +59,7 @@ export default function CreateTeam() {
 
   const handleProceed = () => {
     setShowModal(false);
-    router.push("/");
+    router.push("/join-team");
   };
 
   return (
@@ -123,23 +127,33 @@ export default function CreateTeam() {
                   style={{
                     backgroundImage: "url('/assets/proceedbuttonlogin.svg')",
                   }}
-                >
-                  {loading ? "Creating..." : ""}
-                </Button>
+                ></Button>
               </div>
             </form>
           </div>
         </div>
       </div>
 
-
       {createdTeam && (
-        <Popup
+        <Modal
           isOpen={showModal}
-          teamName={createdTeam.name}
-          joinCode={createdTeam.joinCode}
-          onProceed={handleProceed}
-        />
+          onClose={() => setShowModal(false)}
+          showCloseButton={false}
+          backgroundSvg="/assets/Question_Box.svg"
+        >
+          <div className="text-center space-y-6 px-4 text-white">
+            <h2 className="text-2xl font-bold mb-4">Team Created!</h2>
+            <p className="text-lg">Join Code: {createdTeam.joinCode}</p>
+            <button
+              onClick={() => router.push("/join-team")}
+              className="w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover"
+              style={{
+                backgroundImage: "url('/assets/proceedbuttonlogin.svg')",
+              }}
+              aria-label="Proceed to Login"
+            />
+          </div>
+        </Modal>
       )}
     </>
   );
