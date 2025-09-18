@@ -1,6 +1,6 @@
 import { connectToDatabase } from "@/lib/db";
 import Team from "@/lib/models/team";
-import { getCurrentRound } from "./getRound";
+import { getCurrentRound } from "./getCurrentRound";
 import Question from "@/lib/models/question";
 
 export async function giveQuestion(
