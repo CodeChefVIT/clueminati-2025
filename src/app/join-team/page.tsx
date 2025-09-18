@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
 import localFont from "next/font/local";
+import Link from "next/link";
 
 const rethinkSansBold = localFont({
   src: "../../../public/assets/RethinkSans-Bold.ttf",
@@ -85,15 +86,9 @@ export default function JoinTeam() {
               <span className="text-white font-medium text-base mr-1">
                 Don't have a team?
               </span>
-              <button
-                type="button"
-                className="text-[#00E4B6] text-base mr-7"
-                onClick={() => {
-                  router.push("/create-team");
-                }}
-              >
+              <Link href="/create-team" className="text-[#00E4B6] text-base mr-7">
                 Create
-              </button>
+              </Link>
             </div>
 
             <div className="flex justify-center mt-30">
