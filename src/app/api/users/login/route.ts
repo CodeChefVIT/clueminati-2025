@@ -29,6 +29,7 @@ export async function POST(request: NextRequest){
     const tokenData = {
       id: user._id,
       fullname: user.fullname,
+      reg_num: user.reg_num,
       email: user.email,
       role: user.role,
       teamId: user.teamId ?? null,
@@ -47,8 +48,8 @@ export async function POST(request: NextRequest){
 
     // Special check for participants
     if(user.role === "participant" && !user.teamId){
-      responsePayload.message = "Logged in succesfully but team not selected"
-      responsePayload.redirect = "/team-selection"
+      responsePayload.message = "Logged in successfully but team not selected"
+      responsePayload.redirect = "/join-team"
     }
 
     const response = NextResponse.json(responsePayload)

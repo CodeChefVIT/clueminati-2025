@@ -18,8 +18,14 @@ export const UserSchema = z.object({
     .transform((val: string) => val.toUpperCase()),
 });
 
+export const RegionSelectionSchema = z.object({
+  region: z.enum(["hell", "earth"])
+});
+
+export type RegionSelection = z.infer<typeof RegionSelectionSchema>;
+
 const QuestionTrackingSchema = z.object({
-  easy: z.array(z.string()).default([]), // questionId[]
+  easy: z.array(z.string()).default([]), //questionId[]
   medium: z.array(z.string()).default([]),
   hard: z.array(z.string()).default([]),
 });
@@ -32,18 +38,19 @@ const Round1Schema = z.object({
 });
 
 const Round2Schema = Round1Schema.extend({
-  secret_string: z.string().min(6).max(6), // required, 6 letters
-  path: z.array(z.string()).default([]),   // stationId[]
+  secret_string: z.string().min(6).max(6), //required, 6 letters
+  secret_chars_revealed: z.number().min(0).default(0), //number of letters revealed
+  path: z.array(z.string()).default([]),   //stationId[]
   currentStation: z.string().optional().default(""),
   previousStation: z.string().optional().default(""),
-  solvedStations: z.array(z.string()).default([]), // stationId[]
-  lettersFound: z.array(z.string()).default([]),   // revealed letters
+  solvedStations: z.array(z.string()).default([]), //stationId[]
+  letters_found: z.array(z.string()).default([]),   //changed from lettersFound
 });
 
 export const TeamSchema = z.object({
   teamname: z.string().min(1, "Team name is required"),
   joinCode: z.string().optional(),
-  members: z.array(z.string()).default([]), // userId[]
+  members: z.array(z.string()).default([]), //userId[]
   round1: Round1Schema.optional(),
   round2: Round2Schema.optional(),
   total_score: z.number().min(0).default(0),

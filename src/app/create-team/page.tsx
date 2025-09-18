@@ -1,11 +1,11 @@
 "use client";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import localFont from "next/font/local";
+import toast from "react-hot-toast";
 import axios from "axios";
 import Popup from "@/components/Popup";
 
@@ -31,9 +31,13 @@ export default function CreateTeam() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
 
+    if (!teamName.trim()) {
+      toast.error("Team name cannot be empty.");
+      return;
+    }
+
+    setLoading(true);
     try {
       const res = await axios.post(
         "/api/users/create-team",
@@ -41,8 +45,8 @@ export default function CreateTeam() {
       );
 
       setCreatedTeam({
-        name: res.data.teamname || teamName,
-        joinCode: res.data.joinCode || "TEAM123", 
+        name: res.data.team?.teamname || teamName,
+        joinCode: res.data.team?.joinCode || "TEAM123", 
       });
       setShowModal(true);
     } catch (err: any) {
@@ -55,7 +59,8 @@ export default function CreateTeam() {
 
   const handleProceed = () => {
     setShowModal(false);
-    router.push("/");
+    // Redirect to role selection after team creation
+    router.push("/role-selection");
   };
 
   return (

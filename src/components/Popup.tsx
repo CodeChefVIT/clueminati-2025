@@ -81,14 +81,15 @@ const Popup: React.FC<TeamPopUp> = ({
 
         <div className="flex justify-center mt-30">
           <Button
-            type="submit"
+            type="button"
+            onClick={onProceed}
             disabled={loading}
             className="w-38 h-9 bg-no-repeat bg-center rounded-xl bg-cover flex items-center justify-center"
             style={{
               backgroundImage: "url('/assets/proceedbuttonlogin.svg')",
             }}
           >
-            {loading ? "Creating..." : ""}
+            {loading ? "Processing..." : ""}
           </Button>
         </div>
       </div>

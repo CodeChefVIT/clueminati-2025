@@ -6,10 +6,15 @@ const userSchema = new Schema<IUser>({
     type: String,
     required: [true, "Please provide a full name"],
   },
-  email: {
+  reg_num: {
     type: String,
-    required: [true, "Please provide an email"],
+    required: [true, "Registration Number is required"],
     unique: true,
+  },
+  email: { 
+    type: String, 
+    required: [true, "Please provide an email"], 
+    unique: true 
   },
   password: {
     type: String,
@@ -34,13 +39,24 @@ const userSchema = new Schema<IUser>({
     type: Boolean,
     default: false,
   },
-  reg_num: {
+  verifyToken: {
     type: String,
-    required: true,
-    unique: true,
-  }
+    required: false,
+  },
+  verifyTokenExpiry: {
+    type: Date,
+    required: false,
+  },
+  forgotPasswordToken: {
+    type: String,
+    required: false,
+  },
+  forgotPasswordTokenExpiry: {
+    type: Date,
+    required: false,
+  },
 });
 
-const User: Model<IUser> = models.User || model<IUser>("User", userSchema);
+const User: Model<IUser> = models.User ?? model<IUser>("User", userSchema);
 
 export default User;
