@@ -57,8 +57,7 @@ export default function Login() {
     <div className={`min-h-screen relative overflow-hidden w-full ${rethinkSansBold.variable} ${rethinkSansMedium.variable}`}>
       <div 
         className="absolute inset-0 bg-center bg-cover bg-no-repeat flex items-center justify-center"
-        style={{backgroundImage:"url('/assets/loginbg.png')",
-          filter: 'brightness(0.55)'
+        style={{backgroundImage:"url('/assets/login-bg.svg')",
         }}
       />
 

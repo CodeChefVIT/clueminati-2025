@@ -44,12 +44,11 @@ export default function CreateTeam() {
         {
           teamname: teamName,
         },
-        { withCredentials: true }
       );
 
       setCreatedTeam({
-        name: response.data.newTeam.teamname,
-        joinCode: response.data.newTeam.joinCode,
+        name: response.data.team.teamname,
+        joinCode: response.data.team.joinCode,
       });
       setShowModal(true);
     } catch (err: any) {
@@ -74,8 +73,7 @@ export default function CreateTeam() {
         <div
           className="absolute inset-0 bg-center bg-cover bg-no-repeat flex items-center justify-center"
           style={{
-            backgroundImage: "url('/assets/loginbg.png')",
-            filter: "brightness(0.55)",
+            backgroundImage: "url('/assets/login-bg.svg')",
           }}
         />
 
@@ -149,12 +147,12 @@ export default function CreateTeam() {
             <h2 className="text-2xl font-bold mb-4">Team Created!</h2>
             <p className="text-lg">Join Code: {createdTeam.joinCode}</p>
             <button
-              onClick={() => router.push("/join-team")}
+              onClick={handleProceed}
               className="w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover"
               style={{
                 backgroundImage: "url('/assets/proceedbuttonlogin.svg')",
               }}
-              aria-label="Proceed to Login"
+              aria-label="Proceed"
             />
           </div>
         </Modal>

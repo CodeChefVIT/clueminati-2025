@@ -54,6 +54,11 @@ export async function POST(req: NextRequest) {
       members: [tUser.id],
     });
     user.teamId = newTeam._id.toString();
+    // Mongoose validation fails if region is undefined, as it casts to ''.
+    // Explicitly setting it to null bypasses the enum validation for an empty value.
+    if (!user.region) {
+      user.region = undefined;
+    }
     await user.save();
 
     // AsSigning a fresh JWT so client has updated teamId

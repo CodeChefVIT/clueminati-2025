@@ -50,8 +50,7 @@ export default function JoinTeam() {
       <div
         className="absolute inset-0 bg-center bg-cover bg-no-repeat flex items-center justify-center"
         style={{
-          backgroundImage: "url('/assets/loginbg.png')",
-          filter: "brightness(0.55)",
+          backgroundImage: "url('/assets/login-bg.svg')",
         }}
       />  
 
@@ -99,7 +98,7 @@ export default function JoinTeam() {
                   backgroundImage: "url('/assets/proceedbuttonlogin.svg')",
                 }}
                 disabled={loading}>
-                  {loading ? 'Joining...' : 'Proceed'}
+                  
               </Button>
             </div>
           </form>

@@ -4,15 +4,19 @@ interface ButtonProps {
   label: string;
   onClick: () => void;
   className?: string; //optional to override size
+  disabled?: boolean;
 }
 
 const roundBox = "/assets/round-box.svg";
 
-const Button: FC<ButtonProps> = ({ label, onClick, className }) => {
+const Button: FC<ButtonProps> = ({ label, onClick, className, disabled }) => {
   return (
     <button
       onClick={onClick}
-      className={`relative ${className || "w-full"}`}
+      disabled={disabled}
+      className={`relative ${className || "w-full"} ${
+        disabled ? "opacity-50 cursor-not-allowed" : ""
+      }`}
     >
       <img
         src={roundBox}

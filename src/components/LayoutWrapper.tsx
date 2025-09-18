@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 
 export default function LayoutClientWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const rethinkPages = ["/login", "/create-team", "/join-team", "/role-selection", "/signup", "/verifyemail"];
+  const rethinkPages = ["/login", "/create-team", "/join-team", "/role-selection", "/signup", "/verifyemail", "/hell-instructions"];
   const docsPage = pathname.startsWith("/docs");
   const isRethinkPage = rethinkPages.some((page) => pathname.startsWith(page));
   const [isDesktop, setIsDesktop] = useState(false);
@@ -56,7 +56,7 @@ export default function LayoutClientWrapper({ children }: { children: React.Reac
       <Image
         src="/assets/background.svg"
         alt="Background"
-        className="absolute w-full h-full object-cover z-0 !brightness-50"
+        className="absolute w-full h-full object-cover z-0 "
         width={100}
         height={100}
         priority

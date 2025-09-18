@@ -41,7 +41,7 @@ export default function ScannerPage() {
       {/* Header */}
       <div className="relative z-10">
         <Image
-          src="/assets/scan page header.png"
+          src="/assets/scan-page-header.png"
           alt="Scan Page Header"
           width={229}
           height={67}

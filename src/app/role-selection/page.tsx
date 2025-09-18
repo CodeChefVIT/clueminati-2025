@@ -2,20 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import localFont from "next/font/local";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
-
-const rethinkSansBold = localFont({
-  src: "../../../public/assets/RethinkSans-Bold.ttf",
-  variable: "--font-rethinkSansBold",
-});
-const rethinkSansMedium = localFont({
-  src: "../../../public/assets/RethinkSans-Medium.ttf",
-  variable: "--font-rethinkSansMedium",
-});
+import { pixelFont, rethinkSansBold, rethinkSansMedium } from "../fonts";
 
 interface TeamMember {
   _id: string;
@@ -28,27 +18,12 @@ export default function RegionSelection() {
   const [selectedRegion, setSelectedRegion] = useState<"hell" | "earth" | null>(
     null
   );
+  const [background, setBackground] = useState("/assets/login-bg.svg");
   const [loading, setLoading] = useState(false);
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [currentUser, setCurrentUser] = useState<TeamMember | null>(null);
   const [hellCount, setHellCount] = useState(0);
   const [earthCount, setEarthCount] = useState(0);
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [countdown, setCountdown] = useState(10);
-  const [isConfirmActive, setIsConfirmActive] = useState(false);
-
-  //countdown timer effect
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (showConfirm && countdown > 0) {
-      timer = setTimeout(() => {
-        setCountdown((prev) => prev - 1);
-      }, 1000);
-    } else if (countdown === 0) {
-      setIsConfirmActive(true);
-    }
-    return () => clearTimeout(timer);
-  }, [showConfirm, countdown]);
 
   //fetch current user and team data
   useEffect(() => {
@@ -116,15 +91,17 @@ export default function RegionSelection() {
       return;
     }
 
-    //set selected region and show confirm button
+    if (region === "hell") {
+      setBackground("/assets/hell-bg.svg");
+    } else {
+      setBackground("/assets/background.svg");
+    }
+
     setSelectedRegion(region);
-    setShowConfirm(true);
-    setCountdown(10);
-    setIsConfirmActive(false);
   };
 
   const handleConfirm = async () => {
-    if (!selectedRegion || !isConfirmActive) return;
+    if (!selectedRegion) return;
 
     try {
       setLoading(true);
@@ -138,7 +115,6 @@ export default function RegionSelection() {
 
       if (response.data.success || response.data.message) {
         toast.success(`Region confirmed: ${selectedRegion.toUpperCase()}`);
-        //update current user state
         setCurrentUser((prev) =>
           prev ? { ...prev, region: selectedRegion } : null
         );
@@ -171,24 +147,17 @@ export default function RegionSelection() {
           setEarthCount((prev) => prev - 1);
         }
 
-        console.log("Redirecting to profile...");
-
-        setTimeout(async () => {
-          try {
-            router.push("/");
-          } catch (routerError) {
-            console.log("Router failed, using window.location");
-            window.location.href = "/profile";
-          }
-        }, 500);
+        if (selectedRegion === "hell") {
+          router.push("/hell-instructions");
+        } else {
+          router.push("/");
+        }
       } else {
         throw new Error("Unexpected response format");
       }
     } catch (error: any) {
       console.error("Region confirmation error:", error);
       toast.error(error.response?.data?.error || "Failed to assign region");
-      //reset confirm state on error
-      setShowConfirm(false);
       setSelectedRegion(null);
     } finally {
       setLoading(false);
@@ -213,62 +182,41 @@ export default function RegionSelection() {
 
   return (
     <div
-      className={`min-h-screen relative overflow-hidden w-full ${rethinkSansBold.variable} ${rethinkSansMedium.variable}`}
+      className={`min-h-screen relative overflow-hidden w-full ${rethinkSansBold.variable} ${rethinkSansMedium.variable} ${pixelFont.variable} font-pixel`}
     >
       <div
-        className="absolute inset-0 bg-center bg-cover bg-no-repeat flex items-center justify-center"
+        className="absolute inset-0 bg-center bg-cover bg-no-repeat flex items-center justify-center transition-all duration-500"
         style={{
-          backgroundImage: "url('/assets/loginbg.png')",
-          filter: "brightness(0.55)",
+          backgroundImage: `url('${background}')`,
         }}
       />
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center p-4">
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center p-4 font-pixel">
         <div className="w-full max-w-md mx-auto">
           <h1 className="text-4xl font-bold text-white text-center mb-4">
             Region Selection
           </h1>
-          <p className="text-white text-center mb-10 text-lg">
+          <p className="text-white text-center font-rethink mb-10 text-lg">
             Choose your region to play in
           </p>
 
-          {/* Current User Info */}
-          {currentUser && (
-            <div className="text-center mb-8">
-              <p className="text-white text-xl mb-2">
-                Welcome, {currentUser.fullname}!
-              </p>
-              {currentUser.region && (
-                <p className="text-yellow-400 text-lg">
-                  Current Region: {currentUser.region.toUpperCase()}
-                </p>
-              )}
-            </div>
-          )}
-
-          {/* Region Selection */}
           <div className="grid grid-cols-1 gap-6 mb-8">
             {/* Hell Region */}
             <div className="flex flex-col items-center">
               <Button
                 onClick={() => handleRegionSelect("hell")}
                 disabled={loading || isHellDisabled()}
-                className={`w-full h-32 bg-gradient-to-br from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 
-                          border-2 border-red-400 text-white font-bold text-2xl rounded-xl shadow-lg
-                          ${
-                            selectedRegion === "hell"
-                              ? "ring-4 ring-yellow-400"
-                              : ""
-                          }
-                          ${
-                            isHellDisabled()
-                              ? "opacity-50 cursor-not-allowed"
-                              : "hover:scale-105 transition-transform"
-                          }`}
+                className={`w-full h-24 bg-no-repeat bg-center bg-cover text-white font-bold text-xl rounded-xl shadow-lg transition-all duration-300 ${
+                  selectedRegion === "hell" ? "brightness-100" : "brightness-50"
+                } ${
+                  isHellDisabled()
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:scale-105 hover:opacity-100"
+                }`}
+                style={{ backgroundImage: "url('/assets/round-box-hell.svg')" }}
               >
                 <div className="flex flex-col items-center">
-                  <span className="text-3xl mb-2">🔥</span>
-                  <span>HELL</span>
-                  <span className="text-sm mt-1">
+                  <span className="text-xl">HELL</span>
+                  <span className="text-xs mt-1">
                     ({hellCount}/2 slots filled)
                   </span>
                 </div>
@@ -283,23 +231,20 @@ export default function RegionSelection() {
               <Button
                 onClick={() => handleRegionSelect("earth")}
                 disabled={loading || isEarthDisabled()}
-                className={`w-full h-32 bg-gradient-to-br from-green-600 to-green-800 hover:from-green-700 hover:to-green-900 
-                          border-2 border-green-400 text-white font-bold text-2xl rounded-xl shadow-lg
-                          ${
-                            selectedRegion === "earth"
-                              ? "ring-4 ring-yellow-400"
-                              : ""
-                          }
-                          ${
-                            isEarthDisabled()
-                              ? "opacity-50 cursor-not-allowed"
-                              : "hover:scale-105 transition-transform"
-                          }`}
+                className={`w-full h-24 bg-no-repeat bg-center bg-cover text-white font-bold text-xl rounded-xl shadow-lg transition-all duration-300 ${
+                  selectedRegion === "earth"
+                    ? "brightness-100"
+                    : "brightness-50"
+                } ${
+                  isEarthDisabled()
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:scale-105 hover:opacity-100"
+                }`}
+                style={{ backgroundImage: "url('/assets/round-box.svg')" }}
               >
                 <div className="flex flex-col items-center">
-                  <span className="text-3xl mb-2">🌍</span>
-                  <span>EARTH</span>
-                  <span className="text-sm mt-1">
+                  <span className="text-xl">EARTH</span>
+                  <span className="text-xs mt-1">
                     ({earthCount}/3 slots filled)
                   </span>
                 </div>
@@ -312,110 +257,24 @@ export default function RegionSelection() {
             </div>
           </div>
 
-          {/* Confirm Button with Timer */}
-          {showConfirm && (
+          {selectedRegion && (
             <div className="flex flex-col items-center mb-8">
-              <div className="bg-black/40 rounded-lg p-6 w-full max-w-sm">
-                <h3 className="text-white text-xl font-bold text-center mb-4">
-                  Confirm Region Selection
-                </h3>
-                <p className="text-white text-center mb-4">
-                  You selected:{" "}
-                  <span
-                    className={`font-bold ${
-                      selectedRegion === "hell"
-                        ? "text-red-400"
-                        : "text-green-400"
-                    }`}
-                  >
-                    {selectedRegion?.toUpperCase()}
-                  </span>
-                </p>
-
-                {countdown > 0 ? (
-                  <div className="text-center mb-4">
-                    <p className="text-gray-300 text-sm mb-2">
-                      Please wait to confirm
-                    </p>
-                    <div className="text-4xl font-bold text-yellow-400">
-                      {countdown}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="text-center mb-4">
-                    <p className="text-green-400 text-sm">Ready to confirm!</p>
-                  </div>
-                )}
-
-                <Button
-                  onClick={handleConfirm}
-                  disabled={!isConfirmActive || loading}
-                  className={`w-full h-14 text-xl font-bold rounded-xl transition-all duration-300 ${
-                    isConfirmActive
-                      ? "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg hover:scale-105"
-                      : "bg-gray-600 text-gray-400 cursor-not-allowed opacity-50"
-                  }`}
-                >
-                  {loading
-                    ? "Confirming..."
-                    : isConfirmActive
-                    ? "CONFIRM SELECTION"
-                    : "PLEASE WAIT..."}
-                </Button>
-
-                <button
-                  onClick={() => {
-                    setShowConfirm(false);
-                    setSelectedRegion(null);
-                    setCountdown(10);
-                    setIsConfirmActive(false);
-                  }}
-                  className="w-full mt-3 text-gray-400 hover:text-white text-sm underline"
-                >
-                  Cancel and choose again
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Team Members Status */}
-          {teamMembers.length > 0 && (
-            <div className="bg-black/30 rounded-lg p-4 mb-6">
-              <h3 className="text-white text-lg font-bold mb-3">
-                Team Status:
-              </h3>
-              <div className="space-y-2">
-                {teamMembers.map((member) => (
-                  <div
-                    key={member._id}
-                    className="flex justify-between text-white"
-                  >
-                    <span
-                      className={
-                        member._id === currentUser?._id
-                          ? "font-bold text-yellow-400"
-                          : ""
-                      }
-                    >
-                      {member.fullname}{" "}
-                      {member._id === currentUser?._id ? "(You)" : ""}
-                    </span>
-                    <span
-                      className={`px-2 py-1 rounded text-sm ${
-                        member.region === "hell"
-                          ? "bg-red-600"
-                          : member.region === "earth"
-                          ? "bg-green-600"
-                          : "bg-gray-600"
-                      }`}
-                    >
-                      {member.region
-                        ? member.region.toUpperCase()
-                        : "Not Selected"}
-                    </span>
-                  </div>
-                ))}
-              </div>
+              <Button
+                onClick={handleConfirm}
+                disabled={loading}
+                className="w-fit py-6 px-8  text-xl font-bold rounded-xl transition-all duration-300 bg-no-repeat bg-center bg-cover text-white shadow-lg hover:scale-105"
+                style={{
+                  backgroundImage: `url(${
+                    selectedRegion === "hell"
+                      ? "/assets/round-box-hell.svg"
+                      : "/assets/round-box.svg"
+                  })`,
+                }}
+              >
+                {loading
+                  ? "Entering..."
+                  : `ENTER ${selectedRegion.toUpperCase()}`}
+              </Button>
             </div>
           )}
 
