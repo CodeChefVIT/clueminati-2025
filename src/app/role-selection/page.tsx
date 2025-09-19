@@ -55,11 +55,14 @@ export default function RegionSelection() {
               setHellCount(hellMembers.length);
               setEarthCount(earthMembers.length);
             }
-          } catch (error) {
-            console.log(
-              "Could not fetch team members, using current user only"
-            );
-            setTeamMembers([userData]);
+          } catch (membersError) {
+            console.error("Error fetching team members:", membersError);
+            let message = "Could not fetch team members. Region counts may be inaccurate.";
+            if (isAxiosError(membersError) && membersError.response) {
+              message = membersError.response.data.error || message;
+            }
+            setErrorMessage(message);
+            setShowErrorModal(true);
           }
         }
       } catch (error) {
@@ -82,7 +85,6 @@ export default function RegionSelection() {
       return;
     }
 
-    //check if hell or earth is full excluding current user if they already have that region
     const currentUserHasHell = currentUser.region === "hell";
     const currentUserHasEarth = currentUser.region === "earth";
     const effectiveHellCount = currentUserHasHell ? hellCount - 1 : hellCount;
@@ -159,8 +161,9 @@ export default function RegionSelection() {
 
         if (selectedRegion === "hell") {
           router.push("/hell-instructions");
+        } else {
+          router.push("/profile");
         }
-        router.push("/");
       } else {
         throw new Error("Unexpected response format");
       }
