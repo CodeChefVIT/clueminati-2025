@@ -4,7 +4,7 @@ import { getUserFromToken } from "@/utils/getUserFromToken";
 import User from "@/lib/models/user";
 import Team from "@/lib/models/team";
 import { IEvent } from "@/lib/interfaces";
-import { getCurrentRound } from "@/utils/getCurrentRound";
+import { getCurrentRound } from "@/utils/getRound";
 import jwt from "jsonwebtoken";
 
 connectToDatabase();

@@ -1,7 +1,7 @@
 import { connectToDatabase } from "@/lib/db";
 import Team from "@/lib/models/team";
 import User from "@/lib/models/user";
-import { getCurrentRound } from "@/utils/getCurrentRound";
+import { getCurrentRound } from "@/utils/getRound";
 import { getUserFromToken } from "@/utils/getUserFromToken";
 import { NextRequest, NextResponse } from "next/server";
 
