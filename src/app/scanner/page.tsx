@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Scanner } from "@yudiel/react-qr-scanner";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 import GamePopup from "@/components/gamePopup";
 
 export default function ScannerPage() {
@@ -12,34 +12,45 @@ export default function ScannerPage() {
   const [isScanning, setIsScanning] = useState(true);
   const [manualCode, setManualCode] = useState("");
   const [useManual, setUseManual] = useState(true);
-  const [showPopup, setShowPopup] = useState(false);
-  const [message, setMessage] = useState("");
+  const [showPopup, setShowPopup] = useState(false); // <-- popup state
+  const [message, setMessage] = useState('');
 
   const router = useRouter();
 
-  const handleManualSubmit = (e: React.FormEvent) => {
+  const handleManualSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Manual Code Entered:", manualCode);
-  };
-
-  const handleScan = (result: string) => {
-    // MongoDB ObjectId validation regex
-    const objectIdRegex = /^[0-9a-fA-F]{24}$/;
-
-    if (objectIdRegex.test(result)) {
-      setScannedResult(result);
-      setIsScanning(false);
-      router.push(`/core-member/difficulty/${result}`);
-    } else {
-      setMessage("Invalid QR Code. Not a valid Team ID.");
+    try {
+      const response = await axios.get("/api/round-one/get-question-by-id", {
+        params: { id: manualCode },
+      });
+      router.push("/question/" + manualCode);
+    } catch (error: any) {
+      console.error(error);
+      setMessage(error.response.data.error);
       setShowPopup(true);
     }
   };
 
+  const handleScan = async (result: string) => {
+    try {
+      const response = await axios.get("/api/round-one/get-question-by-id", {
+        params: { id: result },
+      });
+      setScannedResult(result);
+      setIsScanning(false);
+      router.push("/question/" + result);
+    } catch (error: any) {
+      console.error(error);
+      setMessage(error.response.data.error);
+      setShowPopup(true);
+      setIsScanning(true);
+    }
+  };
+
   return (
-    <main className="relative pt-10 w-full flex flex-col items-center justify-center gap-y-8 overflow-hidden no-scrollbar">
+    <main className="relative  w-full flex flex-col items-center justify-start overflow-hidden no-scrollbar">
       {/* Header */}
-      <div className="relative z-10">
+      <div className="mt-[60px] relative z-10">
         <Image
           src="/assets/scan-page-header.png"
           alt="Scan Page Header"
@@ -49,13 +60,14 @@ export default function ScannerPage() {
       </div>
 
       {/* Scanner with overlay */}
-      <div className="relative w-[300px] h-[300px] flex items-center justify-center z-10">
+      <div className="mt-[20px] relative w-[340px] h-[340px] flex items-center justify-center z-10">
         <div className="relative w-full h-full rounded-2xl overflow-hidden">
           {isScanning && (
             <Scanner
               onScan={(detectedCodes) => {
                 if (detectedCodes.length > 0) {
                   const result = detectedCodes[0].rawValue;
+                  console.log("QR Code Result:", result);
                   handleScan(result);
                 }
               }}
@@ -79,9 +91,9 @@ export default function ScannerPage() {
         />
       </div>
 
-      {/* Manual Input box */}
-      {/* {useManual && (
-        <div className="relative w-[360px] h-[78px] z-10">
+      {/* Manual Input box
+      {useManual && (
+        <div className="mt-[30px] relative w-[360px] h-[78px] z-10">
           <Image
             src="/assets/mannual entry.svg"
             alt="Manual Entry Frame"
@@ -103,21 +115,6 @@ export default function ScannerPage() {
         </div>
       )} */}
 
-      {/* Close Button */}
-      <Link
-        href="/core-member"
-        aria-label="Close Scanner"
-        className="group z-10 hover:scale-105 transition"
-      >
-        <Image
-          src="/assets/close.svg"
-          alt="Close Button"
-          width={145}
-          height={60}
-          className="object-contain"
-        />
-      </Link>
-
       {/* Debug output */}
       {(scannedResult || manualCode) && (
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 p-2 bg-gray-800 rounded-md text-white text-sm max-w-[300px] break-words z-30">
@@ -125,6 +122,7 @@ export default function ScannerPage() {
         </div>
       )}
       <GamePopup isOpen={showPopup} onClose={() => setShowPopup(false)} message={message} />
+
     </main>
   );
 }

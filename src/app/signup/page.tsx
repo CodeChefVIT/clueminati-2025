@@ -6,12 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { toast } from "react-hot-toast";
 import localFont from "next/font/local";
 import Link from "next/link";
 import Modal from "@/components/Modal";
-const questionBox = "/assets/Question_Box.svg";
 
+const questionBox = "/assets/Question_Box.svg";
 
 const rethinkSansBold = localFont({
   src: "../../../public/assets/RethinkSans-Bold.ttf",
@@ -25,11 +24,14 @@ const rethinkSansMedium = localFont({
 export default function SignupPage() {
   const router = useRouter();
   const [fullname, setFullname] = useState("");
-  const [regno, setregno] = useState("");
+  const [regno, setRegno] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [emailError, setEmailError] = useState("");
+
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const [buttonDisabled, setButtonDisabled] = useState(true);
 
   useEffect(() => {
@@ -44,7 +46,6 @@ export default function SignupPage() {
     e.preventDefault();
     try {
       setLoading(true);
-      setEmailError("");
       const response = await axios.post("/api/users/signup", {
         fullname,
         reg_num: regno,
@@ -54,15 +55,26 @@ export default function SignupPage() {
       setShowSuccessModal(true);
     } catch (error: any) {
       console.log("Signup failed", error);
-      if (error.response?.data?.error === "user already exists") {
-        const errorMessage =
-          error.response?.data?.message ||
-          "This email is already registered. Please login or use a different email.";
-        setEmailError(errorMessage);
-        toast.error(errorMessage);
-      } else {
-        toast.error(error.response?.data?.error || "Signup failed");
+
+      let message = "Signup failed. Please try again.";
+
+      if (error.response?.data?.error) {
+        try {
+          const parsed = JSON.parse(error.response.data.error);
+
+          if (Array.isArray(parsed)) {
+            message = parsed.map((err: any) => err.message).join("\n");
+          } else if (parsed.message) {
+            message = parsed.message;
+          }
+        } catch (e) {
+          message =
+            error.response.data.message || error.response.data.error || message;
+        }
       }
+
+      setErrorMessage(message);
+      setShowErrorModal(true);
     } finally {
       setLoading(false);
     }
@@ -75,8 +87,7 @@ export default function SignupPage() {
       <div
         className="absolute inset-0 bg-center bg-cover bg-no-repeat flex items-center justify-center"
         style={{
-          backgroundImage: "url('/assets/loginbg.png')",
-          filter: "brightness(0.55)",
+          backgroundImage: "url('/assets/login-bg.svg')",
         }}
       />
 
@@ -111,8 +122,8 @@ export default function SignupPage() {
               <Input
                 id="regno"
                 type="text"
-                value={regno.toUpperCase()}
-                onChange={(e) => setregno(e.target.value)}
+                value={regno}
+                onChange={(e) => setRegno(e.target.value)}
                 className="h-[60px] w-[100%] bg-[#D3D5D7] border border-black/20 rounded-lg text-black mb-2"
                 required
               />
@@ -126,27 +137,20 @@ export default function SignupPage() {
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setEmailError("");
-                }}
-                className={`h-[60px] w-[100%] bg-[#D3D5D7] border ${
-                  emailError ? "border-red-500" : "border-black/20"
-                } rounded-lg text-black mb-2`}
+                onChange={(e) => setEmail(e.target.value)}
+                className="h-[60px] w-[100%] bg-[#D3D5D7] border border-black/20 rounded-lg text-black mb-2"
                 required
               />
-              {emailError && (
-                <p className="text-red-500 text-sm mb-2">{emailError}</p>
-              )}
             </div>
+
             <div className="flex justify-center mt-6">
               <Button
                 type="submit"
-                disabled={buttonDisabled || loading || !!emailError}
+                disabled={buttonDisabled || loading}
                 className={`w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover flex items-center justify-center
                   ${
-                    buttonDisabled || loading || !!emailError
-                      ? "pointer-events-none opacity-50"
+                    buttonDisabled || loading
+                      ? "pointer-events-none "
                       : "pointer-events-auto"
                   }
                 `}
@@ -165,18 +169,17 @@ export default function SignupPage() {
           </p>
         </div>
       </div>
+
       <Modal
         isOpen={showSuccessModal}
         onClose={() => router.push("/login")}
         showCloseButton={false}
         backgroundSvg={questionBox}
-
       >
         <div className="text-center space-y-6 px-4 text-white">
-        
           <h2 className="text-2xl font-bold mb-4">Account Created!</h2>
           <p className="text-white/80 mb-8">
-            Please check your email for your password and login details.
+            Please check {email} for your password and login details.
           </p>
           <button
             onClick={() => router.push("/login")}
@@ -186,6 +189,23 @@ export default function SignupPage() {
             }}
             aria-label="Proceed to Login"
           />
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showErrorModal}
+        onClose={() => setShowErrorModal(false)}
+        backgroundSvg={questionBox}
+      >
+        <div className="text-center space-y-6 px-4">
+          <h2 className="text-xl font-bold text-red-500">Error</h2>
+          <div className="space-y-2">
+            {errorMessage?.split("\n").map((line, i) => (
+              <p key={i} className="text-base text-gray-300 leading-relaxed">
+                {line}
+              </p>
+            ))}
+          </div>
         </div>
       </Modal>
     </div>

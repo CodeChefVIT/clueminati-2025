@@ -54,7 +54,7 @@
                                         },
                                         "redirect": {
                                             "type": "string",
-                                            "example": "/team-selection"
+                                            "example": "/region-selection"
                                         }
                                     }
                                 }
