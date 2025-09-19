@@ -22,6 +22,7 @@ export default function LayoutClientWrapper({
     "/signup",
     "/verifyemail",
     "/hell-instructions",
+    "/instructions"
   ];
   const docsPage = pathname.startsWith("/docs");
   const isRethinkPage = rethinkPages.some((page) => pathname.startsWith(page));

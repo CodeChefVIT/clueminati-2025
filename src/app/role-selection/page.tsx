@@ -162,7 +162,7 @@ export default function RegionSelection() {
         if (selectedRegion === "hell") {
           router.push("/hell-instructions");
         } else {
-          router.push("/profile");
+          router.push("/instructions");
         }
       } else {
         throw new Error("Unexpected response format");

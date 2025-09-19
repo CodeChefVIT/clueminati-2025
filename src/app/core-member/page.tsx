@@ -13,7 +13,7 @@ export default function CoreMember() {
       {/* QR Scanner Image */}
       <div className="mb-8">
         <Image
-          src="/assets/qr_scanner_icon.png" // qr frame asset
+          src="/assets/qr_scanner_icon.svg" // qr frame asset
           alt="QR Scan Frame"
           width={204}
           height={157}

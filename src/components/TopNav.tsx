@@ -26,7 +26,7 @@ function TopNav() {
         setTimeLeft(r1End - now);
       } else if (now > r1End && now < r2Start) {
         //gap between round 1 and round 2
-        setRound("Half Time");
+        setRound("Half Time");  
         setTimeLeft(r2Start - now);
       } else if (now >= r2Start && now <= r2End) {
         //during round 2
@@ -49,7 +49,6 @@ function TopNav() {
       setTimeLeft((prev) => {
         if (prev === null) return null;
         if (prev <= 1000) {
-          // ⏱ When timer hits zero, refetch game state to auto-transition
           fetchGameStat();
           return null;
         }
@@ -79,7 +78,6 @@ function TopNav() {
         </span>
       </div>
 
-      {/* Timer Box */}
       <div className="relative w-40 sm:w-44">
         <img src="/assets/timer-box.svg" alt="Timer" className="w-full" />
         <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-xl sm:text-2xl">

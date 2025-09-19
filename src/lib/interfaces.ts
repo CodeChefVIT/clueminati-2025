@@ -12,6 +12,7 @@ export const UserSchema = z.object({
   verifyTokenExpiry: z.date().optional(),
   forgotPasswordToken: z.string().optional(),
   forgotPasswordTokenExpiry: z.date().optional(),
+  core_alloted_station: z.string().optional(),
   reg_num: z.string().regex(/^\d{2}[A-Z]{3}\d{4}$/, {
       message: "Invalid registration number format. Example: 23BCX1234",
     })
