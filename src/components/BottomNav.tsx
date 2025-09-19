@@ -1,8 +1,9 @@
 "use client";
 
 import { FC } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 
 interface Tab {
   active: string;
@@ -12,7 +13,6 @@ interface Tab {
 }
 
 const BottomNav: FC = () => {
-  const router = useRouter();
   const pathname = usePathname();
 
   const isCoreMemberPath = pathname.startsWith("/core-member");
@@ -41,19 +41,19 @@ const BottomNav: FC = () => {
         }
 
         return (
-          <button
+          <Link
             key={i}
-            onClick={() => router.push(tab.path)}
+            href={tab.path}
             className="flex items-center justify-center cursor-pointer"
           >
             <Image
               src={isActive ? tab.active : tab.inactive}
               alt={tab.alt}
-              width={200}
-              height={200}
+              width={80}
+              height={80}
               className="h-20 w-25"
             />
-          </button>
+          </Link>
         );
       })}
     </div>

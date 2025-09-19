@@ -5,9 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import localFont from "next/font/local";
-import toast from "react-hot-toast";
-import axios from "axios";
-import Popup from "@/components/Popup";
+import axios, { isAxiosError } from "axios";
+import Modal from "@/components/Modal";
+
+const questionBox = "/assets/Question_Box.svg";
 
 const rethinkSansBold = localFont({
   src: "../../../public/assets/RethinkSans-Bold.ttf",
@@ -22,8 +23,9 @@ export default function CreateTeam() {
   const router = useRouter();
   const [teamName, setTeamName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [createdTeam, setCreatedTeam] = useState<{
     name: string;
     joinCode: string;
@@ -33,34 +35,41 @@ export default function CreateTeam() {
     e.preventDefault();
 
     if (!teamName.trim()) {
-      toast.error("Team name cannot be empty.");
+      setErrorMessage("Team name cannot be empty.");
+      setShowErrorModal(true);
       return;
     }
 
     setLoading(true);
     try {
-      const res = await axios.post(
+      const response = await axios.post(
         "/api/users/create-team",
-        { teamname: teamName },
+        {
+          teamname: teamName,
+        },
       );
 
       setCreatedTeam({
-        name: res.data.team?.teamname || teamName,
-        joinCode: res.data.team?.joinCode || "TEAM123", 
+        name: response.data.team.teamname,
+        joinCode: response.data.team.joinCode,
       });
-      setShowModal(true);
-    } catch (err: any) {
+      setShowSuccessModal(true);
+    } catch (err) {
       console.error("Error creating team:", err);
-      setError(err.response?.data?.error || "Something went wrong.");
+      let message = "Failed to create team. Please try again.";
+      if (isAxiosError(err) && err.response) {
+        message = err.response.data.error || message;
+      }
+      setErrorMessage(message);
+      setShowErrorModal(true);
     } finally {
       setLoading(false);
     }
   };
 
   const handleProceed = () => {
-    setShowModal(false);
-    // Redirect to role selection after team creation
-    router.push("/role-selection");
+    setShowSuccessModal(false);
+    router.push("/");
   };
 
   return (
@@ -71,8 +80,7 @@ export default function CreateTeam() {
         <div
           className="absolute inset-0 bg-center bg-cover bg-no-repeat flex items-center justify-center"
           style={{
-            backgroundImage: "url('/assets/loginbg.png')",
-            filter: "brightness(0.55)",
+            backgroundImage: "url('/assets/login-bg.svg')",
           }}
         />
 
@@ -103,10 +111,6 @@ export default function CreateTeam() {
                 />
               </div>
 
-              {error && (
-                <p className="text-red-500 text-center text-sm">{error}</p>
-              )}
-
               <div className="text-right">
                 <span className="text-white font-medium text-base mr-1.5">
                   Have a team?
@@ -128,24 +132,46 @@ export default function CreateTeam() {
                   style={{
                     backgroundImage: "url('/assets/proceedbuttonlogin.svg')",
                   }}
-                >
-                  {loading ? "Creating..." : ""}
-                </Button>
+                ></Button>
               </div>
             </form>
           </div>
         </div>
       </div>
 
-
       {createdTeam && (
-        <Popup
-          isOpen={showModal}
-          teamName={createdTeam.name}
-          joinCode={createdTeam.joinCode}
-          onProceed={handleProceed}
-        />
+        <Modal
+          isOpen={showSuccessModal}
+          onClose={() => setShowSuccessModal(false)}
+          showCloseButton={false}
+          backgroundSvg="/assets/Question_Box.svg"
+        >
+          <div className="text-center space-y-6 px-4 text-white">
+            <h2 className="text-2xl font-bold mb-4">Team Created!</h2>
+            <p className="text-lg">Join Code: {createdTeam.joinCode}</p>
+            <button
+              onClick={handleProceed}
+              className="w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover"
+              style={{
+                backgroundImage: "url('/assets/proceedbuttonlogin.svg')",
+              }}
+              aria-label="Proceed"
+            />
+          </div>
+        </Modal>
       )}
+      <Modal
+        isOpen={showErrorModal}
+        onClose={() => setShowErrorModal(false)}
+        backgroundSvg={questionBox}
+      >
+        <div className="text-center space-y-6 px-4">
+          <h2 className="text-xl font-bold text-red-500">Error</h2>
+          <p className="text-base text-gray-300 leading-relaxed">
+            {errorMessage}
+          </p>
+        </div>
+      </Modal>
     </>
   );
 }

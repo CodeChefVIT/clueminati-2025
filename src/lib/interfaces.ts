@@ -35,8 +35,6 @@ const Round1Schema = z.object({
   questions_encountered: QuestionTrackingSchema,
   score: z.number().min(0).default(0),
   game_score: z.number().min(0).default(0),
-  // testing skip - add skip tracking
-  lastSkipTimestamp: z.date().optional(),
 });
 
 const Round2Schema = Round1Schema.extend({
@@ -47,7 +45,6 @@ const Round2Schema = Round1Schema.extend({
   previousStation: z.string().optional().default(""),
   solvedStations: z.array(z.string()).default([]), //stationId[]
   letters_found: z.array(z.string()).default([]),   //changed from lettersFound
-  // testing skip - lastSkipTimestamp inherited from Round1Schema
 });
 
 export const TeamSchema = z.object({

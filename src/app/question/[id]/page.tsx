@@ -18,50 +18,6 @@ export default function QuestionScreen() {
   const [loading, setLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const [message, setMessage] = useState('');
-  
-  // testing skip - Skip functionality state
-  const [canSkip, setCanSkip] = useState(true);
-  const [skipCooldownSeconds, setSkipCooldownSeconds] = useState(0);
-  const [skipLoading, setSkipLoading] = useState(false);
-
-  // testing skip - Check skip status on component mount and set up timer
-  useEffect(() => {
-    const checkSkipStatus = async () => {
-      try {
-        const response = await axios.get("/api/round/skip-question");
-        setCanSkip(response.data.canSkip);
-        if (!response.data.canSkip && response.data.remainingSeconds) {
-          setSkipCooldownSeconds(response.data.remainingSeconds);
-        }
-      } catch (error) {
-        console.error("Error checking skip status:", error);
-        setCanSkip(true); // Default to allowing skip if check fails
-      }
-    };
-    
-    checkSkipStatus();
-  }, []);
-
-  // testing skip - Countdown timer for skip cooldown
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    
-    if (skipCooldownSeconds > 0) {
-      interval = setInterval(() => {
-        setSkipCooldownSeconds((prev) => {
-          if (prev <= 1) {
-            setCanSkip(true);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [skipCooldownSeconds]);
 
   useEffect(() => {
     const getQuestionById = async () => {
@@ -112,37 +68,12 @@ export default function QuestionScreen() {
     }
   }, [id, inputValue, router]);
 
-  // testing skip - Updated skip handler with API call and cooldown
-  const handleSkip = async () => {
-    if (!canSkip || skipLoading) return;
-
-    try {
-      setSkipLoading(true);
-      const response = await axios.post("/api/round/skip-question");
-      
-      if (response.status === 200) {
-        setMessage("Question skipped! You can skip again in 5 minutes.");
-        setShowPopup(true);
-        setCanSkip(false);
-        setSkipCooldownSeconds(300); // 5 minutes = 300 seconds
-        
-        setTimeout(() => {
-          router.push("/");
-        }, 2000);
-      }
-    } catch (error: any) {
-      console.error("Skip error:", error);
-      if (error.response?.status === 429) {
-        setMessage(`Skip cooldown active. Try again in ${error.response.data.remainingMinutes} minutes.`);
-        setCanSkip(false);
-        setSkipCooldownSeconds(Math.ceil(error.response.data.remainingTime / 1000));
-      } else {
-        setMessage(error.response?.data?.error || "Failed to skip question");
-      }
-      setShowPopup(true);
-    } finally {
-      setSkipLoading(false);
-    }
+  const handleSkip = () => {
+    setMessage("answer skipped!!");
+    setShowPopup(true);
+    setTimeout(() => {
+      router.push("/");
+    }, 1000);
   };
 
   return (
@@ -170,21 +101,10 @@ export default function QuestionScreen() {
       </div>
 
       <div className="flex flex-col items-center w-full max-w-[16rem] sm:max-w-[18rem]">
-        {/* testing skip - Enhanced skip button with timer and disabled state */}
         <Button
-          label={
-            canSkip && !skipLoading
-              ? "Skip"
-              : skipLoading
-              ? "Skipping..."
-              : `Skip (${Math.floor(skipCooldownSeconds / 60)}:${(skipCooldownSeconds % 60).toString().padStart(2, '0')})`
-          }
-          onClick={canSkip && !skipLoading ? handleSkip : () => {}}
-          className={`!w-full !text-3xl sm:!text-4xl !font-extrabold ${
-            !canSkip || skipLoading
-              ? "!bg-gray-600 !text-gray-400 cursor-not-allowed opacity-60"
-              : "!bg-red-600 hover:!bg-red-700"
-          }`}
+          label="Skip"
+          onClick={handleSkip}
+          className="!w-full !text-3xl sm:!text-4xl !font-extrabold"
         />
         <Button
           label="Submit"
@@ -199,7 +119,10 @@ export default function QuestionScreen() {
         backgroundSvg={questionBox}
       >
         <div className="text-center space-y-6 px-4">
-          <div className="font-bold text-2xl leading-tight tracking-wide" style={{ color: "#B9B9B9" }}>
+          <div
+            className="font-bold text-2xl leading-tight tracking-wide"
+            style={{ color: "#B9B9B9" }}
+          >
             {message}
           </div>
         </div>

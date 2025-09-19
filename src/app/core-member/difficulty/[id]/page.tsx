@@ -3,8 +3,10 @@
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import GamePopup from "@/components/gamePopup";
+import axios, { isAxiosError } from "axios";
+import Modal from "@/components/Modal";
+
+const questionBox = "/assets/Question_Box.svg";
 
 export default function CoreMemberDifficulty() {
   const params = useParams();
@@ -13,8 +15,8 @@ export default function CoreMemberDifficulty() {
 
   const [teamName, setTeamName] = useState("Loading...");
   const [score, setScore] = useState<number | string>("...");
-  const [error, setError] = useState<string | null>(null);
-  const [showPopup, setShowPopup] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showErrorModal, setShowErrorModal] = useState(false);
 
   const [isGenerating, setIsGenerating] = useState(false);
   const [difficulty, setDifficulty] = useState("Medium");
@@ -33,12 +35,14 @@ export default function CoreMemberDifficulty() {
         const { teamname, total_score } = response.data.data;
         setTeamName(teamname);
         setScore(total_score);
-      } catch (err: any) {
+      } catch (err) {
         console.error("Error fetching team data:", err);
-        const errorMessage =
-          err.response?.data?.error || "Failed to fetch team data.";
-        setError(errorMessage);
-        setShowPopup(true);
+        let message = "Failed to fetch team data.";
+        if (isAxiosError(err) && err.response) {
+          message = err.response.data.error || message;
+        }
+        setErrorMessage(message);
+        setShowErrorModal(true);
       }
     };
 
@@ -47,12 +51,12 @@ export default function CoreMemberDifficulty() {
 
   const handleOptionClick = (level: string) => {
     setDifficulty(level);
-    setIsOpen(false); // Close the dropdown after selection
+    setIsOpen(false); 
   };
 
   const handleGenerate = async () => {
     setIsGenerating(true);
-    setError(null);
+    setErrorMessage(null);
     try {
       const response = await axios.get("/api/round-one/serve-question", {
         params: {
@@ -62,12 +66,14 @@ export default function CoreMemberDifficulty() {
       });
       const questionId = response.data.data.question._id;
       router.push(`/core-member/qr/${questionId}`);
-    } catch (err: any) {
+    } catch (err) {
       console.error("Error generating question:", err);
-      const errorMessage =
-        err.response?.data?.error || "Failed to generate a question.";
-      setError(errorMessage);
-      setShowPopup(true);
+      let message = "Failed to generate a question.";
+      if (isAxiosError(err) && err.response) {
+        message = err.response.data.error || message;
+      }
+      setErrorMessage(message);
+      setShowErrorModal(true);
     } finally {
       setIsGenerating(false);
     }
@@ -75,9 +81,7 @@ export default function CoreMemberDifficulty() {
 
   return (
     <main className="relative pt-8 w-full flex flex-col items-center justify-center gap-y-8 p-4">
-      {/* Header */}
 
-      {/* Team Name Display */}
       <div className="relative flex items-center justify-center">
         <Image
           src="/assets/brick.svg"
@@ -91,7 +95,6 @@ export default function CoreMemberDifficulty() {
         </span>
       </div>
 
-      {/* Score Display */}
       <div className="relative flex items-center justify-center">
         <Image
           src="/assets/brick.svg"
@@ -127,10 +130,10 @@ export default function CoreMemberDifficulty() {
           <div className="absolute top-full mt-2 w-full z-20">
             <div className="relative flex flex-col items-center justify-center">
               <Image
-                src="/assets/brick.svg" // Using your asset as a background
+                src="/assets/brick.svg" 
                 alt="Dropdown Menu Background"
                 width={320}
-                height={120} // Adjusted height for 3 options
+                height={120} 
               />
               <div className="absolute inset-0 flex flex-col justify-around p-2">
                 {difficulties.map((level) => (
@@ -164,11 +167,18 @@ export default function CoreMemberDifficulty() {
           className="object-contain"
         />
       </button>
-      <GamePopup
-        isOpen={showPopup}
-        onClose={() => setShowPopup(false)}
-        message={error || ""}
-      />
+      <Modal
+        isOpen={showErrorModal}
+        onClose={() => setShowErrorModal(false)}
+        backgroundSvg={questionBox}
+      >
+        <div className="text-center space-y-6 px-4">
+          <h2 className="text-xl font-bold text-red-500">Error</h2>
+          <p className="text-base text-gray-300 leading-relaxed">
+            {errorMessage}
+          </p>
+        </div>
+      </Modal>
     </main>
   );
 }
