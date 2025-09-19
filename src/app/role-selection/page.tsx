@@ -238,9 +238,7 @@ export default function RegionSelection() {
                   </span>
                 </div>
               </Button>
-              {isHellDisabled() && (
-                <p className="text-red-400 text-sm mt-2">Hell region is full</p>
-              )}
+          
             </div>
 
             {/* Earth Region */}
@@ -266,11 +264,7 @@ export default function RegionSelection() {
                   </span>
                 </div>
               </Button>
-              {isEarthDisabled() && (
-                <p className="text-green-400 text-sm mt-2">
-                  Earth region is full
-                </p>
-              )}
+            
             </div>
           </div>
 

@@ -58,7 +58,7 @@ export default function CoreMemberDifficulty() {
     setIsGenerating(true);
     setErrorMessage(null);
     try {
-      const response = await axios.get("/api/round-one/serve-question", {
+      const response = await axios.get("/api/round/serve-question", {
         params: {
           teamId: id,
           difficulty: difficulty.toLowerCase(),

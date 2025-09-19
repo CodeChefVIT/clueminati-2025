@@ -25,7 +25,7 @@ export default function QuestionScreen() {
     const getQuestionById = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("/api/round-one/get-question-by-id", {
+        const response = await axios.get("/api/round/get-question-by-id", {
           params: { id },
         });
 
@@ -59,7 +59,7 @@ export default function QuestionScreen() {
 
     try {
       setLoading(true);
-      const response = await axios.post("/api/round-one/validate-answer", {
+      const response = await axios.post("/api/round/validate-answer", {
         questionId: id,
         userAnswer: inputValue,
       });
