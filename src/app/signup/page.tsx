@@ -179,7 +179,7 @@ export default function SignupPage() {
         <div className="text-center space-y-6 px-4 text-white">
           <h2 className="text-2xl font-bold mb-4">Account Created!</h2>
           <p className="text-white/80 mb-8">
-            Please check your email for your password and login details.
+            Please check {email} for your password and login details.
           </p>
           <button
             onClick={() => router.push("/login")}

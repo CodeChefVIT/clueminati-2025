@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
-import toast from "react-hot-toast";
+import axios, { isAxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { pixelFont, rethinkSansBold, rethinkSansMedium } from "../fonts";
+import Modal from "@/components/Modal";
 
+const questionBox = "/assets/Question_Box.svg";
 interface TeamMember {
   _id: string;
   fullname: string;
@@ -24,6 +25,8 @@ export default function RegionSelection() {
   const [currentUser, setCurrentUser] = useState<TeamMember | null>(null);
   const [hellCount, setHellCount] = useState(0);
   const [earthCount, setEarthCount] = useState(0);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   //fetch current user and team data
   useEffect(() => {
@@ -59,9 +62,14 @@ export default function RegionSelection() {
             setTeamMembers([userData]);
           }
         }
-      } catch (error: any) {
+      } catch (error) {
         console.error("Error fetching data:", error);
-        toast.error("Failed to load user data");
+        let message = "Failed to load user data. Please try again.";
+        if (isAxiosError(error) && error.response) {
+          message = error.response.data.error || message;
+        }
+        setErrorMessage(message);
+        setShowErrorModal(true);
       }
     };
     fetchData();
@@ -69,7 +77,8 @@ export default function RegionSelection() {
 
   const handleRegionSelect = async (region: "hell" | "earth") => {
     if (!currentUser) {
-      toast.error("User data not loaded");
+      setErrorMessage("User data not loaded. Please refresh the page.");
+      setShowErrorModal(true);
       return;
     }
 
@@ -82,12 +91,14 @@ export default function RegionSelection() {
       : earthCount;
 
     if (region === "hell" && effectiveHellCount >= 2) {
-      toast.error("Hell region is full! Maximum 2 members allowed.");
+      setErrorMessage("Hell region is full! Maximum 2 members allowed.");
+      setShowErrorModal(true);
       return;
     }
 
     if (region === "earth" && effectiveEarthCount >= 3) {
-      toast.error("Earth region is full! Maximum 3 members allowed.");
+      setErrorMessage("Earth region is full! Maximum 3 members allowed.");
+      setShowErrorModal(true);
       return;
     }
 
@@ -114,7 +125,6 @@ export default function RegionSelection() {
       console.log("API Response:", response.data);
 
       if (response.data.success || response.data.message) {
-        toast.success(`Region confirmed: ${selectedRegion.toUpperCase()}`);
         setCurrentUser((prev) =>
           prev ? { ...prev, region: selectedRegion } : null
         );
@@ -155,9 +165,14 @@ export default function RegionSelection() {
       } else {
         throw new Error("Unexpected response format");
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Region confirmation error:", error);
-      toast.error(error.response?.data?.error || "Failed to assign region");
+      let message = "Failed to assign region. Please try again.";
+      if (isAxiosError(error) && error.response) {
+        message = error.response.data.error || message;
+      }
+      setErrorMessage(message);
+      setShowErrorModal(true);
       setSelectedRegion(null);
     } finally {
       setLoading(false);
@@ -284,6 +299,18 @@ export default function RegionSelection() {
           </p>
         </div>
       </div>
+      <Modal
+        isOpen={showErrorModal}
+        onClose={() => setShowErrorModal(false)}
+        backgroundSvg={questionBox}
+      >
+        <div className="text-center space-y-6 px-4">
+          <h2 className="text-xl font-bold text-red-500">Error</h2>
+          <p className="text-base text-gray-300 leading-relaxed">
+            {errorMessage}
+          </p>
+        </div>
+      </Modal>
     </div>
   );
 }

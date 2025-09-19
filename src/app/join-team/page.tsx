@@ -5,10 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import toast from "react-hot-toast";
 import localFont from "next/font/local";
 import Link from "next/link";
+import Modal from "@/components/Modal";
+
+const questionBox = "/assets/Question_Box.svg";
 
 const rethinkSansBold = localFont({
   src: "../../../public/assets/RethinkSans-Bold.ttf",
@@ -22,6 +25,8 @@ export default function JoinTeam() {
   const router = useRouter();
   const [teamCode, setTeamCode] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,13 +38,14 @@ export default function JoinTeam() {
         toast.success(response.data.message);
         router.push(`/role-selection?teamId=${response.data.team._id}`);
       }
-    } catch (error: any) {
-      console.error(
-        "Error joining team:",
-        error.response?.data || error.message
-      );
-      alert(error.response?.data?.error || "Failed to join team");
-      toast.error(error.response?.data?.error || 'Failed to join team.');
+    } catch (error) {
+      console.error("Error joining team:", error);
+      let message = "Failed to join team. Please try again.";
+      if (isAxiosError(error) && error.response) {
+        message = error.response.data.error || message;
+      }
+      setErrorMessage(message);
+      setShowErrorModal(true);
     } finally {
       setLoading(false);
     }
@@ -104,6 +110,18 @@ export default function JoinTeam() {
           </form>
         </div>
       </div>
+      <Modal
+        isOpen={showErrorModal}
+        onClose={() => setShowErrorModal(false)}
+        backgroundSvg={questionBox}
+      >
+        <div className="text-center space-y-6 px-4">
+          <h2 className="text-xl font-bold text-red-500">Error</h2>
+          <p className="text-base text-gray-300 leading-relaxed">
+            {errorMessage}
+          </p>
+        </div>
+      </Modal>
     </div>
   );
 }
