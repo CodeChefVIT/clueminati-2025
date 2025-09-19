@@ -159,9 +159,8 @@ export default function RegionSelection() {
 
         if (selectedRegion === "hell") {
           router.push("/hell-instructions");
-        } else if(selectedRegion === "earth") {
-          router.push("/");
         }
+        router.push("/");
       } else {
         throw new Error("Unexpected response format");
       }
