@@ -13,6 +13,7 @@ export default function LayoutClientWrapper({ children }: { children: React.Reac
   const docsPage = pathname.startsWith("/docs");
   const isRethinkPage = rethinkPages.some((page) => pathname.startsWith(page));
   const [isDesktop, setIsDesktop] = useState(false);
+  const [installPrompt, setInstallPrompt] = useState<any>(null);
 
   useEffect(() => {
     const checkDevice = () => {
@@ -24,6 +25,28 @@ export default function LayoutClientWrapper({ children }: { children: React.Reac
 
     return () => {
       window.removeEventListener("resize", checkDevice);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+      console.log("'beforeinstallprompt' event fired.");
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
+    const handleAppInstalled = () => {
+      setInstallPrompt(null);
+      console.log("PWA was installed");
+    };
+
+    window.addEventListener("appinstalled", handleAppInstalled);
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+      window.removeEventListener("appinstalled", handleAppInstalled);
     };
   }, []);
 
@@ -45,6 +68,15 @@ export default function LayoutClientWrapper({ children }: { children: React.Reac
       </body>
     );
   }
+
+  const handleInstallClick = async () => {
+    if (!installPrompt) {
+      return;
+    }
+    installPrompt.prompt();
+    await installPrompt.userChoice;
+    setInstallPrompt(null);
+  };
 
   return (
     <body
@@ -74,6 +106,16 @@ export default function LayoutClientWrapper({ children }: { children: React.Reac
             <BottomNav />
           </div>
         </div>
+      )}
+
+      {installPrompt && !isRethinkPage && (
+        <button
+          onClick={handleInstallClick}
+          className="fixed bottom-24 right-4 z-50 bg-green-500 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-green-600 transition-colors flex items-center gap-2"
+        >
+          <Image src="/assets/download-icon.svg" alt="Install" width={20} height={20} />
+          Install App
+        </button>
       )}
     </body>
   );
