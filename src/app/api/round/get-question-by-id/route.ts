@@ -19,9 +19,6 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    if (user.role !== "participant") {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
-    }
 
     const currentRound = await getCurrentRound();
     if (currentRound === "not_started" || currentRound === "finished") {
