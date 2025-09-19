@@ -119,8 +119,9 @@ export default function QuestionScreen() {
 
       <div className="flex flex-col items-center w-full max-w-[16rem] sm:max-w-[18rem]">
         <Button
-          label="Submit"
+          label={loading ? "Submitting..." : "Submit"}
           onClick={handleSubmit}
+          disabled={loading}
           className="!w-full !text-3xl sm:!text-4xl !font-extrabold"
         />
         <Button
