@@ -159,7 +159,7 @@ export default function RegionSelection() {
 
         if (selectedRegion === "hell") {
           router.push("/hell-instructions");
-        } else {
+        } else if(selectedRegion === "earth") {
           router.push("/");
         }
       } else {
