@@ -10,14 +10,16 @@ const questionBox = "/assets/Question_Box.svg";
 const answerBox = "/assets/Answer_Box.svg";
 
 export default function QuestionScreen() {
-  const router = useRouter()
+  const router = useRouter();
   const params = useParams();
   const [question, setQuestion] = useState("");
   const [inputValue, setInputValue] = useState("");
   const id = params.id;
   const [loading, setLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
+  const [skipDisabled, setSkipDisabled] = useState(true);
+  const [countdown, setCountdown] = useState(30);
 
   useEffect(() => {
     const getQuestionById = async () => {
@@ -36,6 +38,21 @@ export default function QuestionScreen() {
     };
     getQuestionById();
   }, [id]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown((prevCountdown) => {
+        if (prevCountdown <= 1) {
+          clearInterval(timer);
+          setSkipDisabled(false);
+          return 0;
+        }
+        return prevCountdown - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const handleSubmit = useCallback(async () => {
     if (!inputValue.trim()) return;
@@ -68,14 +85,6 @@ export default function QuestionScreen() {
     }
   }, [id, inputValue, router]);
 
-  const handleSkip = () => {
-    setMessage("answer skipped!!");
-    setShowPopup(true);
-    setTimeout(() => {
-      router.push("/");
-    }, 1000);
-  };
-
   return (
     <div className="flex flex-col items-center justify-start text-white px-4 sm:px-8 overflow-hidden gap-4">
       <div className="relative w-full max-w-2xl">
@@ -101,14 +110,16 @@ export default function QuestionScreen() {
       </div>
 
       <div className="flex flex-col items-center w-full max-w-[16rem] sm:max-w-[18rem]">
+        {/* testing skip - Enhanced skip button with timer and disabled state */}
         <Button
           label="Skip"
           onClick={handleSkip}
           className="!w-full !text-3xl sm:!text-4xl !font-extrabold"
         />
         <Button
-          label="Submit"
-          onClick={handleSubmit}
+          label={skipDisabled ? `Skip (${countdown}s)` : "Skip"}
+          onClick={handleSkip}
+          disabled={skipDisabled}
           className="!w-full !text-3xl sm:!text-4xl !font-extrabold"
         />
       </div>
