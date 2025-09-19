@@ -54,6 +54,7 @@ export const TeamSchema = z.object({
   round1: Round1Schema.optional(),
   round2: Round2Schema.optional(),
   total_score: z.number().min(0).default(0),
+  teamString: z.string().optional(),
 });
 
 export const QuestionSchema = z.object({

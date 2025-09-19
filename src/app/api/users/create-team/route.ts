@@ -1,5 +1,6 @@
 import { generateJoinCode } from "@/utils/generateJoinCode";
 import { getUserFromToken } from "@/utils/getUserFromToken";
+import { assignTeamString } from "@/utils/assignTeamString";
 import { connectToDatabase } from "@/lib/db";
 import { TeamSchema } from "@/lib/interfaces";
 import Team from "@/lib/models/team";
@@ -52,6 +53,7 @@ export async function POST(req: NextRequest) {
       ...parsed,
       joinCode: code,
       members: [tUser.id],
+      teamString: assignTeamString(),
     });
     user.teamId = newTeam._id.toString();
     // Mongoose validation fails if region is undefined, as it casts to ''.
