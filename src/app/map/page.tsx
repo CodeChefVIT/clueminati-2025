@@ -21,7 +21,7 @@ export default function MapScreen() {
           className="w-full h-auto rounded-md" 
         />
       </div>
-    <div className=" max-w-[40px] rounded-lg  right-66 mt-190">
+    <div className="max-w-[40px] rounded-lg  right-66 mt-190">
         <span className="absolute inset-0 bg-transparent text-center text-xs sm:text-sm text-white font-semibold focus:outline-none px-10 py-110">
                 The areas marked in green are your stations
               </span>
