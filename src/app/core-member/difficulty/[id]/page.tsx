@@ -64,7 +64,7 @@ export default function CoreMemberDifficulty() {
           difficulty: difficulty.toLowerCase(),
         },
       });
-      const questionId = response.data.data.question._id;
+      const questionId = response.data.data._id;
       router.push(`/core-member/qr/${questionId}`);
     } catch (err) {
       console.error("Error generating question:", err);
