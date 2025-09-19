@@ -16,6 +16,7 @@ export const UserSchema = z.object({
       message: "Invalid registration number format. Example: 23BCX1234",
     })
     .transform((val: string) => val.toUpperCase()),
+  core_allocated_station: z.string().optional(),
 });
 
 export const RegionSelectionSchema = z.object({
