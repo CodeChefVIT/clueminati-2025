@@ -1,14 +1,17 @@
 'use client'
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import axios from "axios"
+import axios, { isAxiosError } from "axios"
 import { useRouter } from "next/navigation"
 import { toast } from "react-hot-toast"
 import Link from "next/link"
 import localFont from "next/font/local";
+import Modal from "@/components/Modal";
+
+const questionBox = "/assets/Question_Box.svg";
 
 const rethinkSansBold = localFont({
   src: "../../../public/assets/RethinkSans-Bold.ttf", 
@@ -24,6 +27,17 @@ export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [buttonDisabled, setButtonDisabled] = useState(true)
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (email && password) {
+      setButtonDisabled(false);
+    } else {
+      setButtonDisabled(true);
+    }
+  }, [email, password]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -47,14 +61,24 @@ export default function Login() {
       console.log(response)
       
       
-    } catch (error: any) {
-      toast.error(error.response.data.error || "Login failed")
+    } catch (error) {
+      let message = "Login failed. Please try again.";
+      if (isAxiosError(error) && error.response) {
+        message = error.response.data.error || "Login failed. Please check your credentials.";
+      } else {
+        message = "An unexpected error occurred. Please try again later.";
+      }
+      setErrorMessage(message);
+      setShowErrorModal(true);
+      console.error("Login error:", error);
     } finally {
       setLoading(false)
     }
   }
   return (
-    <div className={`min-h-screen relative overflow-hidden w-full ${rethinkSansBold.variable} ${rethinkSansMedium.variable}`}>
+    <div
+      className={`min-h-screen relative overflow-hidden w-full ${rethinkSansBold.variable} ${rethinkSansMedium.variable}`}
+    >
       <div 
         className="absolute inset-0 bg-center bg-cover bg-no-repeat flex items-center justify-center"
         style={{backgroundImage:"url('/assets/login-bg.svg')",
@@ -110,8 +134,13 @@ export default function Login() {
             <div className="flex justify-center mt-8">
               <Button
                 type="submit"
-  className="w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover flex items-center justify-center "
-  style={{ backgroundImage: "url('/assets/proceedbuttonlogin.svg')" }}
+                disabled={buttonDisabled || loading}
+                className={` w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover flex items-center justify-center ${
+                  buttonDisabled || loading
+                    ? "pointer-events-none "
+                    : "pointer-events-auto "
+                }`}
+                style={{ backgroundImage: "url('/assets/proceedbuttonlogin.svg')" }}
               >
               </Button>
             </div>
@@ -124,6 +153,18 @@ export default function Login() {
           </p>
         </div>
       </div>
+      <Modal
+        isOpen={showErrorModal}
+        onClose={() => setShowErrorModal(false)}
+        backgroundSvg={questionBox}
+      >
+        <div className="text-center space-y-6 px-4">
+          <h2 className="text-xl font-bold text-red-500">Error</h2>
+          <p className="text-base text-gray-300 leading-relaxed">
+            {errorMessage}
+          </p>
+        </div>
+      </Modal>
     </div>
   );
 }
