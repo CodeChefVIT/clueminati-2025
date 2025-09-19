@@ -60,25 +60,26 @@ export async function middleware(request: NextRequest) {
 
     //special flow for participants
     if (payload.role === "participant") {
-      if(payload.region === "hell"){
+      if (payload.region === "hell") {
         const allowedPaths = ["/hell-instructions"];
         if (!allowedPaths.includes(path)) {
-          return NextResponse.redirect(new URL("/hell-instructions", request.url));
+          return NextResponse.redirect(
+            new URL("/hell-instructions", request.url)
+          );
         }
       }
-     
+
       if (!payload.teamId) {
         const allowedPaths = ["/join-team", "/create-team"];
         if (!allowedPaths.includes(path)) {
           return NextResponse.redirect(new URL("/join-team", request.url));
         }
       }
-      else if (!payload.region) {
+      if (!payload.region) {
         if (path !== "/role-selection") {
           return NextResponse.redirect(new URL("/role-selection", request.url));
         }
       }
-     
     }
   }
 
