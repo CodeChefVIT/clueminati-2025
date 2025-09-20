@@ -4,12 +4,18 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Button from "./Button";
-
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   const [score, setScore] = useState<number>(0);
+  const [round, setRound] = useState<string>("");
 
   useEffect(() => {
+    const r = localStorage.getItem("round");
+    if (r) {
+      setRound(r);
+    }
     async function fetchProfile() {
       try {
         const response = await axios.get("/api/users/profile");
@@ -46,16 +52,34 @@ export default function Home() {
       />
 
       {/* Scan Button */}
-      <Link href="/scanner" aria-label="Navigate to another page">
-        <Image
-          src="/assets/scan.svg"
-          alt="Scan Button"
-          width={137}
-          height={38}
+      <Button
+        label={`Scan`}
+        onClick={() => {
+          router.push("/scanner");
+        }}
+        className="cursor-default w-35 text-base"
+      />
+      {round === "Round 1" && (
+        <Button
+          label={`Map`}
+          onClick={() => {
+            router.push("/map");
+          }}
+          className="cursor-default w-35 text-base"
         />
-      </Link>
+      )}
+      {round === "Round 2" && (
+        <div className="relative w-fit px-6 py-5 ">
+          <Image
+            src="/assets/brick.svg"
+            alt="next station"
+            fill
+            className="object-cover -z-10 rounded-lg"
+          />
+          <div className="relative text-white">Next Station: Foodyes</div>
+        </div>
+      )}
 
-      
       <div className="mt-8">
         <Button
           label={`Score: ${score}`}

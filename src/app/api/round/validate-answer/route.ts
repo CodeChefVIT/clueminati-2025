@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     const user = await User.findOne({ _id: tUser.id }).select(
       '-password -isVerified -verifyToken -verifyTokenExpiry'
     );
-
+    console.log(user)
     if (!user || !user.teamId) {
       return NextResponse.json({ error: 'User not found or not in a team' }, { status: 404 });
     }
