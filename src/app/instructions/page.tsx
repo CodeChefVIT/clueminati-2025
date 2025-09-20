@@ -5,8 +5,8 @@ import Image from "next/image";
 
 export default function Instructions() {
     return (
-        <div className="w-full flex flex-col items-center justify-center text-white  h-full ">
-            <div className="relative w-full bg-center bg-contain bg-no-repeat flex flex-col items-center justify-center text-white  h-[40rem] px-25"
+        <div className="w-full h-screen flex flex-col items-center justify-center text-white  h-full ">
+            <div className="relative w-full bg-center bg-contain bg-no-repeat flex flex-col items-center justify-center text-white  h-[33rem] px-25"
                 style={{ backgroundImage: "url('/assets/instructions_bg.svg')" }}
             >
                 <h2 className="text-2xl font-bold mb-6 mt-8 text-[#A5A5A5]">Instructions</h2>
@@ -16,7 +16,7 @@ export default function Instructions() {
                 </p>
             </div>
 
-            {/* <Link href="/" className="relative mt-8 w-[60%] max-w-xs">
+            <Link href="/" className="relative mt-8 w-[50%] max-w-xs hover:brightness-50">
                 <Image
                     src="/assets/round-box.svg"
                     alt="Proceed"
@@ -27,7 +27,7 @@ export default function Instructions() {
                 <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-xl sm:text-2xl">
                     Proceed
                 </span>
-            </Link> */}
+            </Link>
         </div>
     );
 }

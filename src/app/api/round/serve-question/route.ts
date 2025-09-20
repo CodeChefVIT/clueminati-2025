@@ -9,7 +9,7 @@ import Station from "@/lib/models/station";
 
 connectToDatabase();
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
     const tUser = await getUserFromToken(req);
     if (!tUser) {
@@ -33,13 +33,11 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const { searchParams } = new URL(req.url);
-    const teamId = searchParams.get("teamId");
-    const difficulty = searchParams.get("difficulty") as
-      | "easy"
-      | "medium"
-      | "hard"
-      | null;
+    const body = await req.json();
+    const { teamId, difficulty } = body as {
+      teamId?: string;
+      difficulty?: "easy" | "medium" | "hard";
+    };
 
     if (!teamId || !difficulty) {
       return NextResponse.json(
@@ -53,15 +51,8 @@ export async function GET(req: NextRequest) {
     if (currentRound === "1") {
       result = await giveQuestion(teamId, difficulty);
     } else if (currentRound === "2") {
-      const stationId = searchParams.get("stationId");
-      
-      if (!stationId) {
-        return NextResponse.json(
-          { error: "stationId is required for Round 2" },
-          { status: 400 }
-        );
-      }
-
+      const user = await User.findById(tUser.id);
+      const stationId = user?.core_allocated_station;
       const team = await Team.findById(teamId);
       if (!team) {
         return NextResponse.json({ error: "Team not found" }, { status: 404 });
@@ -79,11 +70,11 @@ export async function GET(req: NextRequest) {
         );
       }
 
-      //checking if this station is the team's current assigned station
       if (team.round2.currentStation !== stationId) {
         return NextResponse.json(
-          { 
-            error: "Access denied: You can only get questions from your currently assigned station",
+          {
+            error:
+              "Access denied: You can only get questions from your currently assigned station",
             currentStation: team.round2.currentStation,
             requestedStation: stationId
           },
@@ -91,23 +82,26 @@ export async function GET(req: NextRequest) {
         );
       }
 
-      if (user.core_allocated_station !== stationId) {
+      if (user?.core_allocated_station !== stationId) {
         return NextResponse.json(
           { 
             error: "Access denied: You are not allocated to serve questions for this station",
-            coreAllocatedStation: user.core_allocated_station,
+            coreAllocatedStation: user?.core_allocated_station,
             requestedStation: stationId
           },
           { status: 403 }
         );
       }
 
-      //verifying station hasn't been completed already
-      if (team.round2.solvedStations && team.round2.solvedStations.includes(stationId)) {
+      if (
+        team.round2.solvedStations &&
+        team.round2.solvedStations.includes(stationId)
+      ) {
         return NextResponse.json(
-          { 
-            error: "Station already completed. Please wait for your next station assignment.",
-            completedStations: team.round2.solvedStations
+          {
+            error:
+              "Station already completed. Please wait for your next station assignment.",
+            completedStations: team.round2.solvedStations,
           },
           { status: 400 }
         );
@@ -116,7 +110,6 @@ export async function GET(req: NextRequest) {
       result = await giveQuestion(teamId, difficulty);
     }
 
-    //checking if result exists and handling error cases
     if (!result) {
       return NextResponse.json(
         { error: "No question available" },
@@ -124,25 +117,24 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    if (typeof result === 'object' && 'error' in result) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 400 }
-      );
+    if (typeof result === "object" && "error" in result) {
+      return NextResponse.json({ error: result.error }, { status: 400 });
     }
 
     return NextResponse.json(
-      { 
-        message: "successfully fetched question", 
+      {
+        message: "successfully fetched question",
         data: result.question || result,
         round: currentRound,
-        ...(currentRound === "2" ? { 
-          currentStation: (await Team.findById(teamId))?.round2?.currentStation 
-        } : {})
+        ...(currentRound === "2"
+          ? {
+              currentStation: (await Team.findById(teamId))?.round2
+                ?.currentStation,
+            }
+          : {}),
       },
       { status: 200 }
     );
-
   } catch (err) {
     console.error("Error in serve-question:", err);
     return NextResponse.json(

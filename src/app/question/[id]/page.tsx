@@ -25,7 +25,7 @@ export default function QuestionScreen() {
     const getQuestionById = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("/api/round-one/get-question-by-id", {
+        const response = await axios.get("/api/round/get-question-by-id", {
           params: { id },
         });
         setQuestion(
@@ -66,7 +66,7 @@ export default function QuestionScreen() {
 
     try {
       setLoading(true);
-      const response = await axios.post("/api/round-one/validate-answer", {
+      const response = await axios.post("/api/round/validate-answer", {
         questionId: id,
         userAnswer: inputValue,
       });
@@ -119,8 +119,9 @@ export default function QuestionScreen() {
       <div className="flex flex-col items-center w-full max-w-[16rem] sm:max-w-[18rem]">
         {/* testing skip - Enhanced skip button with timer and disabled state */}
         <Button
-          label="Skip"
-          onClick={handleSkip}
+          label={loading ? "Submitting..." : "Submit"}
+          onClick={handleSubmit}
+          disabled={loading}
           className="!w-full !text-3xl sm:!text-4xl !font-extrabold"
         />
         <Button

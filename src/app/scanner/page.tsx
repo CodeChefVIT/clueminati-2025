@@ -20,7 +20,7 @@ export default function ScannerPage() {
   const handleManualSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.get("/api/round-one/get-question-by-id", {
+      const response = await axios.get("/api/round/get-question-by-id", {
         params: { id: manualCode },
       });
       router.push("/question/" + manualCode);
@@ -33,7 +33,7 @@ export default function ScannerPage() {
 
   const handleScan = async (result: string) => {
     try {
-      const response = await axios.get("/api/round-one/get-question-by-id", {
+      const response = await axios.get("/api/round/get-question-by-id", {
         params: { id: result },
       });
       setScannedResult(result);

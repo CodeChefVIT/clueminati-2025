@@ -34,7 +34,7 @@ export default function ProfileScreen() {
   useEffect(() => {
     async function fetchProfile() {
       try {
-        const response = await axios.post("/api/users/profile");
+        const response = await axios.get("/api/users/profile");
         setUser(response.data.data.user);
         setTeam(response.data.data.team);
       } catch (error: any) {

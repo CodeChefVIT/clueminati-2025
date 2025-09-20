@@ -8,6 +8,7 @@ import { pixelFont, rethinkSansBold, rethinkSansMedium } from "../fonts";
 import Modal from "@/components/Modal";
 
 const questionBox = "/assets/Question_Box.svg";
+
 interface TeamMember {
   _id: string;
   fullname: string;
@@ -21,6 +22,7 @@ export default function RegionSelection() {
   );
   const [background, setBackground] = useState("/assets/login-bg.svg");
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true); 
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [currentUser, setCurrentUser] = useState<TeamMember | null>(null);
   const [hellCount, setHellCount] = useState(0);
@@ -28,86 +30,52 @@ export default function RegionSelection() {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  //fetch current user and team data
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const profileResponse = await axios.post("/api/users/profile");
-        const userData = profileResponse.data.data.user;
-        const teamData = profileResponse.data.data.team;
+  const fetchData = async () => {
+    try {
+      setFetching(true);
+      const profileResponse = await axios.get("/api/users/profile");
+      const userData = profileResponse.data.data.user;
+      const teamData = profileResponse.data.data.team;
 
-        setCurrentUser(userData);
+      setCurrentUser(userData);
 
-        if (teamData?.teamId) {
-          try {
-            const membersResponse = await axios.get(
-              `/api/teams/${teamData.teamId}/members`
-            );
-            if (membersResponse.data.success) {
-              setTeamMembers(membersResponse.data.members);
-              //count current hell and earth members
-              const hellMembers = membersResponse.data.members.filter(
-                (m: TeamMember) => m.region === "hell"
-              );
-              const earthMembers = membersResponse.data.members.filter(
-                (m: TeamMember) => m.region === "earth"
-              );
-              setHellCount(hellMembers.length);
-              setEarthCount(earthMembers.length);
-            }
-          } catch (membersError) {
-            console.error("Error fetching team members:", membersError);
-            let message = "Could not fetch team members. Region counts may be inaccurate.";
-            if (isAxiosError(membersError) && membersError.response) {
-              message = membersError.response.data.error || message;
-            }
-            setErrorMessage(message);
-            setShowErrorModal(true);
-          }
+      if (teamData?.teamId) {
+        const membersResponse = await axios.get(
+          `/api/teams/${teamData.teamId}/members`
+        );
+        if (membersResponse.data.success) {
+          const members: TeamMember[] = membersResponse.data.members;
+          setTeamMembers(members);
+
+          const hellMembers = members.filter((m) => m.region === "hell");
+          const earthMembers = members.filter((m) => m.region === "earth");
+
+          setHellCount(hellMembers.length);
+          setEarthCount(earthMembers.length);
         }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        let message = "Failed to load user data. Please try again.";
-        if (isAxiosError(error) && error.response) {
-          message = error.response.data.error || message;
-        }
-        setErrorMessage(message);
-        setShowErrorModal(true);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      let message = "Failed to load user data. Please try again.";
+      if (isAxiosError(error) && error.response) {
+        message = error.response.data.error || message;
+      }
+      setErrorMessage(message);
+      setShowErrorModal(true);
+    } finally {
+      setFetching(false);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
 
-  const handleRegionSelect = async (region: "hell" | "earth") => {
+  const handleRegionSelect = (region: "hell" | "earth") => {
     if (!currentUser) {
       setErrorMessage("User data not loaded. Please refresh the page.");
       setShowErrorModal(true);
       return;
-    }
-
-    const currentUserHasHell = currentUser.region === "hell";
-    const currentUserHasEarth = currentUser.region === "earth";
-    const effectiveHellCount = currentUserHasHell ? hellCount - 1 : hellCount;
-    const effectiveEarthCount = currentUserHasEarth
-      ? earthCount - 1
-      : earthCount;
-
-    if (region === "hell" && effectiveHellCount >= 2) {
-      setErrorMessage("Hell region is full! Maximum 2 members allowed.");
-      setShowErrorModal(true);
-      return;
-    }
-
-    if (region === "earth" && effectiveEarthCount >= 3) {
-      setErrorMessage("Earth region is full! Maximum 3 members allowed.");
-      setShowErrorModal(true);
-      return;
-    }
-
-    if (region === "hell") {
-      setBackground("/assets/hell-bg.svg");
-    } else {
-      setBackground("/assets/background.svg");
     }
 
     setSelectedRegion(region);
@@ -118,52 +86,22 @@ export default function RegionSelection() {
 
     try {
       setLoading(true);
-      console.log("Attempting to confirm region:", selectedRegion);
 
       const response = await axios.post("/api/region-selection", {
         region: selectedRegion,
       });
 
-      console.log("API Response:", response.data);
-
       if (response.data.success || response.data.message) {
-        setCurrentUser((prev) =>
-          prev ? { ...prev, region: selectedRegion } : null
-        );
-
-        if (
-          selectedRegion === "hell" &&
-          currentUser &&
-          currentUser.region !== "hell"
-        ) {
-          setHellCount((prev) => prev + 1);
-        } else if (
-          selectedRegion === "earth" &&
-          currentUser &&
-          currentUser.region !== "earth"
-        ) {
-          setEarthCount((prev) => prev + 1);
-        }
-
-        if (
-          currentUser &&
-          currentUser.region === "hell" &&
-          selectedRegion !== "hell"
-        ) {
-          setHellCount((prev) => prev - 1);
-        } else if (
-          currentUser &&
-          currentUser.region === "earth" &&
-          selectedRegion !== "earth"
-        ) {
-          setEarthCount((prev) => prev - 1);
-        }
-
         if (selectedRegion === "hell") {
+          setBackground("/assets/hell-bg.svg");
           router.push("/hell-instructions");
         } else {
-          router.push("/profile");
+          setBackground("/assets/background.svg");
+          router.push("/instructions");
         }
+
+        // refetch fresh counts and user data
+        await fetchData();
       } else {
         throw new Error("Unexpected response format");
       }
@@ -183,19 +121,67 @@ export default function RegionSelection() {
 
   const isHellDisabled = () => {
     if (!currentUser) return true;
-    const currentUserHasHell = currentUser.region === "hell";
-    const effectiveHellCount = currentUserHasHell ? hellCount - 1 : hellCount;
+    const effectiveHellCount =
+      currentUser.region === "hell" ? hellCount - 1 : hellCount;
     return effectiveHellCount >= 2;
   };
 
   const isEarthDisabled = () => {
     if (!currentUser) return true;
-    const currentUserHasEarth = currentUser.region === "earth";
-    const effectiveEarthCount = currentUserHasEarth
-      ? earthCount - 1
-      : earthCount;
+    const effectiveEarthCount =
+      currentUser.region === "earth" ? earthCount - 1 : earthCount;
     return effectiveEarthCount >= 3;
   };
+
+  const RegionButton = ({
+    region,
+    count,
+    max,
+    disabled,
+    selected,
+    onClick,
+  }: {
+    region: "hell" | "earth";
+    count: number;
+    max: number;
+    disabled: boolean;
+    selected: boolean;
+    onClick: () => void;
+  }) => (
+    <Button
+      onClick={onClick}
+      disabled={loading || disabled}
+      className={`w-full h-24 bg-no-repeat bg-center bg-cover text-white font-bold text-xl rounded-xl shadow-lg transition-all duration-300 ${
+        selected ? "brightness-100" : "brightness-50"
+      } ${
+        disabled
+          ? "opacity-50 cursor-not-allowed"
+          : "hover:scale-105 hover:opacity-100"
+      }`}
+      style={{
+        backgroundImage: `url('${
+          region === "hell"
+            ? "/assets/round-box-hell.svg"
+            : "/assets/round-box.svg"
+        }')`,
+      }}
+    >
+      <div className="flex flex-col items-center">
+        <span className="text-xl">{region.toUpperCase()}</span>
+        <span className="text-xs mt-1">
+          ({count}/{max} slots filled)
+        </span>
+      </div>
+    </Button>
+  );
+
+  if (fetching) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white text-xl">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <div
@@ -203,9 +189,7 @@ export default function RegionSelection() {
     >
       <div
         className="absolute inset-0 bg-center bg-cover bg-no-repeat flex items-center justify-center transition-all duration-500"
-        style={{
-          backgroundImage: `url('${background}')`,
-        }}
+        style={{ backgroundImage: `url('${background}')` }}
       />
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center p-4 font-pixel">
         <div className="w-full max-w-md mx-auto">
@@ -217,61 +201,22 @@ export default function RegionSelection() {
           </p>
 
           <div className="grid grid-cols-1 gap-6 mb-8">
-            {/* Hell Region */}
-            <div className="flex flex-col items-center">
-              <Button
-                onClick={() => handleRegionSelect("hell")}
-                disabled={loading || isHellDisabled()}
-                className={`w-full h-24 bg-no-repeat bg-center bg-cover text-white font-bold text-xl rounded-xl shadow-lg transition-all duration-300 ${
-                  selectedRegion === "hell" ? "brightness-100" : "brightness-50"
-                } ${
-                  isHellDisabled()
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:scale-105 hover:opacity-100"
-                }`}
-                style={{ backgroundImage: "url('/assets/round-box-hell.svg')" }}
-              >
-                <div className="flex flex-col items-center">
-                  <span className="text-xl">HELL</span>
-                  <span className="text-xs mt-1">
-                    ({hellCount}/2 slots filled)
-                  </span>
-                </div>
-              </Button>
-              {isHellDisabled() && (
-                <p className="text-red-400 text-sm mt-2">Hell region is full</p>
-              )}
-            </div>
-
-            {/* Earth Region */}
-            <div className="flex flex-col items-center">
-              <Button
-                onClick={() => handleRegionSelect("earth")}
-                disabled={loading || isEarthDisabled()}
-                className={`w-full h-24 bg-no-repeat bg-center bg-cover text-white font-bold text-xl rounded-xl shadow-lg transition-all duration-300 ${
-                  selectedRegion === "earth"
-                    ? "brightness-100"
-                    : "brightness-50"
-                } ${
-                  isEarthDisabled()
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:scale-105 hover:opacity-100"
-                }`}
-                style={{ backgroundImage: "url('/assets/round-box.svg')" }}
-              >
-                <div className="flex flex-col items-center">
-                  <span className="text-xl">EARTH</span>
-                  <span className="text-xs mt-1">
-                    ({earthCount}/3 slots filled)
-                  </span>
-                </div>
-              </Button>
-              {isEarthDisabled() && (
-                <p className="text-green-400 text-sm mt-2">
-                  Earth region is full
-                </p>
-              )}
-            </div>
+            <RegionButton
+              region="hell"
+              count={hellCount}
+              max={2}
+              disabled={isHellDisabled()}
+              selected={selectedRegion === "hell"}
+              onClick={() => handleRegionSelect("hell")}
+            />
+            <RegionButton
+              region="earth"
+              count={earthCount}
+              max={3}
+              disabled={isEarthDisabled()}
+              selected={selectedRegion === "earth"}
+              onClick={() => handleRegionSelect("earth")}
+            />
           </div>
 
           {selectedRegion && (
@@ -279,7 +224,7 @@ export default function RegionSelection() {
               <Button
                 onClick={handleConfirm}
                 disabled={loading}
-                className="w-fit py-6 px-8  text-xl font-bold rounded-xl transition-all duration-300 bg-no-repeat bg-center bg-cover text-white shadow-lg hover:scale-105"
+                className="w-fit py-6 px-8 text-xl font-bold rounded-xl transition-all duration-300 bg-no-repeat bg-center bg-cover text-white shadow-lg hover:scale-105"
                 style={{
                   backgroundImage: `url(${
                     selectedRegion === "hell"
@@ -301,6 +246,7 @@ export default function RegionSelection() {
           </p>
         </div>
       </div>
+
       <Modal
         isOpen={showErrorModal}
         onClose={() => setShowErrorModal(false)}

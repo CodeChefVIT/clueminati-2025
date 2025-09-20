@@ -68,8 +68,8 @@ export default function CreateTeam() {
   };
 
   const handleProceed = () => {
-    setShowSuccessModal(false);
-    router.push("/");
+    // setShowSuccessModal(false);
+    router.push("/role-selection");
   };
 
   return (
