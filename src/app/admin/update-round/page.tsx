@@ -109,9 +109,9 @@ export default function UpdateRoundPage() {
   }
 
   return (
-    <div className="flex h-screen items-center"> 
+    <div className="flex h-screen items-center">
       <div className="container mx-auto p-4 sm:p-8 text-white">
-        <h1 className="text-3xl font-bold mb-6 text-center">
+        <h1 className="text-3xl font-bold mb-6 text-center text-black">
           Update Round Times
         </h1>
         <form
@@ -149,11 +149,10 @@ export default function UpdateRoundPage() {
         >
           <div className="text-center space-y-4 px-4">
             <h2
-              className={`text-2xl font-bold ${
-                modalMessage.title === "Error"
-                  ? "text-red-500"
-                  : "text-green-500"
-              }`}
+              className={`text-2xl font-bold ${modalMessage.title === "Error"
+                ? "text-red-500"
+                : "text-green-500"
+                }`}
             >
               {modalMessage.title}
             </h2>
