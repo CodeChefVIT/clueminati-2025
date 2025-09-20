@@ -9,7 +9,7 @@ export default function CreateQuestionPage() {
 
     async function logout() {
         try {
-            const response = await axios.get("/api/admin/logout");
+            const response = await axios.get("/api/users/logout");
             console.log(response.data);
             router.push("/login");
         } catch (error) {
