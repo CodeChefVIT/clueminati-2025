@@ -91,6 +91,17 @@ export async function GET(req: NextRequest) {
         );
       }
 
+      if (user.core_allocated_station !== stationId) {
+        return NextResponse.json(
+          { 
+            error: "Access denied: You are not allocated to serve questions for this station",
+            coreAllocatedStation: user.core_allocated_station,
+            requestedStation: stationId
+          },
+          { status: 403 }
+        );
+      }
+
       //verifying station hasn't been completed already
       if (team.round2.solvedStations && team.round2.solvedStations.includes(stationId)) {
         return NextResponse.json(
