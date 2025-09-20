@@ -42,12 +42,9 @@ export default function CreateTeam() {
 
     setLoading(true);
     try {
-      const response = await axios.post(
-        "/api/users/create-team",
-        {
-          teamname: teamName,
-        },
-      );
+      const response = await axios.post("/api/users/create-team", {
+        teamname: teamName,
+      });
 
       setCreatedTeam({
         name: response.data.team.teamname,
@@ -68,7 +65,6 @@ export default function CreateTeam() {
   };
 
   const handleProceed = () => {
-    // setShowSuccessModal(false);
     router.push("/role-selection");
   };
 
@@ -128,10 +124,11 @@ export default function CreateTeam() {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover flex items-center justify-center"
+                  className="w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover"
                   style={{
-                    backgroundImage: "url('/assets/proceedbuttonlogin.svg')",
+                    backgroundImage: "url('/assets/Question_Box.svg')",
                   }}
+                  aria-label="Proceed"
                 ></Button>
               </div>
             </form>
