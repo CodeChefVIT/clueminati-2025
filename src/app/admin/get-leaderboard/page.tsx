@@ -45,7 +45,7 @@ export default function LeaderboardPage() {
       setError("");
       const token = localStorage.getItem("token");
 
-      const res = await fetch(`/api/admin/get-Leaderboard?page=${page}`, {
+      const res = await fetch(`/api/admin/get-leaderboard?page=${page}`, {
   headers: { Authorization: token ? `Bearer ${token}` : "" },
 });
 

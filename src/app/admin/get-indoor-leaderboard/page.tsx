@@ -46,7 +46,7 @@ export default function IndoorLeaderboardPage() {
       setError("");
       const token = localStorage.getItem("token");
 
-      const res = await fetch(`/api/admin/get-indoor-Leaderboard?page=${page}`, {
+      const res = await fetch(`/api/admin/get-indoor-leaderboard?page=${page}`, {
         headers: { Authorization: token ? `Bearer ${token}` : "" },
       });
 

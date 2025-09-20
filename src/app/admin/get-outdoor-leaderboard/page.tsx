@@ -46,7 +46,7 @@ export default function OutdoorLeaderboardPage() {
       setError("");
       const token = localStorage.getItem("token");
 
-      const res = await fetch(`/api/admin/get-outdoor-Leaderboard?page=${page}`, {
+      const res = await fetch(`/api/admin/get-outdoor-leaderboard?page=${page}`, {
         headers: { Authorization: token ? `Bearer ${token}` : "" },
       });
 
