@@ -41,6 +41,7 @@ const TeamSchema = new Schema<ITeam>({
     letters_found: { type: [String], default: [] },
   },
   total_score: { type: Number, default: 0, required: true },
+  teamString: { type: String, required: false },
 });
 
 const Team: Model<ITeam> = models.Team ?? model<ITeam>("Team", TeamSchema);

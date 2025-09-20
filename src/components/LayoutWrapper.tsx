@@ -14,6 +14,7 @@ export default function LayoutClientWrapper({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+
   const rethinkPages = [
     "/login",
     "/create-team",
@@ -24,22 +25,19 @@ export default function LayoutClientWrapper({
     "/hell-instructions",
     "/instructions"
   ];
-  const docsPage = pathname.startsWith("/docs");
+
+  const isDocsPage = pathname.startsWith("/docs");
   const isRethinkPage = rethinkPages.some((page) => pathname.startsWith(page));
+  const isAdminPage = pathname.startsWith("/admin");
+
   const [isDesktop, setIsDesktop] = useState(false);
   const [installPrompt, setInstallPrompt] = useState<any>(null);
 
   useEffect(() => {
-    const checkDevice = () => {
-      setIsDesktop(window.innerWidth >= 768);
-    };
-
+    const checkDevice = () => setIsDesktop(window.innerWidth >= 768);
     checkDevice();
     window.addEventListener("resize", checkDevice);
-
-    return () => {
-      window.removeEventListener("resize", checkDevice);
-    };
+    return () => window.removeEventListener("resize", checkDevice);
   }, []);
 
   useEffect(() => {
@@ -59,19 +57,13 @@ export default function LayoutClientWrapper({
     window.addEventListener("appinstalled", handleAppInstalled);
 
     return () => {
-      window.removeEventListener(
-        "beforeinstallprompt",
-        handleBeforeInstallPrompt
-      );
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
       window.removeEventListener("appinstalled", handleAppInstalled);
     };
   }, []);
 
-  if (docsPage) {
-    return <>{children}</>;
-  }
-
-  if (isDesktop && !isRethinkPage) {
+ 
+  if (!isAdminPage && !isRethinkPage && !isDocsPage && isDesktop) {
     return (
       <body className={`${pixelFont.variable} font-pixel`}>
         <div className="flex flex-col items-center justify-center h-screen bg-black text-white text-center p-8">
@@ -95,9 +87,7 @@ export default function LayoutClientWrapper({
   }
 
   const handleInstallClick = async () => {
-    if (!installPrompt) {
-      return;
-    }
+    if (!installPrompt) return;
     installPrompt.prompt();
     await installPrompt.userChoice;
     setInstallPrompt(null);
@@ -111,20 +101,29 @@ export default function LayoutClientWrapper({
           : `${pixelFont.variable} font-pixel relative min-h-screen`
       }`}
     >
-      <Image
-        src="/assets/background.svg"
-        alt="Background"
-        className="absolute w-full h-full object-cover z-0 "
-        width={100}
-        height={100}
-        priority
-      />
+      
+      {!isAdminPage && (
+        <Image
+          src="/assets/background.svg"
+          alt="Background"
+          className="absolute w-full h-full object-cover z-0"
+          width={100}
+          height={100}
+          priority
+        />
+      )}
 
       {isRethinkPage ? (
         <div className="relative z-20 min-h-screen overflow-y-auto">
           {children}
         </div>
+      ) : isAdminPage ? (
+        
+        <div className="relative z-20 min-h-screen bg-gray-900 text-gray-100 flex flex-col p-6">
+          <main className="flex-1 overflow-y-auto">{children}</main>
+        </div>
       ) : (
+        
         <div className="grid grid-rows-[10%_1fr_15%] h-screen">
           <div className="z-30 relative">
             <TopNav />
@@ -136,7 +135,7 @@ export default function LayoutClientWrapper({
         </div>
       )}
 
-      {installPrompt && (
+      {installPrompt && !isAdminPage && (
         <motion.button
           onClick={handleInstallClick}
           className="fixed bottom-24 right-4 z-50 flex items-center justify-center gap-2 text-white font-bold rounded-full shadow-lg hover:brightness-50 bg-cover h-14 w-40 px-6"

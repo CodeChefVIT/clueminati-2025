@@ -28,8 +28,15 @@ export default function QuestionScreen() {
         const response = await axios.get("/api/round/get-question-by-id", {
           params: { id },
         });
+        setQuestion(
+          response.data.data.question_description + " " +
+          (response.data.data.difficulty === 'hard'
+            ? 'H 70'
+            : response.data.data.difficulty === 'easy'
+              ? 'E 10'
+              : 'M 40')
+        );
 
-        setQuestion(response.data.data.question_description);
       } catch (error: any) {
         console.error(error);
       } finally {

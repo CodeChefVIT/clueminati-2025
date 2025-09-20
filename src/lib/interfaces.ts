@@ -17,6 +17,7 @@ export const UserSchema = z.object({
       message: "Invalid registration number format. Example: 23BCX1234",
     })
     .transform((val: string) => val.toUpperCase()),
+  core_allocated_station: z.string().optional(),
 });
 
 export const RegionSelectionSchema = z.object({
@@ -35,7 +36,7 @@ const Round1Schema = z.object({
   questions_solved: QuestionTrackingSchema,
   questions_encountered: QuestionTrackingSchema,
   score: z.number().min(0).default(0),
-  game_score: z.number().min(0).default(0),
+  indoor_score: z.number().min(0).default(0),
 });
 
 const Round2Schema = Round1Schema.extend({
@@ -55,6 +56,7 @@ export const TeamSchema = z.object({
   round1: Round1Schema.optional(),
   round2: Round2Schema.optional(),
   total_score: z.number().min(0).default(0),
+  teamString: z.string().optional(),
 });
 
 export const QuestionSchema = z.object({
