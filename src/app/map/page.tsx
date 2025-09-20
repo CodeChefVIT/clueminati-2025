@@ -7,29 +7,24 @@ const Brick="/assets/brick.png";
 export default function MapScreen() {
   return (
     
-  <div className="screen relative overflow-hidden  inset-0 flex items-center justify-center p-4 bg-transparent ">
-      <div className="absolute top-7 left-20 w-[200px] h-auto bg-white rounded-lg p-1.5 shadow-2xl"
-       style={{
-          touchAction: 'none',
-          overscrollBehavior: 'none'
-        }}>
+  <div className="screen relative h-screen w-full bg-transparent ">
+      <div className="absolute top-[50px] bottom-[70px] left-0 right-0 overflow-y-auto">
+         <div className="flex flex-col items-center gap-6 p-4">
         <img
           src={mapSvgPath}
           alt="Game Map"
-          className="w-full h-auto rounded-md" 
+          className="w-[320px] h-auto rounded-md shadow-2xl" 
         />
-      </div>
-      <div className="relative overflow-visible flex items-center justify-center top-[170px] w-full rounded-lg p-20 shadow-2xl absolute right-[32px] mt-[290px]  ">
         <img
           src={Brick}
           alt="Game Map"
-          className="absolute bottom-20 right-10 w-[220px] h-[220px] object-contain " 
+          className="w-[300px] h-auto object-contain" 
         />
       </div>
-    <div className=" max-w-[40px] rounded-lg ">
-<span className="absolute inset-0 -left-[20px] bg-transparent text-center text-[0.52rem] sm:text-sm text-white font-semibold focus:outline-none px-20 py-110">
-                The areas marked in green are your stations
-              </span>
+    <p className="text-center text-white text-[1rem] font-semibold w-[250px] mx-auto leading-snug -mt-20">
+            The areas marked in green are your stations
+          </p>
+
       </div>
       
     </div>
