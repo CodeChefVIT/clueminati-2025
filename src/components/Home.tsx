@@ -12,7 +12,7 @@ export default function Home() {
   useEffect(() => {
     async function fetchProfile() {
       try {
-        const response = await axios.post("/api/users/profile");
+        const response = await axios.get("/api/users/profile");
         const team = response.data.data.team;
         if (team?.total_score !== undefined) {
           setScore(team.total_score);

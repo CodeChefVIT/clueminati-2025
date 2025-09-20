@@ -51,18 +51,16 @@ export default function CoreMemberDifficulty() {
 
   const handleOptionClick = (level: string) => {
     setDifficulty(level);
-    setIsOpen(false); 
+    setIsOpen(false);
   };
 
   const handleGenerate = async () => {
     setIsGenerating(true);
     setErrorMessage(null);
     try {
-      const response = await axios.get("/api/round/serve-question", {
-        params: {
-          teamId: id,
-          difficulty: difficulty.toLowerCase(),
-        },
+      const response = await axios.post("/api/round/serve-question", {
+        teamId: id,
+        difficulty: difficulty.toLowerCase(),
       });
       const questionId = response.data.data._id;
       router.push(`/core-member/qr/${questionId}`);
@@ -81,7 +79,6 @@ export default function CoreMemberDifficulty() {
 
   return (
     <main className="relative pt-8 w-full flex flex-col items-center justify-center gap-y-8 p-4">
-
       <div className="relative flex items-center justify-center">
         <Image
           src="/assets/brick.svg"
@@ -130,10 +127,10 @@ export default function CoreMemberDifficulty() {
           <div className="absolute top-full mt-2 w-full z-20">
             <div className="relative flex flex-col items-center justify-center">
               <Image
-                src="/assets/brick.svg" 
+                src="/assets/brick.svg"
                 alt="Dropdown Menu Background"
                 width={320}
-                height={120} 
+                height={120}
               />
               <div className="absolute inset-0 flex flex-col justify-around p-2">
                 {difficulties.map((level) => (
