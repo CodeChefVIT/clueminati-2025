@@ -6,25 +6,25 @@ const Brick="/assets/brick.svg";
 
 export default function MapScreen() {
   return (
-  <div className="w-[600px] h-[600px] flex items-center justify-center p-4 bg-transparent ">
-      <div className="relative w-full max-w-[200px] bg-white rounded-lg p-1.5 shadow-2xl -mt-40 left-0">
+    
+  <div className="screen relative h-screen w-full bg-transparent ">
+      <div className="absolute top-[50px] bottom-[70px] left-0 right-0 overflow-y-auto">
+         <div className="flex flex-col items-center gap-6 p-4">
         <img
           src={mapSvgPath}
           alt="Game Map"
-          className="w-full h-auto rounded-md" 
+          className="w-[320px] h-auto rounded-md shadow-2xl" 
         />
-      </div>
-      <div className="relative w-full max-w-[263px] rounded-lg p-1.5 shadow-2xl right-59 mt-77">
         <img
           src={Brick}
           alt="Game Map"
-          className="w-full h-auto rounded-md" 
+          className="w-[300px] h-auto object-contain" 
         />
       </div>
-    <div className=" max-w-[40px] rounded-lg  right-66 mt-190">
-        <span className="absolute inset-0 bg-transparent text-center text-xs sm:text-sm text-white font-semibold focus:outline-none px-10 py-110">
-                The areas marked in green are your stations
-              </span>
+    <p className="text-center text-white text-[1rem] font-semibold w-[250px] mx-auto leading-snug -mt-20">
+            The areas marked in green are your stations
+          </p>
+
       </div>
       
     </div>
