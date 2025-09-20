@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const question = await Question.findById(questionId);
+    const question = await Question.findById(questionId).select("-answer");
     if (!question) {
       return NextResponse.json({ error: "Question not found" }, { status: 404 });
     }

@@ -34,10 +34,9 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { teamId, difficulty, stationId } = body as {
+    const { teamId, difficulty } = body as {
       teamId?: string;
       difficulty?: "easy" | "medium" | "hard";
-      stationId?: string;
     };
 
     if (!teamId || !difficulty) {
@@ -52,13 +51,8 @@ export async function POST(req: NextRequest) {
     if (currentRound === "1") {
       result = await giveQuestion(teamId, difficulty);
     } else if (currentRound === "2") {
-      if (!stationId) {
-        return NextResponse.json(
-          { error: "stationId is required for Round 2" },
-          { status: 400 }
-        );
-      }
-
+      const user = await User.findById(tUser.id);
+      const stationId = user?.core_allocated_station;
       const team = await Team.findById(teamId);
       if (!team) {
         return NextResponse.json({ error: "Team not found" }, { status: 404 });
@@ -88,11 +82,11 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      if (user.core_allocated_station !== stationId) {
+      if (user?.core_allocated_station !== stationId) {
         return NextResponse.json(
           { 
             error: "Access denied: You are not allocated to serve questions for this station",
-            coreAllocatedStation: user.core_allocated_station,
+            coreAllocatedStation: user?.core_allocated_station,
             requestedStation: stationId
           },
           { status: 403 }

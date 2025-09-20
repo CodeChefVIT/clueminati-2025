@@ -12,7 +12,6 @@ export const UserSchema = z.object({
   verifyTokenExpiry: z.date().optional(),
   forgotPasswordToken: z.string().optional(),
   forgotPasswordTokenExpiry: z.date().optional(),
-  core_alloted_station: z.string().optional(),
   reg_num: z.string().regex(/^\d{2}[A-Z]{3}\d{4}$/, {
       message: "Invalid registration number format. Example: 23BCX1234",
     })
@@ -43,8 +42,8 @@ const Round2Schema = Round1Schema.extend({
   secret_string: z.string().min(6).max(6), //required, 6 letters
   secret_chars_revealed: z.number().min(0).default(0), //number of letters revealed
   path: z.array(z.string()).default([]),   //stationId[]
-  currentStation: z.string().optional().default(""),
-  previousStation: z.string().optional().default(""),
+  currentStation: z.string().default(""),
+  previousStation: z.string().default(""),
   solvedStations: z.array(z.string()).default([]), //stationId[]
   letters_found: z.array(z.string()).default([]),   //changed from lettersFound
 });

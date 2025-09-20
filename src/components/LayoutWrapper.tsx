@@ -26,7 +26,7 @@ export default function LayoutClientWrapper({
     "/hell-instructions",
     "/instructions",
     "/admin",
-    "/admin/*"
+    "/admin/*",
   ];
 
   const isDocsPage = pathname.startsWith("/docs");
@@ -49,23 +49,25 @@ export default function LayoutClientWrapper({
       const r1End = new Date(data.r1EndTime).getTime();
       const r2Start = new Date(data.r2StartTime).getTime();
       const r2End = new Date(data.r2EndTime).getTime();
-
+      let theRound = "";
       if (now < r1Start) {
-        setRound("Not Started");
+        theRound = "Not Started";
         setTimeLeft(r1Start - now);
       } else if (now >= r1Start && now <= r1End) {
-        setRound("Round 1");
+        theRound = "Round 1";
         setTimeLeft(r1End - now);
       } else if (now > r1End && now < r2Start) {
-        setRound("Half Time");
+        theRound = "Half Time";
         setTimeLeft(r2Start - now);
       } else if (now >= r2Start && now <= r2End) {
-        setRound("Round 2");
+        theRound = "Round 2";
         setTimeLeft(r2End - now);
       } else {
-        setRound("Finished");
+        theRound = "Finished";
         setTimeLeft(null);
       }
+      localStorage.setItem("round", theRound)
+      setRound(theRound);
     } catch (err) {
       console.error("Failed to fetch game stats:", err);
     }
@@ -116,12 +118,14 @@ export default function LayoutClientWrapper({
     window.addEventListener("appinstalled", handleAppInstalled);
 
     return () => {
-      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt
+      );
       window.removeEventListener("appinstalled", handleAppInstalled);
     };
   }, []);
 
- 
   if (!isAdminPage && !isRethinkPage && !isDocsPage && isDesktop) {
     return (
       <body className={`${pixelFont.variable} font-pixel`}>
@@ -160,7 +164,6 @@ export default function LayoutClientWrapper({
           : `${pixelFont.variable} font-pixel relative min-h-screen`
       }`}
     >
-      
       {!isAdminPage && (
         <Image
           src="/assets/background.svg"
@@ -177,12 +180,10 @@ export default function LayoutClientWrapper({
           {children}
         </div>
       ) : isAdminPage ? (
-        
         <div className="relative z-20 min-h-screen bg-gray-900 text-gray-100 flex flex-col p-6">
           <main className="flex-1 overflow-y-auto">{children}</main>
         </div>
       ) : (
-        
         <div className="grid grid-rows-[10%_1fr_15%] h-screen">
           <div className="z-30 relative">
             <TopNav round={round} timeLeft={timeLeft} />

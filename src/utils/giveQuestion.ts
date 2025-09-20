@@ -20,7 +20,7 @@ export async function giveQuestion(
     const allQuestions = await Question.find({
       round: round,
       difficulty,
-    });
+    }).select(" -answer");
     if (!allQuestions.length) {
       return {
         error: `No questions found for round ${round} (${difficulty})`,
