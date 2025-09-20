@@ -55,6 +55,10 @@ const userSchema = new Schema<IUser>({
     type: Date,
     required: false,
   },
+  core_allocated_station: {
+    type: String,
+    required: false,
+  },
 });
 
 const User: Model<IUser> = models.User ?? model<IUser>("User", userSchema);
