@@ -22,6 +22,11 @@ const rethinkSansMedium = localFont({
   variable: "--font-rethinkSansMedium",
 });
 
+const pixelFont = localFont({
+  src: "../../../public/assets/pixel-font.ttf",
+  variable: "--font-pixel",
+});
+
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -76,9 +81,7 @@ export default function Login() {
     }
   };
   return (
-    <div
-      className={`min-h-screen relative overflow-hidden w-full ${rethinkSansBold.variable} ${rethinkSansMedium.variable}`}
-    >
+    <div className="min-h-screen relative overflow-hidden w-full">
       <div
         className="absolute inset-0 bg-center bg-cover bg-no-repeat flex items-center justify-center"
         style={{ backgroundImage: "url('/assets/login-bg.svg')" }}
@@ -93,7 +96,7 @@ export default function Login() {
             Login
           </h1>
 
-          <form onSubmit={handleSubmit} className="">
+          <form onSubmit={handleSubmit}>
             <div className="space-y-1">
               <Label htmlFor="email" className="text-white font-medium text-lg">
                 Email Address
@@ -103,16 +106,13 @@ export default function Login() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-[60px] w-[100%] bg-[#D3D5D7] border border-black/20 rounded-lg text-black mb-3"
+                className="h-[60px] w-full bg-[#D3D5D7] border border-black/20 rounded-lg text-black mb-3"
                 required
               />
             </div>
 
             <div className="space-y-1">
-              <Label
-                htmlFor="password"
-                className="text-white font-medium text-lg"
-              >
+              <Label htmlFor="password" className="text-white font-medium text-lg">
                 Password
               </Label>
               <Input
@@ -120,7 +120,7 @@ export default function Login() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-[60px] w-[100%] bg-[#D3D5D7] border border-black/20 rounded-lg text-black mb-2"
+                className="h-[60px] w-full bg-[#D3D5D7] border border-black/20 rounded-lg text-black mb-2"
                 required
               />
             </div>
@@ -129,18 +129,23 @@ export default function Login() {
               <Button
                 type="submit"
                 disabled={buttonDisabled || loading}
-                className={` w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover flex items-center justify-center ${
-                  buttonDisabled || loading
-                    ? "pointer-events-none "
-                    : "pointer-events-auto "
+                className={`relative w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover flex items-center justify-center ${
+                  buttonDisabled || loading ? "pointer-events-none" : "pointer-events-auto"
                 }`}
                 style={{
-                  backgroundImage: "url('/assets/Question_Box.svg')",
+                  backgroundImage: "url('/assets/namebox.svg')",
                 }}
                 aria-label="Proceed"
-              ></Button>
+              >
+                <span
+                  className={`absolute inset-0 flex items-center justify-center text-white text-lg ${pixelFont.variable}`}
+                >
+                  Proceed
+                </span>
+              </Button>
             </div>
           </form>
+
           <p className="text-center font-medium text-base text-white mt-5">
             Don't have an account?{" "}
             <Link href="/signup" className="text-[#24CCFF]">
@@ -149,16 +154,15 @@ export default function Login() {
           </p>
         </div>
       </div>
+
       <Modal
         isOpen={showErrorModal}
         onClose={() => setShowErrorModal(false)}
-        backgroundSvg={questionBox}
+        backgroundSvg="/assets/questionBox.svg"
       >
         <div className="text-center space-y-6 px-4">
           <h2 className="text-xl font-bold text-red-500">Error</h2>
-          <p className="text-base text-gray-300 leading-relaxed">
-            {errorMessage}
-          </p>
+          <p className="text-base text-gray-300 leading-relaxed">{errorMessage}</p>
         </div>
       </Modal>
     </div>
