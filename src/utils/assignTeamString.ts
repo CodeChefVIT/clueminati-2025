@@ -1,20 +1,13 @@
 export function assignTeamString(): string {
+  // Simple test strings - can be updated later for production
   const teamStrings = [
-    "MMNAMO",
-    "SODENM",
-    "GNELAS",
-    "ENVAEH",
-    "LEVDEI",
-    "WOHDSA",
-    "TRULAI",
-    "CRADES",
-    "OSEHRE",
-    "TLEATB",
-    "LCRSEI",
-    "MFSALE",
-    "NHSAIC",
-    "WPEROS",
-    "ZALEAB"
-];
+    "AAAAAA",
+    "BBBBBB", 
+    "CCCCCC",
+    "DDDDDD",
+    "EEEEEE",
+    "FFFFFF"
+  ];
+  
   return teamStrings[Math.floor(Math.random() * teamStrings.length)];
 }

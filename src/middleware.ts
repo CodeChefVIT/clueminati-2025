@@ -42,10 +42,14 @@ export async function middleware(request: NextRequest) {
     }
 
     if (role === "core_member") {
-      if (!path.startsWith("/core-member")) {
+      if (!payload.core_allocated_station) {
+        if (path !== "/chooseStation") {
+          return NextResponse.redirect(new URL("/chooseStation", request.url));
+        }
+      } else if (!path.startsWith("/core-member")) {
         return NextResponse.redirect(new URL("/core-member", request.url));
       }
-    } else if (path.startsWith("/core-member")) {
+    } else if (path.startsWith("/core-member") || path === "/chooseStation") {
       return NextResponse.redirect(new URL("/", request.url));
     }
 
@@ -86,6 +90,7 @@ export const config = {
     "/join-team",
     "/create-team",
     "/role-selection",
+    "/chooseStation",
     "/core-member",
     "/core-member/:path*",
     "/admin/:path*",

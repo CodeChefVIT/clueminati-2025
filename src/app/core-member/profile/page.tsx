@@ -12,6 +12,7 @@ interface User {
   role: "admin" | "core_member" | "participant";
   region?: "hell" | "earth";
   teamId?: string;
+  core_allocated_station?: string;
 }
 
 interface Team {
@@ -26,6 +27,7 @@ export default function ProfileScreen() {
 
   const [user, setUser] = useState<User | null>(null);
   const [team, setTeam] = useState<Team | null>(null);
+  const [stationName, setStationName] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [showQR, setShowQR] = useState(false);
   const [leaving, setLeaving] = useState(false);
@@ -35,8 +37,14 @@ export default function ProfileScreen() {
     async function fetchProfile() {
       try {
         const response = await axios.get("/api/users/profile");
-        setUser(response.data.data.user);
+        const userData = response.data.data.user;
+        setUser(userData);
         setTeam(response.data.data.team);
+        
+        // If user is core member and has allocated station, fetch station name
+        if (userData.role === "core_member" && userData.core_allocated_station) {
+          fetchStationName(userData.core_allocated_station);
+        }
       } catch (error: any) {
         console.error(
           "Error fetching profile:",
@@ -51,6 +59,17 @@ export default function ProfileScreen() {
     }
     fetchProfile();
   }, [router]);
+
+  // Fetch station name by ID
+  async function fetchStationName(stationId: string) {
+    try {
+      const response = await axios.get(`/api/core-member/get-station-info/${stationId}`);
+      setStationName(response.data.stationName);
+    } catch (error) {
+      console.error("Error fetching station info:", error);
+      setStationName("Unknown Station");
+    }
+  }
 
   async function logout() {
     try {
@@ -102,7 +121,7 @@ export default function ProfileScreen() {
   const teamIdForQR = team?.teamId || "No-Team";
 
   return (
-    <div className="w-full flex flex-col items-center justify-start text-white pt-10 p-4 sm:p-8 pt-4">
+    <div className="w-full flex flex-col items-center justify-start text-white pt-10 p-4 sm:p-8">
       <div className="flex flex-col items-center ">
         {/* Profile Picture */}
         <div className="relative w-36 h-36 sm:w-48 sm:h-48 mb-4">
@@ -120,6 +139,11 @@ export default function ProfileScreen() {
             {user.fullname}
           </h1>
           <p className="text-base sm:text-lg text-gray-300">{user.email}</p>
+          {user.role === "core_member" && user.core_allocated_station && (
+            <p className="text-sm sm:text-base text-blue-300 mt-1">
+              Station: {stationName || "Loading..."}
+            </p>
+          )}
         </div>
 
         {/* Team Info */}
