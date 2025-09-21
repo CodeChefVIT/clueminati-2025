@@ -9,7 +9,7 @@ export default function Home() {
   const router = useRouter();
   const [score, setScore] = useState<number>(0);
   const [round, setRound] = useState<string>("");
-  const [scannedForRound, setScannedForRound] = useState<boolean>(false);
+  const [answeredForRound, setAnsweredForRound] = useState<boolean>(false);
 
   useEffect(() => {
     // Load current round from localStorage
@@ -17,11 +17,11 @@ export default function Home() {
     if (r) {
       setRound(r);
 
-      // Check if QR was already scanned for this round
-      const scannedKey = `scanned_${r}`;
-      const scanned = localStorage.getItem(scannedKey);
-      if (scanned === "true") {
-        setScannedForRound(true);
+      // ✅ Check if question was already answered for this round
+      const answeredKey = `answered_${r}`;
+      const answered = localStorage.getItem(answeredKey);
+      if (answered === "true") {
+        setAnsweredForRound(true);
       }
     }
 
@@ -69,7 +69,7 @@ export default function Home() {
       />
 
       {/* Round logic */}
-      {round && !scannedForRound && (
+      {round && !answeredForRound && (
         <div className="relative w-fit px-6 py-5 mt-4">
           <Image
             src="/assets/brick.svg"
@@ -81,7 +81,7 @@ export default function Home() {
         </div>
       )}
 
-      {round && scannedForRound && (
+      {round && answeredForRound && (
         <Button
           label="Map"
           onClick={() => router.push("/map")}

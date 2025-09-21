@@ -35,15 +35,21 @@ export default function CoreMember() {
 
       <Link
         href="/core-member/choose-station"
-        className="group hover:scale-105 transition"
+        className="group relative hover:scale-105 transition flex items-center justify-center"
       >
+        {/* Background Image */}
         <Image
-          src="/assets/station-choose.svg"
+          src="/assets/round-box.svg"
           alt="Choose Station"
           width={200}
           height={85}
           className="object-contain pt-12"
         />
+
+        {/* Overlay Text */}
+        <span className="absolute inset-0 translate-y-[25px] flex items-center justify-center text-white text-lg font-semibold pointer-events-none">
+          Choose Station
+        </span>
       </Link>
     </main>
   );

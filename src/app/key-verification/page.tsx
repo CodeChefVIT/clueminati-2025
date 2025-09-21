@@ -85,12 +85,14 @@ const GamePopup: React.FC = () => {
             {/* Submit button (image) */}
             <button
               onClick={handleSubmit}
-              className="mt-6 w-32 h-12 translate-y-[100px] bg-cover bg-center bg-no-repeat hover:opacity-80 transition-opacity"
+              className="mt-6 w-32 h-12 translate-y-[100px] bg-cover bg-center bg-no-repeat hover:opacity-80 transition-opacity text-white text-lg font-semibold"
               style={{
-                backgroundImage: "url(/assets/submit.svg)",
+                backgroundImage: "url(/assets/round-box.svg)",
               }}
               aria-label="Submit code"
-            />
+            >
+              Submit
+            </button>
           </div>
         </div>
       </div>

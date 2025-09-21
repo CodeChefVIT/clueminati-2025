@@ -11,8 +11,8 @@ export default function ScannerPage() {
   const [scannedResult, setScannedResult] = useState("");
   const [isScanning, setIsScanning] = useState(true);
   const [manualCode, setManualCode] = useState("");
-  const [useManual, setUseManual] = useState(false); // toggle
-  const [showPopup, setShowPopup] = useState(false);
+  const [useManual, setUseManual] = useState(true);
+  const [showPopup, setShowPopup] = useState(false); // <-- popup state
   const [message, setMessage] = useState("");
 
   const router = useRouter();
@@ -23,39 +23,25 @@ export default function ScannerPage() {
       const response = await axios.get("/api/round/get-question-by-id", {
         params: { id: manualCode },
       });
-
-      // ✅ Save scanned flag
-      const round = localStorage.getItem("round");
-      if (round) {
-        localStorage.setItem(`scanned_${round}`, "true");
-      }
-
       router.push("/question/" + manualCode);
     } catch (error: any) {
       console.error(error);
-      setMessage(error.response?.data?.error || "Invalid code");
+      setMessage(error.response?.data?.error || "Something went wrong");
       setShowPopup(true);
     }
   };
 
   const handleScan = async (result: string) => {
     try {
-      await axios.get("/api/round/get-question-by-id", {
+      const response = await axios.get("/api/round/get-question-by-id", {
         params: { id: result },
       });
-
-      // ✅ Save scanned flag
-      const round = localStorage.getItem("round");
-      if (round) {
-        localStorage.setItem(`scanned_${round}`, "true");
-      }
-
       setScannedResult(result);
       setIsScanning(false);
       router.push("/question/" + result);
     } catch (error: any) {
       console.error(error);
-      setMessage(error.response?.data?.error || "Scan failed");
+      setMessage(error.response.data.error);
       setShowPopup(true);
       setIsScanning(true);
     }

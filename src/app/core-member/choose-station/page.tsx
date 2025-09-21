@@ -16,7 +16,9 @@ export default function ChooseStation() {
   return (
     <main className="pt-20 w-full flex flex-col items-center justify-center p-4">
       {/* Instruction Text */}
-      <div className="text-white text-lg mb-4 text-center">Scan Team QR</div>
+      <div className="text-white text-lg mb-4 text-center">
+        Choose the station
+      </div>
 
       {/* Dropdown */}
       <div className="relative mt-16">
@@ -34,7 +36,7 @@ export default function ChooseStation() {
           />
           {/* Label + Arrow */}
           <span className="absolute flex items-center gap-2 text-2xl text-[#F7F7EE] text-center pointer-events-none">
-            {selectedOption ?? "Choose Station"}
+            {selectedOption ?? "Select Station"}
             <ChevronDown
               size={24}
               className={`transition-transform ${
@@ -72,31 +74,41 @@ export default function ChooseStation() {
       {/* Close Button */}
       <Link
         href="/core-member"
-        aria-label="Close Scanner"
-        className="group z-10 hover:scale-105 transition"
+        className="group relative hover:scale-105 transition flex items-center justify-center"
       >
+        {/* Background Image */}
         <Image
-          src="/assets/submit.svg"
-          alt="Close Button"
+          src="/assets/round-box.svg"
+          alt="Choose Station"
           width={145}
           height={60}
           className="object-contain pt-12"
         />
+
+        {/* Overlay Text */}
+        <span className="absolute inset-0 translate-y-[25px] flex items-center justify-center text-white text-lg font-semibold pointer-events-none">
+          Submit
+        </span>
       </Link>
 
       {/* Close Button */}
       <Link
-        href="/core-member"
-        aria-label="Close Scanner"
-        className="group z-10 hover:scale-105 transition"
+        href="/core-member/choose-station"
+        className="group relative hover:scale-105 transition flex items-center justify-center"
       >
+        {/* Background Image */}
         <Image
-          src="/assets/close.svg"
-          alt="Close Button"
+          src="/assets/round-box.svg"
+          alt="Choose Station"
           width={145}
           height={60}
-          className="object-contain pt-12"
+          className="object-contain pt-8"
         />
+
+        {/* Overlay Text */}
+        <span className="absolute inset-0 translate-y-[18px] flex items-center justify-center text-white text-lg font-semibold pointer-events-none">
+          Close
+        </span>
       </Link>
     </main>
   );
