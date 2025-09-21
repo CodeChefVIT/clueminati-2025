@@ -38,15 +38,17 @@ export default function QuestionScreen() {
         const res = await axios.get("/api/round/get-question-by-id", {
           params: { id },
         });
-        const q = res.data.data;
-        const diffTag =
-          q.difficulty === "hard" ? "H 70" :
-          q.difficulty === "easy" ? "E 10" : "M 40";
-        setQuestion(`${q.question_description} ${diffTag}`);
-      } catch (err) {
-        console.error(err);
-        setMessage("Failed to load question");
-        setShowPopup(true);
+        setQuestion(
+          response.data.data.question_description +
+            " " +
+            (response.data.data.difficulty === "hard"
+              ? "H 70"
+              : response.data.data.difficulty === "easy"
+              ? "E 10"
+              : "M 40")
+        );
+      } catch (error: any) {
+        console.error(error);
       } finally {
         setLoadingQuestion(false);
       }
@@ -96,20 +98,29 @@ export default function QuestionScreen() {
         userAnswer: inputValue,
       });
 
-      if (res.status === 200) {
-        if (res.data.message === "correct") {
+      if (response.status === 200) {
+        if (response.data.message === "correct") {
+          const round = localStorage.getItem("round");
+          if (round) {
+            localStorage.setItem(`answered_${round}`, "true");
+          }
+
           setMessage("Correct Answer!");
           setShowPopup(true);
-          setTimeout(() => router.push("/submission-history"), 1000);
+
+          setTimeout(() => {
+            router.push("/submission-history");
+          }, 1000);
         } else {
           setMessage(res.data.message);
           setShowPopup(true);
         }
       }
+
       setInputValue("");
-    } catch (err: any) {
-      console.error(err);
-      setMessage(err.response?.data?.error || "Something went wrong");
+    } catch (error: any) {
+      console.error(error);
+      setMessage(error.response?.data?.error || "Something went wrong");
       setShowPopup(true);
     } finally {
       setSubmitting(false);

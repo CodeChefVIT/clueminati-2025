@@ -1,7 +1,7 @@
 import { connectToDatabase } from "@/lib/db";
+import User from "@/lib/models/user";
 import { getUserFromToken } from "@/utils/getUserFromToken";
 import { NextRequest, NextResponse } from "next/server";
-import Team from "@/lib/models/team";
 
 export async function GET(req: NextRequest) {
   try {
@@ -23,25 +23,27 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Provide the page number" }, { status: 400 });
     }
 
-    const teams = await Team.find({})
-      .sort({ total_score: -1 })
+    const Users = await User.find({})
+      .sort({ fullname: 1 })
       .skip((+page - 1) * 10)
       .limit(10);
 
-    const leaderboard = teams.map((team: any, index: number) => ({
-      rank: index + 1,
-      name: team.teamname,
-      total_score: team.total_score,
-      secret_string: team.secret_string || "", // added secret_string over here..empty for now cuz not added in db
-      members: team.members || [],
+    const userList = Users.map((user: any, index: number) => ({
+      fullname: user.fullname,
+      reg_num: user.reg_num,
+      email: user.email,
+      role: user.role,
+      region: user.region,
+      teamId: user.teamId,
     }));
 
     return NextResponse.json(
-      { message: "Leaderboard fetched successfully", data: leaderboard, totalCount: await Team.countDocuments() },
+      { message: "User list fetched successfully", data: userList, totalCount: await User.countDocuments() },
       { status: 200 }
-    );
+    )
   } catch (error) {
-    console.error("Error in GET /api/admin/getLeaderboard", error);
+    console.error("Error in GET /api/admin/users-list", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
+  
 }
