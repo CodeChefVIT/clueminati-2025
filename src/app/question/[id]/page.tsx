@@ -29,14 +29,14 @@ export default function QuestionScreen() {
           params: { id },
         });
         setQuestion(
-          response.data.data.question_description + " " +
-          (response.data.data.difficulty === 'hard'
-            ? 'H 70'
-            : response.data.data.difficulty === 'easy'
-              ? 'E 10'
-              : 'M 40')
+          response.data.data.question_description +
+            " " +
+            (response.data.data.difficulty === "hard"
+              ? "H 70"
+              : response.data.data.difficulty === "easy"
+              ? "E 10"
+              : "M 40")
         );
-
       } catch (error: any) {
         console.error(error);
       } finally {
@@ -70,10 +70,17 @@ export default function QuestionScreen() {
         questionId: id,
         userAnswer: inputValue,
       });
+
       if (response.status === 200) {
         if (response.data.message === "correct") {
+          const round = localStorage.getItem("round");
+          if (round) {
+            localStorage.setItem(`answered_${round}`, "true");
+          }
+
           setMessage("Correct Answer!");
           setShowPopup(true);
+
           setTimeout(() => {
             router.push("/submission-history");
           }, 1000);
@@ -82,10 +89,11 @@ export default function QuestionScreen() {
           setShowPopup(true);
         }
       }
+
       setInputValue("");
     } catch (error: any) {
       console.error(error);
-      setMessage(error.response.data.error);
+      setMessage(error.response?.data?.error || "Something went wrong");
       setShowPopup(true);
     } finally {
       setLoading(false);

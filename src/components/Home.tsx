@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Button from "./Button";
@@ -10,16 +9,27 @@ export default function Home() {
   const router = useRouter();
   const [score, setScore] = useState<number>(0);
   const [round, setRound] = useState<string>("");
+  const [answeredForRound, setAnsweredForRound] = useState<boolean>(false);
 
   useEffect(() => {
+    // Load current round from localStorage
     const r = localStorage.getItem("round");
     if (r) {
       setRound(r);
+
+      // ✅ Check if question was already answered for this round
+      const answeredKey = `answered_${r}`;
+      const answered = localStorage.getItem(answeredKey);
+      if (answered === "true") {
+        setAnsweredForRound(true);
+      }
     }
+
+    // Fetch score from backend
     async function fetchProfile() {
       try {
         const response = await axios.get("/api/users/profile");
-        const team = response.data.data.team;
+        const team = response.data.data?.team;
         if (team?.total_score !== undefined) {
           setScore(team.total_score);
         }
@@ -53,23 +63,14 @@ export default function Home() {
 
       {/* Scan Button */}
       <Button
-        label={`Scan`}
-        onClick={() => {
-          router.push("/scanner");
-        }}
+        label="Scan"
+        onClick={() => router.push("/scanner")}
         className="cursor-default w-35 text-base"
       />
-      {round === "Round 1" && (
-        <Button
-          label={`Map`}
-          onClick={() => {
-            router.push("/map");
-          }}
-          className="cursor-default w-35 text-base"
-        />
-      )}
-      {round === "Round 2" && (
-        <div className="relative w-fit px-6 py-5 ">
+
+      {/* Round logic */}
+      {round && !answeredForRound && (
+        <div className="relative w-fit px-6 py-5 mt-4">
           <Image
             src="/assets/brick.svg"
             alt="next station"
@@ -80,6 +81,15 @@ export default function Home() {
         </div>
       )}
 
+      {round && answeredForRound && (
+        <Button
+          label="Map"
+          onClick={() => router.push("/map")}
+          className="cursor-default w-35 text-base mt-4"
+        />
+      )}
+
+      {/* Score display */}
       <div className="mt-8">
         <Button
           label={`Score: ${score}`}
