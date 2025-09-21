@@ -28,11 +28,58 @@ export async function GET(req: NextRequest) {
           members: 1,
           total_score: { $add: ["$round1.score", "$round2.score"] },
           secret_string: "$round2.secret_string", // include secret_string
+          _id : 1
         },
       },
-      { $sort: { total_score: -1 } },
+      { 
+        $sort: { 
+          total_score: -1,
+          _id : 1
+        } 
+      },
       { $skip: (+page - 1) * 10 },
       { $limit: 10 },
+      {
+        $addFields: {
+          members: {
+            $map: {
+              input: "$members",
+              as: "memberId",
+              in: {"$toObjectId": "$$memberId"}
+            }
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: "users", 
+          localField: "members", 
+          foreignField: "_id", 
+          as: "memberDetails", 
+        },
+      },
+      {
+        $project: {
+          teamname: "$teamname",
+          total_score: "$total_score",
+          secret_string: "$secret_string",
+          members: {
+            $map: {
+              input: "$members",
+              as: "memberId",
+              in: {
+                $cond: {
+                  if: { $in: ["$$memberId", "$memberDetails._id"] },
+                  then: {
+                    $arrayElemAt: ["$memberDetails.fullname", { $indexOfArray: ["$memberDetails._id", "$$memberId"] }]
+                  },
+                  else: "Unknown User" 
+                }
+              }
+            }
+          }, 
+        },
+      },
     ]);
 
     const leaderboard = teams.map((team: any, index: number) => ({
