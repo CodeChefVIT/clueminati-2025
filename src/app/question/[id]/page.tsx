@@ -39,11 +39,11 @@ export default function QuestionScreen() {
           params: { id },
         });
         setQuestion(
-          response.data.data.question_description +
+          res.data.data.question_description +
             " " +
-            (response.data.data.difficulty === "hard"
+            (res.data.data.difficulty === "hard"
               ? "H 70"
-              : response.data.data.difficulty === "easy"
+              : res.data.data.difficulty === "easy"
               ? "E 10"
               : "M 40")
         );
@@ -98,8 +98,8 @@ export default function QuestionScreen() {
         userAnswer: inputValue,
       });
 
-      if (response.status === 200) {
-        if (response.data.message === "correct") {
+      if (res.status === 200) {
+        if (res.data.message === "correct") {
           const round = localStorage.getItem("round");
           if (round) {
             localStorage.setItem(`answered_${round}`, "true");

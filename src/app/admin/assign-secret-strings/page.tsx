@@ -50,8 +50,17 @@ export default function AssignSecretStrings() {
         
         <div className="bg-gray-800 rounded-lg p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4">Secret String Assignment</h2>
+          <div className="bg-blue-900 rounded-lg p-4 mb-4">
+            <h3 className="font-semibold text-blue-300 mb-2">🎯 How It Works Now:</h3>
+            <ul className="text-sm text-blue-200 space-y-1">
+              <li>• Secret strings are <strong>automatically assigned</strong> when teams are created</li>
+              <li>• When Round 2 starts, any teams without strings get assigned automatically</li>
+              <li>• Manual assignment is only needed for edge cases or testing</li>
+            </ul>
+          </div>
+          
           <p className="text-gray-300 mb-4">
-            Secret strings are automatically assigned when Round 2 starts. You can also manually assign them using this button.
+            Use this button to manually assign strings to teams that don't have them yet (useful for existing teams created before this feature).
           </p>
           
           <div className="mb-4">
@@ -72,7 +81,7 @@ export default function AssignSecretStrings() {
           <Button
             onClick={handleAssignStrings}
             disabled={loading}
-            label={loading ? "Assigning..." : "Assign Secret Strings"}
+            label={loading ? "Assigning..." : "Assign to Existing Teams"}
           />
         </div>
 

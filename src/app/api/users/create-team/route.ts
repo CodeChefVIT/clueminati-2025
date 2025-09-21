@@ -1,4 +1,5 @@
 import { generateJoinCode } from "@/utils/generateJoinCode";
+import { assignTeamString } from "@/utils/assignTeamString";
 import { getUserFromToken } from "@/utils/getUserFromToken";
 import { connectToDatabase } from "@/lib/db";
 import { TeamSchema } from "@/lib/interfaces";
@@ -48,11 +49,41 @@ export async function POST(req: NextRequest) {
     } while (existing);
 
     // Creating team & linking to user
+    const secretString = assignTeamString();
+    
     const newTeam = await Team.create({
       ...parsed,
       joinCode: code,
       members: [tUser.id],
+      round2: {
+        questions_solved: {
+          easy: [],
+          medium: [],
+          hard: []
+        },
+        questions_encountered: {
+          easy: [],
+          medium: [],
+          hard: []
+        },
+        score: 0,
+        game_score: 0,
+        indoor_score: 0,
+        secret_string: secretString,
+        letters_found: [],
+        secret_chars_revealed: 0,
+        string_validated: false,
+        string_score: 0,
+        guessed_string: "",
+        path: [],
+        currentStation: "",
+        previousStation: "",
+        solvedStations: []
+      }
     });
+    
+    console.log(`🎯 Team "${parsed.teamname}" created with secret string: "${secretString}"`);
+    
     user.teamId = newTeam._id.toString();
     // Mongoose validation fails if region is undefined, as it casts to ''.
     // Explicitly setting it to null bypasses the enum validation for an empty value.

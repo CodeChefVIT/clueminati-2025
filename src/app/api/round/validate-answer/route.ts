@@ -118,14 +118,16 @@ export async function POST(req: NextRequest) {
 
           // Get unique characters from secret string that haven't been revealed yet
           const secretChars = [...team.round2.secret_string];
-          const unrevealedChars = secretChars.filter((char, index) => 
-            !team.round2!.letters_found?.some(found => found === `${char}_${index}`)
-          );
+          const unrevealedPositions = secretChars
+            .map((char, index) => ({ char, index }))
+            .filter(({ char, index }) => 
+              !team.round2!.letters_found?.some(found => found === `${char}_${index}`)
+            );
 
-          if (unrevealedChars.length > 0) {
-            // Pick a random unrevealed character
-            const randomChar = unrevealedChars[Math.floor(Math.random() * unrevealedChars.length)];
-            const charIndex = secretChars.indexOf(randomChar);
+          if (unrevealedPositions.length > 0) {
+            // Pick a random unrevealed position
+            const randomPosition = unrevealedPositions[Math.floor(Math.random() * unrevealedPositions.length)];
+            const { char: randomChar, index: charIndex } = randomPosition;
             
             revealChar = randomChar;
             
@@ -140,12 +142,19 @@ export async function POST(req: NextRequest) {
         }
       }
 
+      // Mark current station as solved before assigning next station
+      if (team.round2.currentStation && !team.round2.solvedStations.includes(team.round2.currentStation)) {
+        team.round2.solvedStations.push(team.round2.currentStation);
+        console.log(`✅ Station completed: ${team.round2.currentStation}`);
+      }
+
       try {
         const stationResult = await assignNextStation(user.teamId);
         if ('error' in stationResult) {
           console.warn('Station assignment failed:', stationResult.error);
         } else {
           nextStation = stationResult;
+          console.log(`🎯 Next station assigned: ${nextStation.station_name} (${nextStation.stationId})`);
         }
       } catch (stationError) {
         console.error('Error assigning next station:', stationError);
