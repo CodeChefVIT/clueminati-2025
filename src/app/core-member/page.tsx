@@ -6,9 +6,7 @@ export default function CoreMember() {
   return (
     <main className="pt-20 w-full flex flex-col items-center justify-center p-4">
       {/* Instruction Text */}
-      <div className="text-white text-lg mb-4 text-center">
-        Scan Team QR
-      </div>
+      <div className="text-white text-lg mb-4 text-center">Scan Team QR</div>
 
       {/* QR Scanner Image */}
       <div className="mb-8">
@@ -32,6 +30,19 @@ export default function CoreMember() {
           width={145}
           height={60}
           className="object-contain"
+        />
+      </Link>
+
+      <Link
+        href="/core-member/choose-station"
+        className="group hover:scale-105 transition"
+      >
+        <Image
+          src="/assets/station-choose.svg"
+          alt="Choose Station"
+          width={200}
+          height={85}
+          className="object-contain pt-12"
         />
       </Link>
     </main>
