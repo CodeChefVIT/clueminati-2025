@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import TopNav from "@/components/TopNav";
 import BottomNav from "@/components/BottomNav";
@@ -15,6 +15,7 @@ export default function LayoutClientWrapper({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
 
   const rethinkPages = [
     "/login",
@@ -27,6 +28,8 @@ export default function LayoutClientWrapper({
     "/instructions",
     "/admin",
     "/admin/*",
+    "/not-found",
+    "/key-verification",
   ];
 
   const isDocsPage = pathname.startsWith("/docs");
@@ -56,17 +59,21 @@ export default function LayoutClientWrapper({
       } else if (now >= r1Start && now <= r1End) {
         theRound = "Round 1";
         setTimeLeft(r1End - now);
+        if (pathname === "/instructions") {
+        }
       } else if (now > r1End && now < r2Start) {
         theRound = "Half Time";
         setTimeLeft(r2Start - now);
       } else if (now >= r2Start && now <= r2End) {
         theRound = "Round 2";
         setTimeLeft(r2End - now);
+        if (pathname === "/instructions") {
+        }
       } else {
         theRound = "Finished";
         setTimeLeft(null);
       }
-      localStorage.setItem("round", theRound)
+      localStorage.setItem("round", theRound);
       setRound(theRound);
     } catch (err) {
       console.error("Failed to fetch game stats:", err);
@@ -74,6 +81,7 @@ export default function LayoutClientWrapper({
   }
 
   useEffect(() => {
+    console.log(pathname);
     fetchGameStat();
 
     if (timerRef.current) clearInterval(timerRef.current);
@@ -93,6 +101,14 @@ export default function LayoutClientWrapper({
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, []);
+  useEffect(() => {
+    if (
+      (round === "Round 1" || round === "Round 2") &&
+      pathname === "/instructions"
+    ) {
+      router.push("/");
+    }
+  }, [round, pathname, router]);
 
   useEffect(() => {
     const checkDevice = () => setIsDesktop(window.innerWidth >= 768);

@@ -126,10 +126,11 @@ export default function CreateTeam() {
                   disabled={loading}
                   className="w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover"
                   style={{
-                    backgroundImage: "url('/assets/Question_Box.svg')",
+                    backgroundImage: "url('/assets/proceedbuttonlogin.svg')",
                   }}
                   aria-label="Proceed"
-                ></Button>
+                >
+                </Button>
               </div>
             </form>
           </div>

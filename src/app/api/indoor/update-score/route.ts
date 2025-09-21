@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
         if(currentRound === "1"){
             if(team!.round1!.indoor_score === 0){
                 team!.round1!.indoor_score = +indoorScore;
+                team!.total_score += +indoorScore;
                 await team!.save();
                 return NextResponse.json({ message: "The score for round 1 has been Updated" }, { status: 200 });
             }
@@ -50,6 +51,8 @@ export async function POST(req: NextRequest) {
         if(currentRound === "2"){
             if(team!.round2!.indoor_score === 0){
                 team!.round2!.indoor_score = +indoorScore;
+                team!.total_score += +indoorScore;
+
                 await team!.save();
                 return NextResponse.json({ message: "The score for round 2 has been Updated" }, { status: 200 });
             }

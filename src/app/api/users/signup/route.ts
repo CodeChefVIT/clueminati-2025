@@ -62,7 +62,7 @@ export async function POST(request: NextRequest){   //took request as parameter 
     console.log(savedUser);        
 
     //send verification email with password
-    await sendEmail({email, emailType: "VERIFY", userId: savedUser._id, password})     // sending email for verification
+    await sendEmail({email, password})     // sending email for verification
 
     console.log("Signup process completed for:", email);   
 

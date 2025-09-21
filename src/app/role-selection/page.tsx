@@ -87,7 +87,7 @@ export default function RegionSelection() {
     try {
       setLoading(true);
 
-      const response = await axios.post("/api/region-selection", {
+      const response = await axios.post("/api/users/region-selection", {
         region: selectedRegion,
       });
 
@@ -168,9 +168,7 @@ export default function RegionSelection() {
     >
       <div className="flex flex-col items-center">
         <span className="text-xl">{region.toUpperCase()}</span>
-        <span className="text-xs mt-1">
-          ({count}/{max} slots filled)
-        </span>
+        
       </div>
     </Button>
   );
