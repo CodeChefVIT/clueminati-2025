@@ -71,10 +71,12 @@ export async function GET(req: NextRequest) {
     questions.map((q) => [q._id.toString(), q.question_description])
   );
 
-  const solved = allSolvedInfo.map((info) => ({
-    ...info,
-    questionDescription: questionsMap.get(info.questionId) || null,
-  }));
+  const solved = allSolvedInfo
+    .map((info) => ({
+      ...info,
+      questionDescription: questionsMap.get(info.questionId) || null,
+    }))
+    .reverse();
 
   return NextResponse.json({
     solved,
