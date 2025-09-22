@@ -1,13 +1,11 @@
 "use client";
 import React, { useState } from "react";
 
-const GamePopup: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(true); // popup always open at start
+const KeyVerification: React.FC = () => {
   const [code, setCode] = useState(Array(6).fill("")); // store 6 characters
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
-      setIsOpen(false);
     }
   };
 
@@ -27,15 +25,15 @@ const GamePopup: React.FC = () => {
 
   const handleSubmit = () => {
     console.log("Submitted code:", code.join(""));
-    setIsOpen(false);
   };
 
-  if (!isOpen) return null;
 
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[9999]"
       onClick={handleOverlayClick}
+        style={{ backgroundImage: "url('/assets/login-bg.svg')" }}
+
     >
       <div className="relative max-w-md w-full z-[10000]">
         {/* Popup box with background */}
@@ -48,27 +46,25 @@ const GamePopup: React.FC = () => {
             backgroundPosition: "center",
           }}
         >
-          {/* Close button */}
-          <button
-            onClick={() => setIsOpen(false)}
-            className="absolute -top-8 right-5 w-8 h-8 bg-cover bg-center bg-no-repeat hover:opacity-80 transition-opacity"
-            style={{
-              backgroundImage: "url(/assets/X.svg)",
-            }}
-            aria-label="Close popup"
-          />
+
 
           {/* Popup content */}
-          <div className="relative text-center space-y-6 mt-12">
+          <div className="relative text-center space-y-6 ">
             <div
-              className="font-bold text-3xl leading-tight tracking-wide translate-y-[50px]"
+              className="font-bold text-2xl leading-tight tracking-wide translate-y-[50px]"
               style={{ color: "#B9B9B9" }}
             >
               Enter the final code
             </div>
+            <div
+              className="font-bold text-sm leading-tight tracking-wide translate-y-[50px]"
+              style={{ color: "#B9B9B975" }}
+            >
+              Hint: how's your indoor team doing?
+            </div>
 
             {/* Code input boxes */}
-            <div className="flex justify-center gap-1 mt-4 translate-y-[50px] ">
+            <div className="flex justify-center gap-1 mt translate-y-[50px] ">
               {code.map((char, index) => (
                 <input
                   key={index}
@@ -85,7 +81,7 @@ const GamePopup: React.FC = () => {
             {/* Submit button (image) */}
             <button
               onClick={handleSubmit}
-              className="mt-6 w-32 h-12 translate-y-[100px] bg-cover bg-center bg-no-repeat hover:opacity-80 transition-opacity text-white text-lg font-semibold"
+              className="mt-6 w-32 h-12 translate-y-[100px] bg-cover bg-center bg-no-repeat hover:brightness-50 transition-opacity text-white text-lg font-semibold"
               style={{
                 backgroundImage: "url(/assets/round-box.svg)",
               }}
@@ -100,4 +96,4 @@ const GamePopup: React.FC = () => {
   );
 };
 
-export default GamePopup;
+export default KeyVerification;

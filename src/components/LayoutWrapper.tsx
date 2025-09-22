@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import TopNav from "@/components/TopNav";
 import BottomNav from "@/components/BottomNav";
@@ -8,6 +8,8 @@ import Image from "next/image";
 import { pixelFont, rethinkSansBold, rethinkSansMedium } from "@/app/fonts";
 import { motion } from "framer-motion";
 import axios from "axios";
+import Instructions from "@/app/instructions/page";
+import KeyVerification from "@/app/key-verification/page";
 
 export default function LayoutClientWrapper({
   children,
@@ -15,6 +17,7 @@ export default function LayoutClientWrapper({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
 
   const rethinkPages = [
     "/login",
@@ -27,6 +30,8 @@ export default function LayoutClientWrapper({
     "/instructions",
     "/admin",
     "/admin/*",
+    "/not-found",
+    "/key-verification",
   ];
 
   const isDocsPage = pathname.startsWith("/docs");
@@ -36,7 +41,9 @@ export default function LayoutClientWrapper({
   const [isDesktop, setIsDesktop] = useState(false);
   const [installPrompt, setInstallPrompt] = useState<any>(null);
 
-  const [round, setRound] = useState<string>("...");
+  const [round, setRound] = useState<
+    "Not Started" | "Round 1" | "Round 2" | "Half Time" | "Finished" | "..."
+  >("...");
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -56,24 +63,39 @@ export default function LayoutClientWrapper({
       } else if (now >= r1Start && now <= r1End) {
         theRound = "Round 1";
         setTimeLeft(r1End - now);
+        if (pathname === "/instructions") {
+          router.push("/");
+        }
       } else if (now > r1End && now < r2Start) {
         theRound = "Half Time";
         setTimeLeft(r2Start - now);
       } else if (now >= r2Start && now <= r2End) {
         theRound = "Round 2";
         setTimeLeft(r2End - now);
+        router.push("/");
+        if (pathname === "/instructions") {
+        }
       } else {
         theRound = "Finished";
         setTimeLeft(null);
       }
-      localStorage.setItem("round", theRound)
-      setRound(theRound);
+      localStorage.setItem("round", theRound);
+      setRound(
+        theRound as
+          | "Not Started"
+          | "Round 1"
+          | "Round 2"
+          | "Half Time"
+          | "Finished"
+          | "..."
+      );
     } catch (err) {
       console.error("Failed to fetch game stats:", err);
     }
   }
 
   useEffect(() => {
+    console.log(pathname);
     fetchGameStat();
 
     if (timerRef.current) clearInterval(timerRef.current);
@@ -93,6 +115,15 @@ export default function LayoutClientWrapper({
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, []);
+  // useEffect(() => {
+  //   console.log("ok so round has changed")
+  //   if (
+  //     (round === "Round 1" || round === "Round 2") &&
+  //     pathname === "/instructions"
+  //   ) {
+  //     router.push("/");
+  //   }
+  // }, [round, pathname, router]);
 
   useEffect(() => {
     const checkDevice = () => setIsDesktop(window.innerWidth >= 768);
@@ -183,7 +214,7 @@ export default function LayoutClientWrapper({
         <div className="relative z-20 min-h-screen bg-gray-900 text-gray-100 flex flex-col p-6">
           <main className="flex-1 overflow-y-auto">{children}</main>
         </div>
-      ) : (
+      ) : round === "Round 1" || round === "Round 2" ? (
         <div className="grid grid-rows-[10%_1fr_15%] h-screen">
           <div className="z-30 relative">
             <TopNav round={round} timeLeft={timeLeft} />
@@ -193,6 +224,12 @@ export default function LayoutClientWrapper({
             <BottomNav />
           </div>
         </div>
+      ) : round === "Half Time" || round === "Not Started" ? (
+        <Instructions timeLeft={timeLeft!} />
+      ) : round === "Finished" ? (
+        <KeyVerification />
+      ) : (
+        ""
       )}
 
       {installPrompt && !isAdminPage && (

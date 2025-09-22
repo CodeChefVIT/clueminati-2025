@@ -77,7 +77,7 @@ export default function RegionSelection() {
       setShowErrorModal(true);
       return;
     }
-
+setBackground(region === "hell" ? "/assets/hell-bg.svg" : "/assets/background.svg");
     setSelectedRegion(region);
   };
 
@@ -87,20 +87,17 @@ export default function RegionSelection() {
     try {
       setLoading(true);
 
-      const response = await axios.post("/api/region-selection", {
+      const response = await axios.post("/api/users/region-selection", {
         region: selectedRegion,
       });
 
       if (response.data.success || response.data.message) {
         if (selectedRegion === "hell") {
-          setBackground("/assets/hell-bg.svg");
           router.push("/hell-instructions");
         } else {
-          setBackground("/assets/background.svg");
-          router.push("/instructions");
+          router.push("/");
         }
 
-        // refetch fresh counts and user data
         await fetchData();
       } else {
         throw new Error("Unexpected response format");
@@ -168,9 +165,7 @@ export default function RegionSelection() {
     >
       <div className="flex flex-col items-center">
         <span className="text-xl">{region.toUpperCase()}</span>
-        <span className="text-xs mt-1">
-          ({count}/{max} slots filled)
-        </span>
+        
       </div>
     </Button>
   );
