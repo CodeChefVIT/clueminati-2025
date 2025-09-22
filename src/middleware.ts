@@ -75,17 +75,17 @@ export async function middleware(request: NextRequest) {
         if (path !== "/instructions") {
           if (now < r1Start) {
             //not started
-            return NextResponse.redirect(new URL("/instructions", request.url));
+            // return NextResponse.redirect(new URL("/instructions", request.url));
           } else if (now >= r1Start && now <= r1End) {
             // round 1
           } else if (now > r1End && now < r2Start) {
             // half time
-            return NextResponse.redirect(new URL("/instructions", request.url));
+            // return NextResponse.redirect(new URL("/instructions", request.url));
           } else if (now >= r2Start && now <= r2End) {
             // round 2
           } else {
             // finished
-            return NextResponse.redirect(new URL("/key-verification", request.url));
+            // return NextResponse.redirect(new URL("/key-verification", request.url));
           }
         }
       }

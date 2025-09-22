@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 
-const GamePopup: React.FC = () => {
+const KeyVerification: React.FC = () => {
   const [code, setCode] = useState(Array(6).fill("")); // store 6 characters
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -96,4 +96,4 @@ const GamePopup: React.FC = () => {
   );
 };
 
-export default GamePopup;
+export default KeyVerification;
