@@ -106,8 +106,8 @@ export async function POST(req: NextRequest) {
 
       if (revealSteps.includes(totalSolved)) {
         const idx = team.round2.secret_chars_revealed || 0;
-        if (team.round2.secret_string && idx < team.round2.secret_string.length) {
-          revealChar = team.round2.secret_string[idx];
+        if (team.teamString && idx < team.teamString.length) {
+          revealChar = team.teamString[idx];
           team.round2.secret_chars_revealed = (team.round2.secret_chars_revealed || 0) + 1;
         }
       }
