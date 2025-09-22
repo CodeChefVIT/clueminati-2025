@@ -4,7 +4,13 @@ import { ITeam } from "../interfaces";
 const TeamSchema = new Schema<ITeam>({
   teamname: { type: String, required: true, unique: true },
   joinCode: { type: String, unique: true },
-  members: { type: [String], required: true, default: [] },
+  members: { type: [String], required: true, default: [], validate: {
+    validator: function (val: string[]) {
+      return val.length <= 5;
+    },
+    message: "A team can have a maximum of 5 members.",
+  },
+ },
   round1: {
     questions_encountered: {
       easy: { type: [{ type: String, ref: "Questions" }], default: [] },
@@ -17,7 +23,7 @@ const TeamSchema = new Schema<ITeam>({
       hard: { type: [{ type: String, ref: "Questions" }], default: [] },
     },
     score: { type: Number, default: 0 },
-    indoor_score: { type: Number, default: 0 },
+    indoor_score: { type: Number, default: 0 }
   },
   round2: {
     questions_encountered: {
@@ -38,10 +44,10 @@ const TeamSchema = new Schema<ITeam>({
     solvedStations: { type: [String], default: [] },
     secret_string: { type: String, required: false },
     secret_chars_revealed: { type: Number, default: 0 },
-    letters_found: { type: [String], default: [] },
+    letters_found: { type: [String], default: [] }
   },
   total_score: { type: Number, default: 0, required: true },
-  teamString: { type: String, required: false },
+  //teamString: { type: String, required: false },
 });
 
 const Team: Model<ITeam> = models.Team ?? model<ITeam>("Team", TeamSchema);

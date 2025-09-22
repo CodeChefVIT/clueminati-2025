@@ -1,9 +1,10 @@
 "use client";
 
-import Button from "@/components/Button";
-import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
+import { useParams, useRouter } from "next/navigation";
+import axios from "axios";
+
+import Button from "@/components/Button";
 import Modal from "@/components/Modal";
 
 const questionBox = "/assets/Question_Box.svg";
@@ -11,39 +12,45 @@ const answerBox = "/assets/Answer_Box.svg";
 
 export default function QuestionScreen() {
   const router = useRouter();
-  const params = useParams();
+  const { id } = useParams();
+  
   const [question, setQuestion] = useState("");
   const [inputValue, setInputValue] = useState("");
-  const id = params.id;
-  const [loading, setLoading] = useState(true);
+  const [loadingQuestion, setLoadingQuestion] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+
   const [showPopup, setShowPopup] = useState(false);
   const [message, setMessage] = useState("");
+  
   const [skipDisabled, setSkipDisabled] = useState(true);
   const [countdown, setCountdown] = useState(30);
+
+  //5 mins ka skip
+  const [blockedUntil, setBlockedUntil] = useState<number | null>(null);
 
   useEffect(() => {
     const getQuestionById = async () => {
       try {
-        setLoading(true);
-        const response = await axios.get("/api/round/get-question-by-id", {
+        setLoadingQuestion(true);
+        const res = await axios.get("/api/round/get-question-by-id", {
           params: { id },
         });
         setQuestion(
-          response.data.data.question_description +
+          res.data.data.question_description +
             " " +
-            (response.data.data.difficulty === "hard"
+            (res.data.data.difficulty === "hard"
               ? "H 70"
-              : response.data.data.difficulty === "easy"
+              : res.data.data.difficulty === "easy"
               ? "E 10"
               : "M 40")
         );
       } catch (error: any) {
         console.error(error);
       } finally {
-        setLoading(false);
+        setLoadingQuestion(false);
       }
     };
-    getQuestionById();
+    if (id) getQuestionById();
   }, [id]);
 
   useEffect(() => {
@@ -57,22 +64,21 @@ export default function QuestionScreen() {
         return prevCountdown - 1;
       });
     }, 1000);
-
+    
     return () => clearInterval(timer);
   }, []);
 
   const handleSubmit = useCallback(async () => {
     if (!inputValue.trim()) return;
-
     try {
-      setLoading(true);
-      const response = await axios.post("/api/round/validate-answer", {
+      setSubmitting(true);
+      const res = await axios.post("/api/round/validate-answer", {
         questionId: id,
         userAnswer: inputValue,
       });
 
-      if (response.status === 200) {
-        if (response.data.message === "correct") {
+      if (res.status === 200) {
+        if (res.data.message === "correct") {
           const round = localStorage.getItem("round");
           if (round) {
             localStorage.setItem(`answered_${round}`, "true");
@@ -85,7 +91,7 @@ export default function QuestionScreen() {
             router.push("/submission-history");
           }, 1000);
         } else {
-          setMessage(response.data.message);
+          setMessage(res.data.message);
           setShowPopup(true);
         }
       }
@@ -96,7 +102,7 @@ export default function QuestionScreen() {
       setMessage(error.response?.data?.error || "Something went wrong");
       setShowPopup(true);
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   }, [id, inputValue, router]);
 
@@ -111,17 +117,27 @@ export default function QuestionScreen() {
   return (
     <div className="flex flex-col items-center justify-start text-white px-4 sm:px-8 overflow-hidden gap-4">
       <div className="relative w-full max-w-2xl">
-        <img src={questionBox} alt="Question Box" className="w-full" />
+        <img 
+          src={questionBox} 
+          alt="Question Box" 
+          className="w-full" 
+          width={800} 
+          height={200}
+          style={{ width: "auto", height: "auto" }}
+        />
         <span className="absolute inset-0 flex items-center justify-center px-6 text-center text-lg sm:text-xl font-bold">
-          {question}
+          {loadingQuestion ? "Loading question…" : question}
         </span>
       </div>
 
       <div className="relative w-full max-w-lg h-44 sm:h-52">
-        <img
-          src={answerBox}
-          alt="Answer Box"
-          className="w-full h-full object-contain"
+        <img 
+          src={answerBox} 
+          alt="Answer Box" 
+          className="w-full h-full object-contain" 
+          width={600} 
+          height={200}
+          style={{ width: "auto", height: "auto" }}  {/*console error aa rha tha*/}
         />
         <input
           type="text"
@@ -134,9 +150,9 @@ export default function QuestionScreen() {
 
       <div className="flex flex-col items-center w-full max-w-[16rem] sm:max-w-[18rem]">
         <Button
-          label={loading ? "Submitting..." : "Submit"}
+          label={submitting ? "Submitting..." : "Submit"}
           onClick={handleSubmit}
-          disabled={loading}
+          disabled={submitting || loadingQuestion}
           className="!w-full !text-3xl sm:!text-4xl !font-extrabold"
         />
         <Button
