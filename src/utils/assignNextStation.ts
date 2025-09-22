@@ -25,8 +25,7 @@ export async function assignNextStation(teamId: string): Promise<AssignNextStati
 
   let candidateStations = allStations;
   
-  // exclude only the current and previous stations (last two visited)
-  // teams can revisit any other station, including older solved ones
+//working, last one hadissue
   const excludeStations = [];
   if (currentStation) excludeStations.push(currentStation);
   if (previousStation) excludeStations.push(previousStation);
@@ -43,7 +42,6 @@ export async function assignNextStation(teamId: string): Promise<AssignNextStati
   const randomIndex = Math.floor(Math.random() * candidateStations.length);
   const nextStation = candidateStations[randomIndex];
 
-  // Update stations: current becomes previous, new station becomes current
   (team.round2 as any).previousStation = currentStation;
   team.round2.currentStation = nextStation._id.toString();
   await team.save();
