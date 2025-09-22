@@ -105,18 +105,17 @@ export async function POST(req: NextRequest) {
       const totalSolved = Object.values(team.round2.questions_solved).flat().length;
       const revealSteps = [3, 5, 7];
 
-      console.log(`🎯 Round 2 Debug: Total solved: ${totalSolved}, Reveal steps: [${revealSteps}]`);
+      console.log(`Round 2 Debug: Total solved: ${totalSolved}, Reveal steps: [${revealSteps}]`);
 
       if (revealSteps.includes(totalSolved)) {
         console.log(`🔤 Revealing random character from secret string "${team.round2.secret_string}"`);
         
         if (team.round2.secret_string && team.round2.secret_string.length > 0) {
-          // Initialize letters_found array if not exists
+          // Initialize letters_found array if not exists //debugged error
           if (!team.round2.letters_found) {
             team.round2.letters_found = [];
           }
 
-          // Get unique characters from secret string that haven't been revealed yet
           const secretChars = [...team.round2.secret_string];
           const unrevealedPositions = secretChars
             .map((char, index) => ({ char, index }))
@@ -125,27 +124,25 @@ export async function POST(req: NextRequest) {
             );
 
           if (unrevealedPositions.length > 0) {
-            // Pick a random unrevealed position
             const randomPosition = unrevealedPositions[Math.floor(Math.random() * unrevealedPositions.length)];
             const { char: randomChar, index: charIndex } = randomPosition;
             
             revealChar = randomChar;
             
-            // Store the revealed character with its position to avoid duplicates
+            // store with its posn to avoid duplicates
             team.round2.letters_found.push(`${randomChar}_${charIndex}`);
             team.round2.secret_chars_revealed = (team.round2.secret_chars_revealed || 0) + 1;
             
-            console.log(`✅ Random character revealed: "${revealChar}" (position ${charIndex}), Total revealed: ${team.round2.secret_chars_revealed}`);
+            console.log(`Random character revealed: "${revealChar}" (position ${charIndex}), Total revealed: ${team.round2.secret_chars_revealed}`);
           } else {
-            console.log(`⚠️ All characters already revealed`);
+            console.log(`All characters already revealed`);
           }
         }
       }
 
-      // Mark current station as solved before assigning next station
       if (team.round2.currentStation && !team.round2.solvedStations.includes(team.round2.currentStation)) {
         team.round2.solvedStations.push(team.round2.currentStation);
-        console.log(`✅ Station completed: ${team.round2.currentStation}`);
+        console.log(`Station completed: ${team.round2.currentStation}`);
       }
 
       try {
@@ -154,7 +151,7 @@ export async function POST(req: NextRequest) {
           console.warn('Station assignment failed:', stationResult.error);
         } else {
           nextStation = stationResult;
-          console.log(`🎯 Next station assigned: ${nextStation.station_name} (${nextStation.stationId})`);
+          console.log(`Next station assigned: ${nextStation.station_name} (${nextStation.stationId})`);
         }
       } catch (stationError) {
         console.error('Error assigning next station:', stationError);
