@@ -24,7 +24,6 @@ export default function CreateQuestionPage() {
     const adminRoutes = [
         "/admin/create-question",
         "/admin/create-station",
-        "/admin/assign-secret-strings",
         "/admin/get-indoor-leaderboard",
         "/admin/get-leaderboard",
         "/admin/get-outdoor-leaderboard",
