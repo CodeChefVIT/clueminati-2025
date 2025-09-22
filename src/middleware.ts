@@ -45,11 +45,16 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/", request.url));
     }
 
-    if (role === "core_member" && !path.startsWith("/core-member")) {
-      return NextResponse.redirect(new URL("/core-member", request.url));
-    }
-    if (role !== "core_member" && path.startsWith("/core-member")) {
-      return NextResponse.redirect(new URL("/", request.url));
+    if (role === "core_member") {
+      if (!path.startsWith("/core-member")) {
+        return NextResponse.redirect(new URL("/core-member", request.url));
+      }
+      // after integrating stations, uncomment this
+      // if (!payload.station && path !== "/core-member/choose-station") {
+      //   return NextResponse.redirect(
+      //     new URL("/core-member/choose-station", request.url)
+      //   );
+      // }
     }
 
     if (role === "participant") {
