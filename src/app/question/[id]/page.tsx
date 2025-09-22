@@ -12,9 +12,8 @@ const answerBox = "/assets/Answer_Box.svg";
 
 export default function QuestionScreen() {
   const router = useRouter();
-  const { id } = useParams<{ id: string }>();
-
-  // ── State ───────────────────────────────────────────────
+  const { id } = useParams();
+  
   const [question, setQuestion] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [loadingQuestion, setLoadingQuestion] = useState(true);
@@ -22,15 +21,13 @@ export default function QuestionScreen() {
 
   const [showPopup, setShowPopup] = useState(false);
   const [message, setMessage] = useState("");
-
-  // skip button initial delay
+  
   const [skipDisabled, setSkipDisabled] = useState(true);
   const [countdown, setCountdown] = useState(30);
 
-  // 5-minute block after skip
+  //5 mins ka skip
   const [blockedUntil, setBlockedUntil] = useState<number | null>(null);
 
-  // ── Fetch question ──────────────────────────────────────
   useEffect(() => {
     const getQuestionById = async () => {
       try {
@@ -56,41 +53,23 @@ export default function QuestionScreen() {
     if (id) getQuestionById();
   }, [id]);
 
-  // ── Check if user already blocked ───────────────────────
   useEffect(() => {
-    const stored = localStorage.getItem("skipBlockUntil");
-    if (stored && Number(stored) > Date.now()) {
-      setBlockedUntil(Number(stored));
-    }
-  }, []);
-
-  // ── Countdown for initial Skip enable ───────────────────
-  useEffect(() => {
-    if (!skipDisabled || blockedUntil) return;
     const timer = setInterval(() => {
-      setCountdown((c) => {
-        if (c <= 1) {
+      setCountdown((prevCountdown) => {
+        if (prevCountdown <= 1) {
           clearInterval(timer);
           setSkipDisabled(false);
           return 0;
         }
-        return c - 1;
+        return prevCountdown - 1;
       });
     }, 1000);
+    
     return () => clearInterval(timer);
-  }, [skipDisabled, blockedUntil]);
+  }, []);
 
-  // ── Submit answer ───────────────────────────────────────
   const handleSubmit = useCallback(async () => {
-    // block check
-    if (blockedUntil && Date.now() < blockedUntil) {
-      setMessage("You skipped a question. Please wait 5 minutes before continuing.");
-      setShowPopup(true);
-      return;
-    }
-
-    if (!inputValue.trim() || submitting) return;
-
+    if (!inputValue.trim()) return;
     try {
       setSubmitting(true);
       const res = await axios.post("/api/round/validate-answer", {
@@ -125,25 +104,15 @@ export default function QuestionScreen() {
     } finally {
       setSubmitting(false);
     }
-  }, [blockedUntil, id, inputValue, router, submitting]);
+  }, [id, inputValue, router]);
 
-  //skip 
-  const handleSkip = useCallback(() => {
-    //5-min ka block dala hai, change it if you want
-    const until = Date.now() + 5 * 60 * 1000;
-    localStorage.setItem("skipBlockUntil", String(until));
-    setBlockedUntil(until);
-    setMessage("You skipped this question. You cannot proceed for 5 minutes.");
+  const handleSkip = () => {
+    setMessage("answer skipped!!");
     setShowPopup(true);
-  }, []);
-
-  //render
-  const isBlocked = !!(blockedUntil && Date.now() < blockedUntil);
-  const skipLabel = isBlocked
-    ? "Blocked (5 min)"
-    : skipDisabled
-    ? `Skip (${countdown}s)`
-    : "Skip";
+    setTimeout(() => {
+      router.push("/");
+    }, 1000);
+  };
 
   return (
     <div className="flex flex-col items-center justify-start text-white px-4 sm:px-8 overflow-hidden gap-4">
@@ -168,29 +137,28 @@ export default function QuestionScreen() {
           className="w-full h-full object-contain" 
           width={600} 
           height={200}
-          style={{ width: "auto", height: "auto" }}
+          style={{ width: "auto", height: "auto" }}  {/*console error aa rha tha*/}
         />
         <input
           type="text"
           value={inputValue}
           placeholder="Answer"
           onChange={(e) => setInputValue(e.target.value)}
-          disabled={submitting || isBlocked}
           className="absolute inset-0 bg-transparent text-center text-xl sm:text-2xl text-white font-semibold focus:outline-none px-6"
         />
       </div>
 
-      <div className="flex flex-col items-center w-full max-w-[16rem] sm:max-w-[18rem] space-y-2">
+      <div className="flex flex-col items-center w-full max-w-[16rem] sm:max-w-[18rem]">
         <Button
           label={submitting ? "Submitting..." : "Submit"}
           onClick={handleSubmit}
-          disabled={submitting || loadingQuestion || isBlocked}
+          disabled={submitting || loadingQuestion}
           className="!w-full !text-3xl sm:!text-4xl !font-extrabold"
         />
         <Button
-          label={skipLabel}
+          label={skipDisabled ? `Skip (${countdown}s)` : "Skip"}
           onClick={handleSkip}
-          disabled={skipDisabled || isBlocked}
+          disabled={skipDisabled}
           className="!w-full !text-3xl sm:!text-4xl !font-extrabold"
         />
       </div>
