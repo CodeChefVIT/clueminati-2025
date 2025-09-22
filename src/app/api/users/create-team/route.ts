@@ -1,7 +1,6 @@
 import { generateJoinCode } from "@/utils/generateJoinCode";
-import { assignTeamString } from "@/utils/assignTeamString";
-import { assignNextStation } from "@/utils/assignNextStation";
 import { getUserFromToken } from "@/utils/getUserFromToken";
+import { assignTeamString } from "@/utils/assignTeamString";
 import { connectToDatabase } from "@/lib/db";
 import { TeamSchema } from "@/lib/interfaces";
 import Team from "@/lib/models/team";
@@ -9,27 +8,32 @@ import User from "@/lib/models/user";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 import jwt from "jsonwebtoken";
+import { assignNextStation } from "@/utils/assignNextStation";
 
 connectToDatabase();
 
 export async function POST(req: NextRequest) {
   try {
+    // Authenticatting
     const tUser = await getUserFromToken(req);
     if (!tUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Parsing tken & validating its body
     const data = await req.json();
     const parsed = TeamSchema.parse(data);
 
+    // Get full user record
     const user = await User.findById(tUser.id);
     if (!user) {
       return NextResponse.json(
-        { error: "User not found", data: tUser }, // debug-friendly ++++
+        { error: "User not found", data: tUser }, // debug-friendly ++
         { status: 404 }
       );
     }
 
+    // Prevent multiple teams
     if (user.teamId) {
       return NextResponse.json(
         { redirect: "/role-selection" },
@@ -37,6 +41,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Generating unique join code
     let code: string;
     let existing;
     do {
@@ -70,7 +75,7 @@ export async function POST(req: NextRequest) {
     user.region = undefined;
     await user.save();
 
-    // ASSigning a fresh JWT so client has updated teamId
+    // AsSigning a fresh JWT so client has updated teamId
     const tokenData = {
       id: user._id,
       fullname: user.fullname,
@@ -84,7 +89,8 @@ export async function POST(req: NextRequest) {
     const token = jwt.sign(tokenData, process.env.TOKEN_SECRET!, {
       expiresIn: "1d",
     });
-  
+
+    // 8. Build response and set cookie
     const res = NextResponse.json(
       {
         message: "Team Created Successfully",

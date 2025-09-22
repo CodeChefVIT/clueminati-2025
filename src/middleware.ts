@@ -46,23 +46,16 @@ export async function middleware(request: NextRequest) {
     }
 
     if (role === "core_member") {
-      if (!payload.core_allocated_station) {
-        if (!path.startsWith("/chooseStation")) {
-          return NextResponse.redirect(new URL("/chooseStation", request.url));
-        }
-      } else {
-        // Core member with station → must be under /core-member/*
-        if (!path.startsWith("/core-member")) {
-          return NextResponse.redirect(new URL("/core-member", request.url));
-        }
+      if (!path.startsWith("/core-member")) {
+        return NextResponse.redirect(new URL("/core-member", request.url));
       }
-    } else {
-      // Non-core members cannot access core paths
-      if (path.startsWith("/core-member") || path.startsWith("/chooseStation")) {
-        return NextResponse.redirect(new URL("/", request.url));
-      }
+      // after integrating stations, uncomment this
+      // if (!payload.station && path !== "/core-member/choose-station") {
+      //   return NextResponse.redirect(
+      //     new URL("/core-member/choose-station", request.url)
+      //   );
+      // }
     }
-
 
     if (role === "participant") {
       if (!payload.teamId && path !== "/join-team" && path !== "/create-team") {
@@ -122,7 +115,6 @@ export const config = {
     "/join-team",
     "/create-team",
     "/role-selection",
-    "/chooseStation",
     "/core-member",
     "/core-member/:path*",
     "/admin/:path*",
