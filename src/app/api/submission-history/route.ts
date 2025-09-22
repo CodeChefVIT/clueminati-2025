@@ -1,19 +1,19 @@
-import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "@/lib/db";
-import Team from "@/lib/models/team";
-import Question from "@/lib/models/question";
-import { getUserFromToken } from "@/utils/getUserFromToken";
-import User from "@/lib/models/user";
+import { NextRequest, NextResponse } from 'next/server';
+import { connectToDatabase } from '@/lib/db';
+import Team from '@/lib/models/team';
+import Question from '@/lib/models/question';
+import { getUserFromToken } from '@/utils/getUserFromToken';
+import User from '@/lib/models/user';
 
 export async function GET(req: NextRequest) {
   const tUser = await getUserFromToken(req);
   if (!tUser) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const user = await User.findById(tUser.id);
   if (!user) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
+    return NextResponse.json({ error: 'User not found' }, { status: 404 });
   }
 
   const teamId = user.teamId;
@@ -24,28 +24,49 @@ export async function GET(req: NextRequest) {
   await connectToDatabase();
 
   const team = await Team.findById(teamId).lean();
+
   if (!team) {
-    return NextResponse.json({ error: "Team not found" }, { status: 404 });
+    return NextResponse.json({ error: 'Team not found' }, { status: 404 });
   }
 
-  type Difficulty = "easy" | "medium" | "hard";
+  type Difficulty = 'easy' | 'medium' | 'hard';
+  const difficulties: Difficulty[] = ['easy', 'medium', 'hard'];
 
-  const r1Solved = (team.round1?.questions_solved as Record<
-    Difficulty,
-    string[]
-  >) || { easy: [], medium: [], hard: [] };
-  const difficulties: Difficulty[] = ["easy", "medium", "hard"];
+  let solvedByRound: Record<Difficulty, string[]> = {
+    easy: [],
+    medium: [],
+    hard: [],
+  };
 
-  const allSolvedInfo = difficulties.flatMap(
-    (difficulty) =>
-      (r1Solved[difficulty] || []).filter(Boolean).map((questionId) => ({
-        questionId,
-        difficulty,
-      }))
+  if (team.round1?.questions_solved) {
+    for (const diff of difficulties) {
+      solvedByRound[diff] = [
+        ...solvedByRound[diff],
+        ...(team.round1.questions_solved[diff] || []),
+      ];
+    }
+  }
+
+  if (team.round2?.questions_solved) {
+    for (const diff of difficulties) {
+      solvedByRound[diff] = [
+        ...solvedByRound[diff],
+        ...(team.round2.questions_solved[diff] || []),
+      ];
+    }
+  }
+
+  const allSolvedInfo = difficulties.flatMap((difficulty) =>
+    (solvedByRound[difficulty] || []).filter(Boolean).map((questionId) => ({
+      questionId,
+      difficulty,
+    }))
   );
 
   const allQuestionIds = allSolvedInfo.map((info) => info.questionId);
-  const questions = await Question.find({ _id: { $in: allQuestionIds } }).lean();
+  const questions = await Question.find({
+    _id: { $in: allQuestionIds },
+  }).lean();
   const questionsMap = new Map(
     questions.map((q) => [q._id.toString(), q.question_description])
   );
@@ -57,6 +78,6 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({
     solved,
-    total_score: team.total_score
+    total_score: team.total_score,
   });
 }
