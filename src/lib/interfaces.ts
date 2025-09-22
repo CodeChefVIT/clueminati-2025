@@ -37,22 +37,16 @@ const Round1Schema = z.object({
   score: z.number().min(0).default(0),
   game_score: z.number().min(0).default(0),
   indoor_score: z.number().min(0).default(0),
-  // testing skip - add skip tracking
-  lastSkipTimestamp: z.date().optional(),
 });
 
 const Round2Schema = Round1Schema.extend({
   secret_string: z.string().min(6).max(6), //required, 6 letters
   secret_chars_revealed: z.number().min(0).default(0), //number of letters revealed
-  string_validated: z.boolean().default(false), //whether string has been validated
-  string_score: z.number().min(0).default(0), //score from string validation
-  guessed_string: z.string().optional(), //the team's guessed string
   path: z.array(z.string()).default([]),   //stationId[]
   currentStation: z.string().default(""),
   previousStation: z.string().default(""),
   solvedStations: z.array(z.string()).default([]), //stationId[]
   letters_found: z.array(z.string()).default([]),   //changed from lettersFound
-  // testing skip - lastSkipTimestamp inherited from Round1Schema
 });
 
 export const TeamSchema = z.object({
