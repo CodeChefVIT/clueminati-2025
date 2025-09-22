@@ -47,15 +47,22 @@ export async function middleware(request: NextRequest) {
 
     if (role === "core_member") {
       if (!payload.core_allocated_station) {
-        if (path !== "/chooseStation") {
+        if (!path.startsWith("/chooseStation")) {
           return NextResponse.redirect(new URL("/chooseStation", request.url));
         }
-      } else if (!path.startsWith("/core-member")) {
-        return NextResponse.redirect(new URL("/core-member", request.url));
+      } else {
+        // Core member with station → must be under /core-member/*
+        if (!path.startsWith("/core-member")) {
+          return NextResponse.redirect(new URL("/core-member", request.url));
+        }
       }
-    } else if (path.startsWith("/core-member") || path === "/chooseStation") {
-      return NextResponse.redirect(new URL("/", request.url));
+    } else {
+      // Non-core members cannot access core paths
+      if (path.startsWith("/core-member") || path.startsWith("/chooseStation")) {
+        return NextResponse.redirect(new URL("/", request.url));
+      }
     }
+
 
     if (role === "participant") {
       if (!payload.teamId && path !== "/join-team" && path !== "/create-team") {

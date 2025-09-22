@@ -220,9 +220,11 @@ export default function LayoutClientWrapper({
             <TopNav round={round} timeLeft={timeLeft} />
           </div>
           <div className="relative z-20 overflow-y-scroll">{children}</div>
-          <div className="relative z-30">
-            <BottomNav />
-          </div>
+          {!pathname.startsWith("/question") && (
+            <div className="relative z-30">
+              <BottomNav />
+            </div>
+          )}
         </div>
       ) : round === "Half Time" || round === "Not Started" ? (
         <Instructions timeLeft={timeLeft!} />
