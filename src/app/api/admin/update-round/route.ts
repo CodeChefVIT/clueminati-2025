@@ -3,8 +3,6 @@ import { connectToDatabase } from "@/lib/db";
 import { GameStatSchema } from "@/lib/interfaces";
 import GameStat from "@/lib/models/gameStat";
 import User from "@/lib/models/user";
-import Team from "@/lib/models/team";
-import { assignNextStation } from "@/utils/assignNextStation";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 
@@ -29,12 +27,11 @@ export async function POST(req: NextRequest) {
     const parsed = GameStatSchema.parse(body);
 
     const existing = await GameStat.findOne();
-    const previousGameStat = existing ? { ...existing.toObject() } : null;
 
     if (existing) {
       Object.assign(existing, parsed); 
       await existing.save();
-      
+
       return NextResponse.json(
         { message: "Game updated successfully", data: existing },
         { status: 200 }
