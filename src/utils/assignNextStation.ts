@@ -24,15 +24,11 @@ export async function assignNextStation(teamId: string): Promise<AssignNextStati
   }
 
   let candidateStations = allStations;
-  
-//working, last one hadissue
-  const excludeStations = [];
-  if (currentStation) excludeStations.push(currentStation);
-  if (previousStation) excludeStations.push(previousStation);
-  
-  if (excludeStations.length > 0) {
-    const excludeSet = new Set(excludeStations);
-    candidateStations = allStations.filter((s) => !excludeSet.has(s._id.toString()));
+  if (currentStation && previousStation && allStations.length > 2) {
+    const exclude = new Set([currentStation, previousStation]);
+    candidateStations = allStations.filter((s) => !exclude.has(s._id.toString()));
+  } else if (currentStation) {
+    candidateStations = allStations.filter((s) => s._id.toString() !== currentStation);
   }
 
   if (candidateStations.length === 0) {
@@ -42,7 +38,7 @@ export async function assignNextStation(teamId: string): Promise<AssignNextStati
   const randomIndex = Math.floor(Math.random() * candidateStations.length);
   const nextStation = candidateStations[randomIndex];
 
-  (team.round2 as any).previousStation = currentStation;
+  (team.round2 as any).previousStation = currentStation ?? null;
   team.round2.currentStation = nextStation._id.toString();
   await team.save();
 
