@@ -148,14 +148,28 @@ export default function QuestionScreen() {
   return (
     <div className="flex flex-col items-center justify-start text-white px-4 sm:px-8 overflow-hidden gap-4">
       <div className="relative w-full max-w-2xl">
-        <img src={questionBox} alt="Question Box" className="w-full" />
+        <img 
+          src={questionBox} 
+          alt="Question Box" 
+          className="w-full" 
+          width={800} 
+          height={200}
+          style={{ width: "auto", height: "auto" }}
+        />
         <span className="absolute inset-0 flex items-center justify-center px-6 text-center text-lg sm:text-xl font-bold">
           {loadingQuestion ? "Loading question…" : question}
         </span>
       </div>
 
       <div className="relative w-full max-w-lg h-44 sm:h-52">
-        <img src={answerBox} alt="Answer Box" className="w-full h-full object-contain" />
+        <img 
+          src={answerBox} 
+          alt="Answer Box" 
+          className="w-full h-full object-contain" 
+          width={600} 
+          height={200}
+          style={{ width: "auto", height: "auto" }}
+        />
         <input
           type="text"
           value={inputValue}

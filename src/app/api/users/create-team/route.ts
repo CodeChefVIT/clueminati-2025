@@ -1,5 +1,6 @@
 import { generateJoinCode } from "@/utils/generateJoinCode";
 import { assignTeamString } from "@/utils/assignTeamString";
+import { assignNextStation } from "@/utils/assignNextStation";
 import { getUserFromToken } from "@/utils/getUserFromToken";
 import { connectToDatabase } from "@/lib/db";
 import { TeamSchema } from "@/lib/interfaces";
@@ -83,6 +84,18 @@ export async function POST(req: NextRequest) {
     });
     
     console.log(`🎯 Team "${parsed.teamname}" created with secret string: "${secretString}"`);
+    
+    // Assign initial station for Round 2
+    try {
+      const stationResult = await assignNextStation(newTeam._id.toString());
+      if ('error' in stationResult) {
+        console.warn(`⚠️ Could not assign initial station to team "${parsed.teamname}": ${stationResult.error}`);
+      } else {
+        console.log(`🏁 Team "${parsed.teamname}" assigned initial station: ${stationResult.station_name} (${stationResult.stationId})`);
+      }
+    } catch (error) {
+      console.error(`❌ Error assigning initial station to team "${parsed.teamname}":`, error);
+    }
     
     user.teamId = newTeam._id.toString();
     // Mongoose validation fails if region is undefined, as it casts to ''.
