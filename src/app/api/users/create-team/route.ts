@@ -14,26 +14,22 @@ connectToDatabase();
 
 export async function POST(req: NextRequest) {
   try {
-    // Authenticatting
     const tUser = await getUserFromToken(req);
     if (!tUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Parsing tken & validating its body
     const data = await req.json();
     const parsed = TeamSchema.parse(data);
 
-    // Get full user record
     const user = await User.findById(tUser.id);
     if (!user) {
       return NextResponse.json(
-        { error: "User not found", data: tUser }, // debug-friendly ++
+        { error: "User not found", data: tUser }, // debug-friendly ++++
         { status: 404 }
       );
     }
 
-    // Prevent multiple teams
     if (user.teamId) {
       return NextResponse.json(
         { redirect: "/role-selection" },
@@ -41,71 +37,40 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Generating unique join code
     let code: string;
     let existing;
     do {
       code = generateJoinCode();
       existing = await Team.findOne({ joinCode: code });
     } while (existing);
-
-    // Creating team & linking to user
-    const secretString = assignTeamString();
     
     const newTeam = await Team.create({
       ...parsed,
       joinCode: code,
       members: [tUser.id],
-      round2: {
-        questions_solved: {
-          easy: [],
-          medium: [],
-          hard: []
-        },
-        questions_encountered: {
-          easy: [],
-          medium: [],
-          hard: []
-        },
-        score: 0,
-        game_score: 0,
-        indoor_score: 0,
-        secret_string: secretString,
-        letters_found: [],
-        secret_chars_revealed: 0,
-        string_validated: false,
-        string_score: 0,
-        guessed_string: "",
-        path: [],
-        currentStation: "",
-        previousStation: "",
-        solvedStations: []
-      }
+      teamString: assignTeamString(),
     });
     
-    console.log(`🎯 Team "${parsed.teamname}" created with secret string: "${secretString}"`);
+    console.log(`Team "${parsed.teamname}" created with secret string: "${secretString}"`);
     
     // Assign initial station for Round 2
     try {
       const stationResult = await assignNextStation(newTeam._id.toString());
       if ('error' in stationResult) {
-        console.warn(`⚠️ Could not assign initial station to team "${parsed.teamname}": ${stationResult.error}`);
+        console.warn(`Could not assign initial station to team "${parsed.teamname}": ${stationResult.error}`);
       } else {
-        console.log(`🏁 Team "${parsed.teamname}" assigned initial station: ${stationResult.station_name} (${stationResult.stationId})`);
+        console.log(`Team "${parsed.teamname}" assigned initial station: ${stationResult.station_name} (${stationResult.stationId})`);
       }
     } catch (error) {
-      console.error(`❌ Error assigning initial station to team "${parsed.teamname}":`, error);
+      console.error(`Error assigning initial station to team "${parsed.teamname}":`, error);
     }
     
     user.teamId = newTeam._id.toString();
-    // Mongoose validation fails if region is undefined, as it casts to ''.
-    // Explicitly setting it to null bypasses the enum validation for an empty value.
-    if (!user.region) {
       user.region = undefined;
     }
     await user.save();
 
-    // AsSigning a fresh JWT so client has updated teamId
+    // ASSigning a fresh JWT so client has updated teamId
     const tokenData = {
       id: user._id,
       fullname: user.fullname,
@@ -119,8 +84,7 @@ export async function POST(req: NextRequest) {
     const token = jwt.sign(tokenData, process.env.TOKEN_SECRET!, {
       expiresIn: "1d",
     });
-
-    // 8. Build response and set cookie
+  
     const res = NextResponse.json(
       {
         message: "Team Created Successfully",
