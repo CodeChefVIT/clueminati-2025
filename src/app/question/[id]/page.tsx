@@ -137,7 +137,7 @@ export default function QuestionScreen() {
           className="w-full h-full object-contain" 
           width={600} 
           height={200}
-          style={{ width: "auto", height: "auto" }}  {/*console error aa rha tha*/}
+          style={{ width: "auto", height: "auto" }}
         />
         <input
           type="text"

@@ -44,14 +44,15 @@ export async function POST(req: NextRequest) {
       existing = await Team.findOne({ joinCode: code });
     } while (existing);
     
+    const teamString = assignTeamString();
     const newTeam = await Team.create({
       ...parsed,
       joinCode: code,
       members: [tUser.id],
-      teamString: assignTeamString(),
+      teamString: teamString,
     });
     
-    console.log(`Team "${parsed.teamname}" created with secret string: "${secretString}"`);
+    console.log(`Team "${parsed.teamname}" created with secret string: "${teamString}"`);
     
     // Assign initial station for Round 2
     try {
@@ -66,8 +67,7 @@ export async function POST(req: NextRequest) {
     }
     
     user.teamId = newTeam._id.toString();
-      user.region = undefined;
-    }
+    user.region = undefined;
     await user.save();
 
     // ASSigning a fresh JWT so client has updated teamId
