@@ -11,7 +11,7 @@ export default function ScannerPage() {
   const [scannedResult, setScannedResult] = useState("");
   const [isScanning, setIsScanning] = useState(true);
   const [manualCode, setManualCode] = useState("");
-  const [useManual, setUseManual] = useState(true);
+  const [useManual, setUseManual] = useState(false);
   const [showPopup, setShowPopup] = useState(false); // <-- popup state
   const [message, setMessage] = useState("");
 
