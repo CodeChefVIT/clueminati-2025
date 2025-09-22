@@ -10,6 +10,7 @@ import { toast } from "react-hot-toast";
 import Link from "next/link";
 import localFont from "next/font/local";
 import Modal from "@/components/Modal";
+import { saveRound } from "@/utils/saveRound";
 const questionBox = "/assets/Question_Box.svg";
 
 
@@ -44,6 +45,7 @@ export default function Login() {
     }
   }, [email, password]);
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -52,15 +54,13 @@ export default function Login() {
         email,
         password,
       });
-      toast.success("Login successful!");
 
-      // Check the redirect suggestion from the API
+      saveRound();
       if (response.data.redirect) {
         router.push(response.data.redirect);
       } else if (response.data.role === "core_member") {
         router.push("/core-member");
       } else {
-        // For participants, let middleware handle the routing
         router.push("/");
       }
       console.log(response);

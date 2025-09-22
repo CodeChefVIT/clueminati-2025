@@ -9,7 +9,7 @@ let cached = global.mongoose;
 cached ??= global.mongoose = { conn: null, promise: null };
 
 export async function connectToDatabase(){
-  const MONGODB_URI = process.env.MONGODB_URI;
+  const MONGODB_URI = process.env.MONGODB_URI; 
 
   if (!MONGODB_URI) {
     throw new Error(

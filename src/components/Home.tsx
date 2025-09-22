@@ -54,6 +54,7 @@ export default function Home() {
 
       {/* QR Scanner Icon */}
       <Image
+        onClick={() => router.push("/scanner")}
         src="/assets/qr_scanner_icon.svg"
         alt="Scan Frame"
         width={211}
@@ -77,7 +78,7 @@ export default function Home() {
             fill
             className="object-cover -z-10 rounded-lg"
           />
-          <div className="relative text-white">Next Station: Foodyes</div>
+          <div className="relative text-white">First Station: Foodyes</div>
         </div>
       )}
 

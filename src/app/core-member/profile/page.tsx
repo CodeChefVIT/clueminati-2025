@@ -56,7 +56,9 @@ export default function ProfileScreen() {
     try {
       const response = await axios.get("/api/users/logout");
       console.log(response.data);
+      localStorage.removeItem("round")
       router.push("/login");
+
     } catch (error: any) {
       console.error("Logout failed:", error.response?.data || error.message);
     }

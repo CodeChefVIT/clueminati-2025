@@ -22,7 +22,7 @@ export default function Instructions({ timeLeft }: { timeLeft?: number }) {
         style={{ backgroundImage: "url('/assets/instructions_bg.svg')" }}
       >
         <h2 className="text-2xl font-bold mb-6 mt-8 text-[#A5A5A5]">
-          Instructions
+          Instructions 
         </h2>
         <div className="relative w-40 sm:w-44">
           <img src="/assets/timer-box.svg" alt="Timer" className="w-full" />
@@ -30,6 +30,8 @@ export default function Instructions({ timeLeft }: { timeLeft?: number }) {
             {formatTime(timeLeft!)}
           </span>
         </div>
+        <p className="text-center text-[#A5A5A5] text-sm sm:text-base">{currentRound}</p>
+
         <p className="text-center text-[#A5A5A5] text-sm sm:text-base">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
