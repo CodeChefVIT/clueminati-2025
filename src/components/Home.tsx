@@ -9,6 +9,8 @@ export default function Home() {
   const router = useRouter();
   const [score, setScore] = useState<number>(0);
   const [round, setRound] = useState<string>("");
+  const [currentStation, setCurrentStation] = useState<string>("Loading...");
+  const [nextStation] = useState<string>("Loading...");
   const [firstStation, setFirstStation] = useState<string>("Loading...");
   const [answeredForRound, setAnsweredForRound] = useState<boolean>(false);
 
@@ -24,8 +26,8 @@ export default function Home() {
           const randomIndex = Math.floor(Math.random() * stations.length);
           const randomStationName = stations[randomIndex].name;
 
-          setFirstStation(randomStationName); 
-          localStorage.setItem("firstStation", randomStationName); 
+          setFirstStation(randomStationName);
+          localStorage.setItem("firstStation", randomStationName);
         } catch (error) {
           console.error("Error fetching stations:", error);
         }
@@ -46,6 +48,8 @@ export default function Home() {
       try {
         const response = await axios.get("/api/users/profile");
         const team = response.data.data?.team;
+        const currentStation = response.data.data?.team.currentStationName;
+        setCurrentStation(currentStation)
         if (team?.total_score !== undefined) setScore(team.total_score);
       } catch (error) {
         console.error("Error fetching profile:", error);
@@ -81,7 +85,7 @@ export default function Home() {
         className="cursor-default w-35 text-base"
       />
 
-      {round && !answeredForRound && (
+      {round === "Round 1" && !answeredForRound && (
         <div className="relative w-fit px-6 py-5 mt-4">
           <Image
             src="/assets/brick.svg"
@@ -94,8 +98,21 @@ export default function Home() {
           </div>
         </div>
       )}
+      {round === "Round 2" && (
+        <div className="relative w-fit px-6 py-5 mt-4">
+          <Image
+            src="/assets/brick.svg"
+            alt="next station"
+            fill
+            className="object-cover -z-10 rounded-lg"
+          />
+          <div className="relative text-white">
+            Next Station: {currentStation}
+          </div>
+        </div>
+      )}
 
-      {round && answeredForRound && (
+      {round == "Round 1" && answeredForRound && (
         <Button
           label="Map"
           onClick={() => router.push("/map")}

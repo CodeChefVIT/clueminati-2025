@@ -174,13 +174,7 @@ export default function ProfileScreen() {
 
         {/* Buttons */}
         <div className="flex flex-col space-y-1 items-center w-full max-w-xs">
-          {/* Core Member specific buttons */}
-          {user.role === "core_member" && (
-            <Button 
-              label="Change Stat" 
-              onClick={() => router.push("/core-member/choose-station")} 
-            />
-          )}
+         
 
           {/* Team related buttons for participants */}
           {/* yeh kyun add kiya hai, leaving it as it is */}

@@ -78,7 +78,19 @@ export default function QuestionScreen() {
             localStorage.setItem(`answered_${round}`, "true");
           }
 
-          setMessage("Correct Answer!");
+          let msg = "Correct Answer!";
+
+          if (response.data.reveal) {
+            msg += `\nSecret Char: ${response.data.reveal}`;
+          }
+
+          if (round === "2" && response.data.nextStation) {
+            msg += `\nNext Station: ${response.data.nextStation.station_name}`;
+          } else if (response.data.nextStation) {
+            msg += `\nNext Station: ${response.data.nextStation.station_name}`;
+          }
+
+          setMessage(msg);
           setShowPopup(true);
 
           setTimeout(() => {
@@ -118,11 +130,11 @@ export default function QuestionScreen() {
       </div>
 
       <div className="relative w-full max-w-lg h-44 sm:h-52">
-        <img 
-          src={answerBox} 
-          alt="Answer Box" 
-          className="w-full h-full object-contain" 
-          width={600} 
+        <img
+          src={answerBox}
+          alt="Answer Box"
+          className="w-full h-full object-contain"
+          width={600}
           height={200}
           style={{ width: "auto", height: "auto" }}
         />
