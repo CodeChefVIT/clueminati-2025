@@ -18,8 +18,8 @@ export default function Instructions({ timeLeft }: { timeLeft?: number }) {
   return (
     <div className="w-full h-screen flex flex-col items-center justify-center text-white">
       <div
-        className="relative w-full bg-center bg-contain bg-no-repeat flex flex-col items-center justify-center h-[33rem] px-6"
-        style={{ backgroundImage: "url('/assets/instructions_bg.svg')" }}
+        className="relative w-full bg-center bg-contain bg-no-repeat flex flex-col items-center justify-center h-[40rem] px-6"
+        style={{ backgroundImage: "url('/assets/instructions_bg.svg')", backgroundSize: "70% auto" }}
       >
         <h2 className="text-2xl font-bold mb-6 mt-8 text-[#A5A5A5]">
           Instructions 
@@ -30,14 +30,59 @@ export default function Instructions({ timeLeft }: { timeLeft?: number }) {
             {formatTime(timeLeft!)}
           </span>
         </div>
-        <p className="text-center text-[#A5A5A5] text-sm sm:text-base">{currentRound}</p>
+        <p className="text-center text-[#A5A5A5] mb-4 text-sm sm:text-base">{currentRound}</p>
 
-        <p className="text-center text-[#A5A5A5] text-sm sm:text-base px-8 max-w-[70%] sm:max-w-[65%] break-words">
+        {currentRound === "Not Started" && 
+
+        (<p className="text-center text-[#A5A5A5] text-sm sm:text-base px-8 max-w-[70%] max-h-[100px] px-18 overflow-y-auto sm:max-w-[65%] break-words">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
           minim veniam, quis nostrud exercitation ullamco laboris nisi ut
           aliquip ex ea commodo consequat. Click on the Home button to start
-        </p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Click on the Home button to start
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Click on the Home button to start
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Click on the Home button to start
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Click on the Home button to start
+        </p>) }
+
+        {currentRound === "Half Time" && 
+
+        (<p className="text-center text-[#A5A5A5] text-sm sm:text-base px-8 max-w-[70%] max-h-[100px] px-18 overflow-y-auto sm:max-w-[65%] break-words">
+          Round 2 YAPPPPPP
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Click on the Home button to start
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Click on the Home button to start
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Click on the Home button to start
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Click on the Home button to start
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Click on the Home button to start
+        </p>) }
+
       </div>
 
       {/* <Link
