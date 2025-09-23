@@ -1,5 +1,6 @@
 import User from '@/lib/models/user'
 import Team from '@/lib/models/team'
+import Station from '@/lib/models/station'
 import { NextRequest, NextResponse } from 'next/server'
 import { getDataFromToken } from '@/lib/getDataFromToken'
 import { connectToDatabase } from '@/lib/db'
@@ -25,11 +26,24 @@ export async function GET(request: NextRequest) {
       const team = await Team.findById(user.teamId)
       if (team) {
         teamData = {
-
           teamname: team.teamname,
           teamId: team._id,
           joinCode: team.joinCode,
           total_score: team.total_score
+        }
+      }
+    }
+
+    //Ayman 6:30
+    // fetch station details if user is core member with allocated station
+    let stationData = null
+    if (user.role === "core_member" && user.core_allocated_station) {
+      const station = await Station.findById(user.core_allocated_station)
+      if (station) {
+        stationData = {
+          id: station._id.toString(),
+          name: station.station_name,
+          difficulty: station.difficulty || "Not specified"
         }
       }
     }
@@ -39,6 +53,7 @@ export async function GET(request: NextRequest) {
       data: {
         user,
         team: teamData,
+        station: stationData
       },
     })
   } catch (error: any) {

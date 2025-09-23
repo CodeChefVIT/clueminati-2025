@@ -118,10 +118,13 @@ export default function QuestionScreen() {
       </div>
 
       <div className="relative w-full max-w-lg h-44 sm:h-52">
-        <img
-          src={answerBox}
-          alt="Answer Box"
-          className="w-full h-full object-contain"
+        <img 
+          src={answerBox} 
+          alt="Answer Box" 
+          className="w-full h-full object-contain" 
+          width={600} 
+          height={200}
+          style={{ width: "auto", height: "auto" }}
         />
         <input
           type="text"

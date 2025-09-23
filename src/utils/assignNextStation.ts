@@ -1,5 +1,6 @@
 import Team from "@/lib/models/team";
-import Station from "@/lib/models/station";
+import { getAllStations } from "@/utils/getAllStations";
+//using utility function, hence the changes 
 
 type AssignNextStationResult =
   | {
@@ -18,7 +19,7 @@ export async function assignNextStation(teamId: string): Promise<AssignNextStati
   const currentStation: string | null = team.round2.currentStation ?? null;
   const previousStation: string | null = (team.round2 as any)?.previousStation ?? null;
 
-  const allStations = await Station.find({});
+  const allStations = await getAllStations();
   if (!allStations || allStations.length === 0) {
     return { error: "No stations available" };
   }
@@ -26,9 +27,9 @@ export async function assignNextStation(teamId: string): Promise<AssignNextStati
   let candidateStations = allStations;
   if (currentStation && previousStation && allStations.length > 2) {
     const exclude = new Set([currentStation, previousStation]);
-    candidateStations = allStations.filter((s) => !exclude.has(s._id.toString()));
+    candidateStations = allStations.filter((s) => !exclude.has(s.id));
   } else if (currentStation) {
-    candidateStations = allStations.filter((s) => s._id.toString() !== currentStation);
+    candidateStations = allStations.filter((s) => s.id !== currentStation);
   }
 
   if (candidateStations.length === 0) {
@@ -39,13 +40,13 @@ export async function assignNextStation(teamId: string): Promise<AssignNextStati
   const nextStation = candidateStations[randomIndex];
 
   (team.round2 as any).previousStation = currentStation ?? null;
-  team.round2.currentStation = nextStation._id.toString();
+  team.round2.currentStation = nextStation.id;
   await team.save();
 
   return {
-    stationId: nextStation._id.toString(),
-    station_name: nextStation.station_name,
-    difficulty: (nextStation as any).difficulty,
+    stationId: nextStation.id,
+    station_name: nextStation.name,
+    difficulty: nextStation.difficulty,
   };
 }
 

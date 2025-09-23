@@ -52,6 +52,13 @@ export async function POST(request: NextRequest){
       responsePayload.redirect = "/join-team"
     }
 
+    //Ayman 6:35
+    // Special check for core members without station allocation
+    if(user.role === "core_member" && !user.core_allocated_station){
+      responsePayload.message = "Logged in successfully but station not allocated"
+      responsePayload.redirect = "/core-member/choose-station"
+    }
+
     const response = NextResponse.json(responsePayload)
 
     // set cookie

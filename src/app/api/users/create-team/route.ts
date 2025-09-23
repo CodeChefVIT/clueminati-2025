@@ -8,6 +8,7 @@ import User from "@/lib/models/user";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 import jwt from "jsonwebtoken";
+import { assignNextStation } from "@/utils/assignNextStation";
 
 connectToDatabase();
 
@@ -47,20 +48,31 @@ export async function POST(req: NextRequest) {
       code = generateJoinCode();
       existing = await Team.findOne({ joinCode: code });
     } while (existing);
-
-    // Creating team & linking to user
+    
+    const teamString = assignTeamString();
     const newTeam = await Team.create({
       ...parsed,
       joinCode: code,
       members: [tUser.id],
-      teamString: assignTeamString(),
+      teamString: teamString,
     });
-    user.teamId = newTeam._id.toString();
-    // Mongoose validation fails if region is undefined, as it casts to ''.
-    // Explicitly setting it to null bypasses the enum validation for an empty value.
-    if (!user.region) {
-      user.region = undefined;
+    
+    console.log(`Team "${parsed.teamname}" created with secret string: "${teamString}"`);
+    
+    // Assign initial station for Round 2
+    try {
+      const stationResult = await assignNextStation(newTeam._id.toString());
+      if ('error' in stationResult) {
+        console.warn(`Could not assign initial station to team "${parsed.teamname}": ${stationResult.error}`);
+      } else {
+        console.log(`Team "${parsed.teamname}" assigned initial station: ${stationResult.station_name} (${stationResult.stationId})`);
+      }
+    } catch (error) {
+      console.error(`Error assigning initial station to team "${parsed.teamname}":`, error);
     }
+    
+    user.teamId = newTeam._id.toString();
+    user.region = undefined;
     await user.save();
 
     // AsSigning a fresh JWT so client has updated teamId

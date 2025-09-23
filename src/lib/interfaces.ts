@@ -39,7 +39,7 @@ const Round1Schema = z.object({
 });
 
 const Round2Schema = Round1Schema.extend({
-  secret_string: z.string().min(6).max(6), //required, 6 letters
+  // teamString: z.string().min(6).max(6), 
   secret_chars_revealed: z.number().min(0).default(0), //number of letters revealed
   path: z.array(z.string()).default([]),   //stationId[]
   currentStation: z.string().default(""),
