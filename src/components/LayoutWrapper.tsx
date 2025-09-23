@@ -32,6 +32,7 @@ export default function LayoutClientWrapper({
     "/admin/*",
     "/not-found",
     "/key-verification",
+    "/core-member/choose-station"
   ];
 
   const isDocsPage = pathname.startsWith("/docs");
@@ -72,7 +73,7 @@ export default function LayoutClientWrapper({
       } else if (now >= r2Start && now <= r2End) {
         theRound = "Round 2";
         setTimeLeft(r2End - now);
-        router.push("/");
+        // router.push("/");
         if (pathname === "/instructions") {
         }
       } else {
@@ -228,8 +229,12 @@ export default function LayoutClientWrapper({
         </div>
       ) : round === "Half Time" || round === "Not Started" ? (
         <Instructions timeLeft={timeLeft!} />
-      ) : round === "Finished" ? (
+      ) : round === "Finished" && !pathname.startsWith("/core-member") ? (
         <KeyVerification />
+      ) : pathname.startsWith("/core-member") ?(
+        <div className="text-9xl z-100">
+          Khel Khatam Pesa Hazam
+        </div>
       ) : (
         ""
       )}
