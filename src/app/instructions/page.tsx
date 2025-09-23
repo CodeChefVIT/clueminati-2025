@@ -32,7 +32,7 @@ export default function Instructions({ timeLeft }: { timeLeft?: number }) {
         </div>
         <p className="text-center text-[#A5A5A5] text-sm sm:text-base">{currentRound}</p>
 
-        <p className="text-center text-[#A5A5A5] text-sm sm:text-base">
+        <p className="text-center text-[#A5A5A5] text-sm sm:text-base px-8 max-w-[70%] sm:max-w-[65%] break-words">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
           minim veniam, quis nostrud exercitation ullamco laboris nisi ut
