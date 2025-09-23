@@ -53,11 +53,10 @@ export async function POST(req: NextRequest) {
                 team!.round2!.indoor_score = +indoorScore;
                 team!.total_score += +indoorScore;
                 await team!.save();
-
-                // Reveal string chars in Round 2 only
+                //ma ki chu-
                 let revealedString = "";
                 if (team!.teamString && team!.teamString.length >= 6) {
-                    revealedString = team!.teamString.substring(3, 6); // chars at indices 3,4,5
+                    revealedString = team!.teamString.substring(3, 6);
                 }
 
                 return NextResponse.json({ 
