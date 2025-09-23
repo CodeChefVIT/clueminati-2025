@@ -52,9 +52,18 @@ export async function POST(req: NextRequest) {
             if(team!.round2!.indoor_score === 0){
                 team!.round2!.indoor_score = +indoorScore;
                 team!.total_score += +indoorScore;
-
                 await team!.save();
-                return NextResponse.json({ message: "The score for round 2 has been Updated" }, { status: 200 });
+
+                // Reveal string chars in Round 2 only
+                let revealedString = "";
+                if (team!.teamString && team!.teamString.length >= 6) {
+                    revealedString = team!.teamString.substring(3, 6); // chars at indices 3,4,5
+                }
+
+                return NextResponse.json({ 
+                    message: "The score for round 2 has been Updated",
+                    revealedChars: revealedString
+                }, { status: 200 });
             }
             return NextResponse.json({ 
                 error: "The Score for the indoor has already been updated in round 2" 

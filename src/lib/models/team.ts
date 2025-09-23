@@ -41,6 +41,7 @@ const TeamSchema = new Schema<ITeam>({
   },
   total_score: { type: Number, default: 0, required: true },
   teamString: { type: String, required: false },
+  stringValidated: { type: Boolean, default: false },  //added this booooooool to check if team has validated their string already
 });
 
 const Team: Model<ITeam> = models.Team ?? model<ITeam>("Team", TeamSchema);
