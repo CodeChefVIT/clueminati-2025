@@ -12,6 +12,7 @@ interface User {
   role: "admin" | "core_member" | "participant";
   region?: "hell" | "earth";
   teamId?: string;
+  core_allocated_station?: string;
 }
 
 interface Team {
@@ -21,22 +22,34 @@ interface Team {
   total_score: number;
 }
 
+interface Station {
+  id: string;
+  name: string;
+  difficulty: string;
+}
+
 export default function ProfileScreen() {
   const router = useRouter();
 
   const [user, setUser] = useState<User | null>(null);
   const [team, setTeam] = useState<Team | null>(null);
+  const [station, setStation] = useState<Station | null>(null);
   const [loading, setLoading] = useState(true);
   const [showQR, setShowQR] = useState(false);
   const [leaving, setLeaving] = useState(false);
 
-  // fetch profile
+  // fetch profile (station info included)
   useEffect(() => {
     async function fetchProfile() {
       try {
         const response = await axios.get("/api/users/profile");
-        setUser(response.data.data.user);
-        setTeam(response.data.data.team);
+        const userData = response.data.data.user;
+        const teamData = response.data.data.team;
+        const stationData = response.data.data.station;
+        
+        setUser(userData);
+        setTeam(teamData);
+        setStation(stationData); // Station data is now included in profile response
       } catch (error: any) {
         console.error(
           "Error fetching profile:",
@@ -49,6 +62,7 @@ export default function ProfileScreen() {
         setLoading(false);
       }
     }
+
     fetchProfile();
   }, [router]);
 
@@ -104,7 +118,7 @@ export default function ProfileScreen() {
   const teamIdForQR = team?.teamId || "No-Team";
 
   return (
-    <div className="w-full flex flex-col items-center justify-start text-white pt-10 p-4 sm:p-8 pt-4">
+    <div className="w-full flex flex-col items-center justify-start text-white p-4 sm:p-8 pt-10">
       <div className="flex flex-col items-center ">
         {/* Profile Picture */}
         <div className="relative w-36 h-36 sm:w-48 sm:h-48 mb-4">
@@ -124,18 +138,56 @@ export default function ProfileScreen() {
           <p className="text-base sm:text-lg text-gray-300">{user.email}</p>
         </div>
 
-        {/* Team Info */}
+        {/* User Info */}
         <div className="text-white text-xl sm:text-2xl max-w-xs w-full mb-8 space-y-6">
-         
-          
+          {/* Role Display */}
+          <div className="text-center">
+            <p className="text-gray-300 text-lg">Role</p>
+            <p className="text-green-400 font-semibold capitalize">{user.role.replace('_', ' ')}</p>
+          </div>
+
+          {/* Station Info for Core Members */}
+          {user.role === "core_member" && (
+            <div className="text-center">
+              <p className="text-gray-300 text-lg">Allocated Station</p>
+              {station ? (
+                <div>
+                  <p className="text-blue-400 font-semibold">{station.name}</p>
+                  <p className="text-gray-400 text-sm">({station.difficulty})</p>
+                </div>
+              ) : user.core_allocated_station ? (
+                <p className="text-yellow-400 font-semibold">Loading station...</p>
+              ) : (
+                <p className="text-red-400 font-semibold">Not assigned</p>
+              )}
+            </div>
+          )}
+
+          {/* Region for participants */}
+          {user.role === "participant" && user.region && (
+            <div className="text-center">
+              <p className="text-gray-300 text-lg">Region</p>
+              <p className="text-purple-400 font-semibold capitalize">{user.region}</p>
+            </div>
+          )}
         </div>
 
         {/* Buttons */}
         <div className="flex flex-col space-y-1 items-center w-full max-w-xs">
-          {team && (
+          {/* Core Member specific buttons */}
+          {user.role === "core_member" && (
+            <Button 
+              label="Change Stat" 
+              onClick={() => router.push("/core-member/choose-station")} 
+            />
+          )}
+
+          {/* Team related buttons for participants */}
+          {/* yeh kyun add kiya hai, leaving it as it is */}
+          {team && user.role === "participant" && (
             <Button label="Show Team QR" onClick={() => setShowQR(true)} />
           )}
-          {team && (
+          {team && user.role === "participant" && (
             <Button
               label={leaving ? "Leaving..." : "Leave Team"}
               onClick={() => {
