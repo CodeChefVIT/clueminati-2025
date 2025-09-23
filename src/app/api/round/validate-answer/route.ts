@@ -115,12 +115,18 @@ export async function POST(req: NextRequest) {
       const revealSteps = [3, 5, 7];
 
       if (revealSteps.includes(totalSolved)) {
-        const idx = team.round2.secret_chars_revealed || 0;
-        if (team.teamString && idx < team.teamString.length) {
-          revealChar = team.teamString[idx];
-          team.round2.secret_chars_revealed =
-            (team.round2.secret_chars_revealed || 0) + 1;
-          team.round2.letters_found.push(revealChar);
+
+        // cha mudao im returning the 0,1,2nd indexes of the string 
+        let charIndex: number;
+        if (totalSolved === 3) charIndex = 0;
+        else if (totalSolved === 5) charIndex = 1;
+        else if (totalSolved === 7) charIndex = 2;
+        //safety check
+        else charIndex = -1;
+
+        if (team.teamString && charIndex >= 0 && charIndex < team.teamString.length) {
+          revealChar = team.teamString[charIndex];
+          team.round2.secret_chars_revealed = (team.round2.secret_chars_revealed || 0) + 1;
         }
       }
 
