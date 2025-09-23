@@ -140,20 +140,16 @@ export default function ProfileScreen() {
 
         {/* User Info */}
         <div className="text-white text-xl sm:text-2xl max-w-xs w-full mb-8 space-y-6">
-          {/* Role Display */}
-          <div className="text-center">
-            <p className="text-gray-300 text-lg">Role</p>
-            <p className="text-green-400 font-semibold capitalize">{user.role.replace('_', ' ')}</p>
-          </div>
+       
 
           {/* Station Info for Core Members */}
           {user.role === "core_member" && (
             <div className="text-center">
-              <p className="text-gray-300 text-lg">Allocated Station</p>
+              <p className="text-gray-300 text-xl">Allocated Station</p>
               {station ? (
                 <div>
-                  <p className="text-blue-400 font-semibold">{station.name}</p>
-                  <p className="text-gray-400 text-sm">({station.difficulty})</p>
+                  <p className="text-gray-300 font-semibold text-2xl">{station.name}</p>
+                  <p className="text-gray-300 text-xl">({station.difficulty})</p>
                 </div>
               ) : user.core_allocated_station ? (
                 <p className="text-yellow-400 font-semibold">Loading station...</p>
@@ -174,13 +170,7 @@ export default function ProfileScreen() {
 
         {/* Buttons */}
         <div className="flex flex-col space-y-1 items-center w-full max-w-xs">
-          {/* Core Member specific buttons */}
-          {user.role === "core_member" && (
-            <Button 
-              label="Change Stat" 
-              onClick={() => router.push("/core-member/choose-station")} 
-            />
-          )}
+         
 
           {/* Team related buttons for participants */}
           {/* yeh kyun add kiya hai, leaving it as it is */}

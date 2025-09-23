@@ -78,12 +78,22 @@ export default function QuestionScreen() {
             localStorage.setItem(`answered_${round}`, "true");
           }
 
-          setMessage("Correct Answer!");
+          let msg = "Correct Answer!";
+
+          if (response.data.reveal) {
+            msg += `\nSecret Char: ${response.data.reveal}`;
+          }
+
+          if (response.data.nextStation) {
+            msg += `\nNext Station: ${response.data.nextStation.station_name}`;
+          }
+
+          setMessage(msg);
           setShowPopup(true);
 
           setTimeout(() => {
             router.push("/submission-history");
-          }, 1000);
+          }, 1200);
         } else {
           setMessage(response.data.message);
           setShowPopup(true);
@@ -101,7 +111,7 @@ export default function QuestionScreen() {
   }, [id, inputValue, router]);
 
   const handleSkip = () => {
-    setMessage("answer skipped!!");
+    setMessage("Answer skipped!");
     setShowPopup(true);
     setTimeout(() => {
       router.push("/");
@@ -109,47 +119,48 @@ export default function QuestionScreen() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-start text-white px-4 sm:px-8 overflow-hidden gap-4">
+    <div className="flex flex-col items-center justify-start text-white px-4 sm:px-8 overflow-hidden gap-6">
+      {/* Question Box */}
       <div className="relative w-full max-w-2xl">
         <img src={questionBox} alt="Question Box" className="w-full" />
-        <span className="absolute inset-0 flex items-center justify-center px-6 text-center text-lg sm:text-xl font-bold">
+        <span className="absolute inset-0 flex items-center justify-center px-6 text-center text-base sm:text-lg font-bold leading-tight">
           {question}
         </span>
       </div>
 
-      <div className="relative w-full max-w-lg h-44 sm:h-52">
-        <img 
-          src={answerBox} 
-          alt="Answer Box" 
-          className="w-full h-full object-contain" 
-          width={600} 
-          height={200}
-          style={{ width: "auto", height: "auto" }}
+      {/* Answer Box */}
+      <div className="relative w-full max-w-lg h-28 sm:h-32">
+        <img
+          src={answerBox}
+          alt="Answer Box"
+          className="w-full h-full object-contain"
         />
         <input
           type="text"
           value={inputValue}
-          placeholder="Answer"
+          placeholder="Enter your answer"
           onChange={(e) => setInputValue(e.target.value)}
-          className="absolute inset-0 bg-transparent text-center text-xl sm:text-2xl text-white font-semibold focus:outline-none px-6"
+          className="absolute inset-0 bg-transparent text-center text-lg sm:text-xl text-white font-semibold placeholder-gray-400 focus:outline-none px-4"
         />
       </div>
 
-      <div className="flex flex-col items-center w-full max-w-[16rem] sm:max-w-[18rem]">
+      {/* Buttons */}
+      <div className="flex flex-col sm:flex-row gap-3 w-full max-w-[16rem] sm:max-w-xl">
         <Button
           label={loading ? "Submitting..." : "Submit"}
           onClick={handleSubmit}
           disabled={loading}
-          className="!w-full !text-3xl sm:!text-4xl !font-extrabold"
+          className="flex-1 !text-lg sm:!text-xl !font-bold py-2 sm:py-3"
         />
         <Button
           label={skipDisabled ? `Skip (${countdown}s)` : "Skip"}
           onClick={handleSkip}
           disabled={skipDisabled}
-          className="!w-full !text-3xl sm:!text-4xl !font-extrabold"
+          className="flex-1 !text-lg sm:!text-xl !font-bold py-2 sm:py-3"
         />
       </div>
 
+      {/* Popup */}
       <Modal
         isOpen={showPopup}
         onClose={() => setShowPopup(false)}
@@ -157,7 +168,7 @@ export default function QuestionScreen() {
       >
         <div className="text-center space-y-6 px-4">
           <div
-            className="font-bold text-2xl leading-tight tracking-wide"
+            className="font-bold text-xl sm:text-2xl leading-snug tracking-wide"
             style={{ color: "#B9B9B9" }}
           >
             {message}

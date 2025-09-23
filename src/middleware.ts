@@ -46,15 +46,27 @@ export async function middleware(request: NextRequest) {
     }
 
     if (role === "core_member") {
-      if (!path.startsWith("/core-member")) {
-        return NextResponse.redirect(new URL("/core-member", request.url));
-      }
-      // after integrating stations, uncomment this
-      // if (!payload.station && path !== "/core-member/choose-station") {
+      // if (
+      //   !payload.core_allocated_station &&
+      //   path !== "/core-member/choose-station"
+      // ) {
       //   return NextResponse.redirect(
       //     new URL("/core-member/choose-station", request.url)
       //   );
       // }
+
+      if (!path.startsWith("/core-member")) {
+        return NextResponse.redirect(new URL("/core-member", request.url));
+      }
+
+      if (!payload.core_allocated_station && path !== "/core-member/choose-station") {
+        return NextResponse.redirect(
+          new URL("/core-member/choose-station", request.url)
+        );
+      }
+    }
+    if (role !== "core_member" && path.startsWith("/core-member")) {
+      return NextResponse.redirect(new URL("/", request.url));
     }
 
     if (role === "participant") {
@@ -70,29 +82,6 @@ export async function middleware(request: NextRequest) {
         );
       }
       if (payload.region === "earth") {
-        const res = await fetch(process.env.CLIENT_URL + "/api/get-game-stat");
-        const resJson = await res.json();
-        const now = Date.now();
-        const r1Start = new Date(resJson.r1StartTime).getTime();
-        const r1End = new Date(resJson.r1EndTime).getTime();
-        const r2Start = new Date(resJson.r2StartTime).getTime();
-        const r2End = new Date(resJson.r2EndTime).getTime();
-        if (path !== "/instructions") {
-          if (now < r1Start) {
-            //not started
-            // return NextResponse.redirect(new URL("/instructions", request.url));
-          } else if (now >= r1Start && now <= r1End) {
-            // round 1
-          } else if (now > r1End && now < r2Start) {
-            // half time
-            // return NextResponse.redirect(new URL("/instructions", request.url));
-          } else if (now >= r2Start && now <= r2End) {
-            // round 2
-          } else {
-            // finished
-            // return NextResponse.redirect(new URL("/key-verification", request.url));
-          }
-        }
       }
     }
   } else {

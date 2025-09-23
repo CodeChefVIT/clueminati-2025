@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@/components/Button";
-const mapSvgPath = "/assets/map.svg"; 
+const mapSvgPath = "/assets/map.jpg"; 
 const Brick="/assets/brick.svg"; 
 
 export default function MapScreen() {
@@ -21,8 +21,8 @@ export default function MapScreen() {
           className="w-[300px] h-auto object-contain" 
         />
       </div>
-    <p className="text-center text-white text-[1rem] font-semibold w-[250px] mx-auto leading-snug -mt-20">
-            The areas marked in green are your stations
+    <p className="text-center text-white text-[1rem] font-semibold w-[250px] mx-auto leading-snug -mt-17">
+            Here are your stations 
           </p>
 
       </div>

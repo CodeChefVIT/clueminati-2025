@@ -18,9 +18,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    if (user.role !== "core_member") {
-      return NextResponse.json({ error: "Only core members can access stations" }, { status: 403 });
-    }
+   
     
     const stations = await getAllStations();
 

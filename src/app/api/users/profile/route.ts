@@ -25,11 +25,15 @@ export async function GET(request: NextRequest) {
     if (user.teamId) {
       const team = await Team.findById(user.teamId)
       if (team) {
+        const station = await Station.findById(team.round2?.currentStation)
+
         teamData = {
           teamname: team.teamname,
           teamId: team._id,
           joinCode: team.joinCode,
-          total_score: team.total_score
+          total_score: team.total_score,
+          currentStationName: station?.station_name || null,
+          currentStationId: team.round2?.currentStation || null
         }
       }
     }
