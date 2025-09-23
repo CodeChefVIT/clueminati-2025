@@ -4,7 +4,7 @@ import { connectToDatabase } from "@/lib/db";
 import User from "@/lib/models/user";
 import Station from "@/lib/models/station";
 import { NextRequest, NextResponse } from "next/server";
-import { SignJWT } from "jose";
+import jwt from "jsonwebtoken";
 
 connectToDatabase();
 
@@ -42,64 +42,49 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Station not found" }, { status: 404 });
     }
 
-    // update allocation WITHOUT running full model validators (avoids reg_num issue)
-    await User.updateOne(
-      { _id: tUser.id },
-      { $set: { core_allocated_station: stationId } },
-      { runValidators: false }
-    );
+    // Allocate station
+    user.core_allocated_station = stationId;
+    await user.save();
 
-    // fetch updated user (lean is ok)
-    const updatedUser = await User.findById(tUser.id).lean();
-
-    if (!updatedUser) {
-      return NextResponse.json(
-        { error: "User not found after update" },
-        { status: 404 }
-      );
-    }
-
-    // create a new token including the station claim
-    const secret = new TextEncoder().encode(process.env.TOKEN_SECRET || "");
-    const payload: any = {
-      id: updatedUser._id.toString(),
-      role: updatedUser.role,
-      station: stationId,
+    // Generate new token
+    const payload = {
+      id: user._id,
+      fullname: user.fullname,
+      // reg_num: user.reg_num ?? null,
+      email: user.email,
+      role: user.role,
+      // teamId: user.teamId ?? null,
+      // region: user.region ?? null,
+      core_allocated_station: user.core_allocated_station
     };
 
-    // ✅ preserve extra fields if present
-    if (updatedUser.teamId) payload.teamId = updatedUser.teamId;
-    if (updatedUser.region) payload.region = updatedUser.region;
-    const token = await new SignJWT(payload)
-      .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime("12h")
-      .sign(secret);
+    const token = jwt.sign(payload, process.env.TOKEN_SECRET!, {
+      expiresIn: "7d"
+    });
 
-    // return JSON response and SET cookie on the response
-    const response = NextResponse.json(
-      {
-        message: "Station allocated successfully",
-        success: true,
-        station: {
-          id: station._id,
-          name: station.station_name,
-          difficulty: station.difficulty,
-        },
-      },
-      { status: 200 }
-    );
+    const response = NextResponse.json({
+      message: "Station allocated successfully",
+      success: true,
+      station: {
+        id: station._id,
+        name: station.station_name,
+        difficulty: station.difficulty
+      }
+    }, { status: 200 });
 
-    // Set cookie on the response so browser receives it
-    response.cookies.set("token", token, {
+    response.cookies.set({
+      name: "token",
+      value: token,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      path: "/",
       sameSite: "lax",
+      maxAge: 24 * 60 * 60 
     });
 
     return response;
-  } catch (err: any) {
-    console.error("Error allocating station:", err);
+
+  } catch (error) {
+    console.error("Error allocating station:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

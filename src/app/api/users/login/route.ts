@@ -3,6 +3,7 @@ import {NextRequest, NextResponse} from 'next/server'
 import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { connectToDatabase } from '@/lib/db'
+import { core } from 'zod'
 
 connectToDatabase()
 
@@ -33,7 +34,8 @@ export async function POST(request: NextRequest){
       email: user.email,
       role: user.role,
       teamId: user.teamId ?? null,
-      region: user.region ?? null
+      region: user.region ?? null,
+      core_allocated_station: user.core_allocated_station ?? null
     }
 
     const token = jwt.sign(tokenData, process.env.TOKEN_SECRET!, {expiresIn: '1d'})

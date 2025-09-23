@@ -26,20 +26,8 @@ export default function ChooseStation() {
 
   const fetchStations = async () => {
     try {
-      const response = await axios.get("/api/get-stations", {
-        withCredentials: true,
-      });
-      const { stations, currentAllocation } = response.data;
-
-      setStations(stations);
-
-      if (currentAllocation) {
-        const allocatedStation = stations.find(
-          (s: Station) => s.id === currentAllocation
-        );
-        if (allocatedStation) setSelectedStation(allocatedStation);
-      }
-
+      const response = await axios.get("/api/get-stations");
+      setStations(response.data.stations);
       setLoading(false);
     } catch (err: any) {
       console.error("❌ Error fetching stations:", err);
@@ -98,9 +86,10 @@ export default function ChooseStation() {
 
   return (
     <main className="pt-20 w-full flex flex-col items-center justify-center p-4">
-      <div className="text-white text-lg mb-4 text-center">
+      {/* Instruction Text */}
+      {/* <div className="text-white text-lg mb-4 text-center">
         Choose your station
-      </div>
+      </div> */}
 
       {error && (
         <div className="text-red-400 text-sm mb-4 text-center">{error}</div>
@@ -135,7 +124,7 @@ export default function ChooseStation() {
         </button>
 
         {isOpen && (
-          <div className="absolute top-full mt-2 w-full z-20 max-h-72 overflow-y-auto flex flex-col items-center gap-2">
+          <div className="absolute top-full mt-2 w-full z-20 max-h-100 overflow-y-auto flex flex-col items-center gap-2">
             {stations.map((station) => (
               <button
                 key={station.id}
@@ -178,23 +167,7 @@ export default function ChooseStation() {
         </span>
       </button>
 
-      {/* Cancel Button */}
-      <button
-        type="button"
-        onClick={handleCancel}
-        className="group relative hover:scale-105 transition flex items-center justify-center mt-4"
-      >
-        <Image
-          src="/assets/round-box.svg"
-          alt="Cancel"
-          width={145}
-          height={60}
-          className="object-contain pointer-events-none"
-        />
-        <span className="absolute inset-0 flex items-center justify-center text-white text-lg font-semibold pointer-events-none">
-          Cancel
-        </span>
-      </button>
+      
     </main>
   );
 }
