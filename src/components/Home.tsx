@@ -86,7 +86,7 @@ export default function Home() {
       />
 
       {round === "Round 1" && !answeredForRound && (
-        <div className="relative w-fit px-6 py-5 mt-4">
+        <div className="relative w-fit px-6 py-5 mt-7">
           <Image
             src="/assets/brick.svg"
             alt="next station"
@@ -94,7 +94,7 @@ export default function Home() {
             className="object-cover -z-10 rounded-lg"
           />
           <div className="relative text-white">
-            First Station: {firstStation}
+            Go To: {firstStation}
           </div>
         </div>
       )}

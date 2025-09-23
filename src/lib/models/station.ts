@@ -4,7 +4,6 @@ import { IStation } from "../interfaces";
 const stationSchema = new Schema<IStation>({
     station_name: { type: String, required: true, unique: true },
     difficulty: { type: String, enum: ["easy", "medium", "hard"], default: [], required: false},
-    members: { type: [{ type: String, ref: "User" }], required: true },
 })
 
 
