@@ -3,8 +3,8 @@ import localFont from "next/font/local";
 export const pixelFont = localFont({
   src: [
     {
-      path: "./../../public/assets/pixel-font.ttf", // relative to this file
-      weight: "700",
+      path: "./../../public/assets/Retro-Gaming.ttf", // relative to this file
+      weight: "600",
       style: "normal",
     },
   ],

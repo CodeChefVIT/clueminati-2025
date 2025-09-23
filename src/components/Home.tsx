@@ -61,7 +61,7 @@ export default function Home() {
   return (
     <main className="flex flex-col items-center justify-center h-full relative overflow-hidden">
       <h1
-        className="text-[32px] font-bold text-white mb-6"
+        className="text-[30px] font-bold text-white mb-4 mt-8"
         style={{
           WebkitTextStrokeWidth: "0.35px",
           WebkitTextStrokeColor: "#000",
@@ -82,7 +82,7 @@ export default function Home() {
       <Button
         label="Scan"
         onClick={() => router.push("/scanner")}
-        className="cursor-default w-35 text-base"
+        className="cursor-default w-35 text-[15px] "
       />
 
       {round === "Round 1" && !answeredForRound && (
@@ -121,11 +121,11 @@ export default function Home() {
       )}
 
       {/* Score display */}
-      <div className="mt-8">
+      <div className="mt-8 ">
         <Button
           label={`Score: ${score}`}
           onClick={() => {}}
-          className="cursor-default"
+          className="cursor-default text-[16px]"
         />
       </div>
     </main>
