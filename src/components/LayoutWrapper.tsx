@@ -64,9 +64,9 @@ export default function LayoutClientWrapper({
       } else if (now >= r1Start && now <= r1End) {
         theRound = "Round 1";
         setTimeLeft(r1End - now);
-        if (pathname === "/instructions") {
-          router.push("/");
-        }
+        // if (pathname === "/instructions") {
+        //   router.push("/");
+        // }
       } else if (now > r1End && now < r2Start) {
         theRound = "Half Time";
         setTimeLeft(r2Start - now);
