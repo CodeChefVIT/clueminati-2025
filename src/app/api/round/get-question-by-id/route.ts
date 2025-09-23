@@ -38,6 +38,14 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    const objectIdRegex = /^[0-9a-fA-F]{24}$/;
+    if (!objectIdRegex.test(questionId)) {
+      return NextResponse.json(
+        { error: "Invalid question ID format" },
+        { status: 400 }
+      );
+    }
+
     const question = await Question.findById(questionId).select("-answer");
     if (!question) {
       return NextResponse.json({ error: "Question not found" }, { status: 404 });
