@@ -69,7 +69,6 @@ export const QuestionSchema = z.object({
 export const StationSchema = z.object({
   station_name: z.string(),
   difficulty: z.enum(["easy", "medium", "hard"]).optional(),
-  members: z.array(z.string()).default([]), // userId[]
 });
 
 export const GameStatSchema = z.object({
