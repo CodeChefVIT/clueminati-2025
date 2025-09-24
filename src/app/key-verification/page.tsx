@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { pixelFont } from "@/app/fonts"; 
 
 const KeyVerification: React.FC = () => {
   const router = useRouter();
@@ -101,15 +102,16 @@ const KeyVerification: React.FC = () => {
           {/* Popup content */}
           <div className="relative text-center space-y-6 ">
             <div
-              className="font-bold text-2xl leading-tight tracking-wide translate-y-[50px]"
-              style={{ color: "#B9B9B9" }}
-            >
-              Enter the final code
-            </div>
+  className={`${pixelFont.className} font-bold text-xl leading-tight tracking-wide translate-y-[50px] mt-8`}
+  style={{ color: "#B9B9B9" }}
+>
+  Enter the final code
+</div>
+
             <div
-              className="font-bold text-sm leading-tight tracking-wide translate-y-[50px]"
-              style={{ color: "#B9B9B975" }}
-            >
+              className={`${pixelFont.className} font-bold text-sm leading-tight tracking-wide translate-y-[50px]`}
+  style={{ color: "#B9B9B9" }}
+>
               Hint: how's your indoor team doing?
             </div>
 
@@ -132,10 +134,11 @@ const KeyVerification: React.FC = () => {
             <button
               onClick={handleSubmit}
               disabled={isSubmitting}
-              className="mt-6 w-32 h-12 translate-y-[100px] bg-cover bg-center bg-no-repeat hover:brightness-50 transition-opacity text-white text-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{
-                backgroundImage: "url(/assets/round-box.svg)",
-              }}
+              className={`${pixelFont.className} mt-6 w-32 h-12 translate-y-[100px] bg-cover bg-center bg-no-repeat hover:brightness-50 transition-opacity text-white text-md font-semibold disabled:opacity-50 disabled:cursor-not-allowed`}
+style={{
+  backgroundImage: "url(/assets/round-box.svg)",
+}}
+
               aria-label="Submit code"
             >
               {isSubmitting ? "..." : "Submit"}
