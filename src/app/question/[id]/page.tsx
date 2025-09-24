@@ -14,7 +14,10 @@ export default function QuestionScreen() {
   const params = useParams();
   const [question, setQuestion] = useState("");
   const [inputValue, setInputValue] = useState("");
-  const [difficultyInfo, setDifficultyInfo] = useState<{ text: string, className: string } | null>(null);
+  const [difficultyInfo, setDifficultyInfo] = useState<{
+    text: string;
+    className: string;
+  } | null>(null);
   const id = params.id;
   const [loading, setLoading] = useState(true);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
@@ -32,24 +35,28 @@ export default function QuestionScreen() {
         const response = await axios.get("/api/round/get-question-by-id", {
           params: { id },
         });
-        
+
         const { difficulty } = response.data.data;
         const { round } = response.data;
-        
+
         // Calculate points based on round and difficulty
         let points: number;
         if (round === "1") {
-          points = difficulty === "easy" ? 20 : difficulty === "medium" ? 40 : 70;
+          points =
+            difficulty === "easy" ? 20 : difficulty === "medium" ? 40 : 70;
         } else if (round === "2") {
           points = difficulty === "easy" ? 25 : 60; // medium and hard both get 60
         } else {
           points = 0;
         }
-        
-        const difficultyLabel = difficulty === "easy" ? "E" : difficulty === "medium" ? "M" : "H";
-        
+
+        const difficultyLabel =
+          difficulty === "easy" ? "E" : difficulty === "medium" ? "M" : "H";
+
         setQuestion(
-          response.data.data.question_description + " " + `${difficultyLabel} ${points}`
+          response.data.data.question_description +
+            " " +
+            `${difficultyLabel} ${points}`
         );
       } catch (error: any) {
         console.error(error);
@@ -143,10 +150,19 @@ export default function QuestionScreen() {
       <div className="relative w-full max-w-2xl mt-2">
         <img src={questionBox} alt="Question Box" className="w-full" />
         <div className="absolute inset-0 flex items-center justify-center px-6 text-center text-base sm:text-lg font-bold leading-tight">
-          <p>{question}
-          {difficultyInfo && (
-            <span className={`ml-2 ${difficultyInfo.className}`}>{`(${difficultyInfo.text})`}</span>
-          )}
+          <p>
+            {question.split("\n").map((line, i) => (
+              <span key={i}>
+                {line}
+                <br />
+              </span>
+            ))}
+
+            {difficultyInfo && (
+              <span className={`ml-2 ${difficultyInfo.className}`}>
+                ({difficultyInfo.text})
+              </span>
+            )}
           </p>
         </div>
       </div>
@@ -196,12 +212,16 @@ export default function QuestionScreen() {
           </div>
           {revealedChar && (
             <div className="font-bold text-xl">
-              Secret Char: <span className="text-3xl text-yellow-400 animate-pulse filter drop-shadow-[0_0_8px_rgba(255,215,0,0.8)]">{revealedChar}</span>
+              Secret Char:{" "}
+              <span className="text-3xl text-yellow-400 animate-pulse filter drop-shadow-[0_0_8px_rgba(255,215,0,0.8)]">
+                {revealedChar}
+              </span>
             </div>
           )}
           {nextStationName && (
             <div className="font-bold text-lg text-blue-400">
-              Next Station: <span className="text-white">{nextStationName}</span>
+              Next Station:{" "}
+              <span className="text-white">{nextStationName}</span>
             </div>
           )}
         </div>
@@ -214,9 +234,7 @@ export default function QuestionScreen() {
         backgroundSvg={questionBox}
       >
         <div className="text-center space-y-6 px-4">
-          <div className="font-bold text-xl text-red-400">
-             {message}
-          </div>
+          <div className="font-bold text-xl text-red-400">{message}</div>
         </div>
       </Modal>
     </div>
