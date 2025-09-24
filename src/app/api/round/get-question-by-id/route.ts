@@ -19,7 +19,6 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-
     const currentRound = await getCurrentRound();
     if (currentRound === "not_started" || currentRound === "finished") {
       return NextResponse.json(
@@ -48,28 +47,30 @@ export async function GET(req: NextRequest) {
 
     const question = await Question.findById(questionId).select("-answer");
     if (!question) {
-      return NextResponse.json({ error: "Question not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Question not found" },
+        { status: 404 }
+      );
     }
 
     //verifying question belongs to current round
     if (question.round !== currentRound) {
       return NextResponse.json(
-        { 
-          error: `Question belongs to Round ${question.round}, but current round is ${currentRound}` 
+        {
+          error: `Question belongs to Round ${question.round}, but current round is ${currentRound}`,
         },
         { status: 400 }
       );
     }
 
     return NextResponse.json(
-      { 
-        message: "Successfully fetched question", 
+      {
+        message: "Successfully fetched question",
         data: question,
-        round: currentRound
+        round: currentRound,
       },
       { status: 200 }
     );
-
   } catch (err) {
     console.error("Error in get-question-by-id:", err);
     return NextResponse.json(
