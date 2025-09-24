@@ -68,13 +68,14 @@ export async function GET(req: NextRequest) {
     _id: { $in: allQuestionIds },
   }).lean();
   const questionsMap = new Map(
-    questions.map((q) => [q._id.toString(), q.question_description])
+    questions.map((q) => [q._id.toString(), { description: q.question_description, round: q.round }])
   );
 
   const solved = allSolvedInfo
     .map((info) => ({
       ...info,
-      questionDescription: questionsMap.get(info.questionId) || null,
+      questionDescription: questionsMap.get(info.questionId)?.description || null,
+      round: questionsMap.get(info.questionId)?.round || null,
     }))
     .reverse();
 

@@ -51,9 +51,10 @@ export async function POST(req: NextRequest) {
             if(team!.round2!.indoor_score === 0){
                 team!.round2!.indoor_score = +indoorScore;
                 await team!.save();
-                //ma ki chu-
+
+                //ma ki chu- 
                 let revealedString = "";
-                if (team!.teamString && team!.teamString.length >= 6) {
+                if (team!.teamString) {
                     revealedString = team!.teamString.substring(3, 6);
                 }
 
