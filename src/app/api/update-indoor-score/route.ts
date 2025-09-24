@@ -24,6 +24,9 @@ export async function POST(req: NextRequest) {
       );
     }
     const team = await Team.findById(user.teamId);
+    if (!team) {
+      return NextResponse.json({ error: "Team not found" }, { status: 404 });
+    }
 
     const reqBody = await req.json();
     const { indoorScore, round } = reqBody;
@@ -37,14 +40,20 @@ export async function POST(req: NextRequest) {
 
     const roundKey = round === "1" ? "round1" : "round2";
 
-    if (team![roundKey]!.indoor_score === 0) {
-      team![roundKey]!.indoor_score = +indoorScore;
-      team!.total_score += +indoorScore;
-      await team!.save();
-      return NextResponse.json(
-        { message: `The score for round ${round} has been updated` },
-        { status: 200 }
-      );
+    if (team[roundKey]!.indoor_score === 0) {
+      team[roundKey]!.indoor_score = +indoorScore;
+      team.total_score += +indoorScore;
+      await team.save();
+
+      let responseData: { message: string; secret_string?: string } = {
+        message: `The score for round ${round} has been updated`,
+      };
+
+      if (round === "2" && team.teamString) {
+        responseData.secret_string = team.teamString.slice(-3);
+      }
+
+      return NextResponse.json(responseData, { status: 200 });
     }
     return NextResponse.json(
       {
