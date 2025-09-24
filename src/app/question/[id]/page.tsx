@@ -149,7 +149,7 @@ export default function QuestionScreen() {
       {/* Question Box */}
       <div className="relative w-full max-w-2xl mt-2">
         <img src={questionBox} alt="Question Box" className="w-full" />
-        <div className="absolute inset-0 flex items-start justify-center px-6 py-4 text-center text-base sm:text-lg font-bold leading-tight overflow-y-auto whitespace-normal break-words">
+        <div className="absolute inset-0 flex items-start justify-start px-6 py-12 text-left text-sm sm:text-base font-bold leading-tight overflow-y-auto whitespace-normal break-words">
           <p
             dangerouslySetInnerHTML={{
               __html: question,
