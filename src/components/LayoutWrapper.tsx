@@ -199,7 +199,7 @@ export default function LayoutClientWrapper({
     >
       {!isAdminPage && (
         <Image
-          src="/assets/background.svg"
+          src="/assets/background.png"
           alt="Background"
           className="absolute w-full h-full object-cover z-0"
           width={100}
@@ -243,7 +243,7 @@ export default function LayoutClientWrapper({
       {installPrompt && !isAdminPage && (
         <motion.button
           onClick={handleInstallClick}
-          className="fixed bottom-24 right-4 z-50 flex items-center justify-center gap-2 text-white font-bold rounded-full shadow-lg hover:brightness-50 bg-cover h-14 w-40 px-6"
+          className="fixed bottom-24 right-4 z-50 flex items-center justify-center gap-2 text-white font-bold rounded-full shadow-lg hover:brightness-50 bg-cover h-14  px-6 w-fit"
           style={{ backgroundImage: "url('/assets/neutral-slab.svg')" }}
           initial={{ x: "150%" }}
           animate={{ x: 0 }}

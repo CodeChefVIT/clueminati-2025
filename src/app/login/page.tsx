@@ -84,7 +84,7 @@ export default function Login() {
     <div className="min-h-screen relative overflow-hidden w-full">
       <div
         className="absolute inset-0 bg-center bg-cover bg-no-repeat flex items-center justify-center"
-        style={{ backgroundImage: "url('/assets/login-bg.svg')" }}
+        style={{ backgroundImage: "url('/assets/login-bg.png')" }}
       />
 
       <div className="relative z-10 min-h-screen flex items-center justify-center p-9">

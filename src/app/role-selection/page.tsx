@@ -20,7 +20,7 @@ export default function RegionSelection() {
   const [selectedRegion, setSelectedRegion] = useState<"hell" | "earth" | null>(
     null
   );
-  const [background, setBackground] = useState("/assets/login-bg.svg");
+  const [background, setBackground] = useState("/assets/login-bg.png");
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true); 
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
@@ -77,7 +77,7 @@ export default function RegionSelection() {
       setShowErrorModal(true);
       return;
     }
-setBackground(region === "hell" ? "/assets/hell-bg.svg" : "/assets/background.svg");
+setBackground(region === "hell" ? "/assets/hell-bg.png" : "/assets/background.png");
     setSelectedRegion(region);
   };
 

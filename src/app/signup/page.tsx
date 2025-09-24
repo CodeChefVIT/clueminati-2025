@@ -87,7 +87,7 @@ export default function SignupPage() {
       <div
         className="absolute inset-0 bg-center bg-cover bg-no-repeat flex items-center justify-center"
         style={{
-          backgroundImage: "url('/assets/login-bg.svg')",
+          backgroundImage: "url('/assets/login-bg.png')",
         }}
       />
 

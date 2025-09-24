@@ -31,7 +31,7 @@ function HellInstructions() {
     >
       <div
         className="absolute inset-0 bg-center bg-cover bg-no-repeat"
-        style={{ backgroundImage: "url('/assets/hell-bg.svg')" }}
+        style={{ backgroundImage: "url('/assets/hell-bg.png')" }}
       />
       <div className="relative z-10 w-full flex flex-col items-center justify-center text-white h-full p-4">
         <div

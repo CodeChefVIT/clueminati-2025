@@ -149,7 +149,7 @@ export default function ProfileScreen() {
           </div>
           <div className="flex justify-between">
             <span>Region:</span>
-            <span>{user.region || "N/A"}</span>
+            <span>{user.region?.toUpperCase() || "N/A"}</span>
           </div>
         </div>
 
