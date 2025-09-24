@@ -217,7 +217,11 @@ export default function LayoutClientWrapper({
           <main className="flex-1 overflow-y-auto">{children}</main>
         </div>
       ) : round === "Round 1" || round === "Round 2" ? (
-        <div className="grid grid-rows-[10%_1fr_15%] h-screen">
+        <div
+          className={`grid ${
+            pathname.startsWith("/question") ? "grid-rows-[10%_1fr]" : "grid-rows-[10%_1fr_15%]"
+          } h-screen`}
+        >
           <div className="z-30 relative">
             <TopNav round={round} timeLeft={timeLeft} />
           </div>

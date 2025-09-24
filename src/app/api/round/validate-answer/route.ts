@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
       team[roundKey]!.score += points;
     }
     team.total_score += points;
-    team.scoreLastUpdatedAt = new Date();
+    team.lastQuestionAnsweredAt = new Date();
 
     let revealChar: string | null = null;
     let nextStation: any = null;

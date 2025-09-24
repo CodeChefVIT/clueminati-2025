@@ -77,7 +77,6 @@ export async function POST(request: NextRequest) {
       
       team.stringValidated = true;
       team.total_score += stringScore;
-      team.scoreLastUpdatedAt = new Date();
       
       await team.save();
 

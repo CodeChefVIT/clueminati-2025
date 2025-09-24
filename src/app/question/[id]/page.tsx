@@ -14,6 +14,7 @@ export default function QuestionScreen() {
   const params = useParams();
   const [question, setQuestion] = useState("");
   const [inputValue, setInputValue] = useState("");
+  const [difficultyInfo, setDifficultyInfo] = useState<{ text: string, className: string } | null>(null);
   const id = params.id;
   const [loading, setLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
@@ -28,15 +29,19 @@ export default function QuestionScreen() {
         const response = await axios.get("/api/round/get-question-by-id", {
           params: { id },
         });
-        setQuestion(
-          response.data.data.question_description +
-            " " +
-            (response.data.data.difficulty === "hard"
-              ? "H 70"
-              : response.data.data.difficulty === "easy"
-              ? "E 10"
-              : "M 40")
-        );
+        const { question_description, difficulty } = response.data.data;
+        setQuestion(question_description);
+
+        if (difficulty === "hard") {
+          setDifficultyInfo({ text: "H 70", className: "text-red-400" });
+        } else if (difficulty === "medium") {
+          setDifficultyInfo({ text: "M 40", className: "text-blue-400" });
+        } else if (difficulty === "easy") {
+          setDifficultyInfo({ text: "E 10", className: "text-green-400" });
+        } else {
+          setDifficultyInfo(null);
+        }
+
       } catch (error: any) {
         console.error(error);
       } finally {
@@ -121,15 +126,19 @@ export default function QuestionScreen() {
   return (
     <div className="flex flex-col items-center justify-start text-white px-4 sm:px-8 overflow-hidden gap-6">
       {/* Question Box */}
-      <div className="relative w-full max-w-2xl">
+      <div className="relative w-full max-w-2xl mt-2">
         <img src={questionBox} alt="Question Box" className="w-full" />
-        <span className="absolute inset-0 flex items-center justify-center px-6 text-center text-base sm:text-lg font-bold leading-tight">
-          {question}
-        </span>
+        <div className="absolute inset-0 flex items-center justify-center px-6 text-center text-base sm:text-lg font-bold leading-tight">
+          <p>{question}
+          {difficultyInfo && (
+            <span className={`ml-2 ${difficultyInfo.className}`}>{`(${difficultyInfo.text})`}</span>
+          )}
+          </p>
+        </div>
       </div>
 
       {/* Answer Box */}
-      <div className="relative w-full max-w-lg h-28 sm:h-32">
+      <div className="relative w-[20rem]  -mt-2">
         <img
           src={answerBox}
           alt="Answer Box"
@@ -140,23 +149,23 @@ export default function QuestionScreen() {
           value={inputValue}
           placeholder="Enter your answer"
           onChange={(e) => setInputValue(e.target.value)}
-          className="absolute inset-0 bg-transparent text-center text-lg sm:text-xl text-white font-semibold placeholder-gray-400 focus:outline-none px-4"
+          className="absolute inset-0 bg-transparent text-center text-lg sm:text-xl text-white font-semibold  placeholder-gray-400 focus:outline-none px-4"
         />
       </div>
 
       {/* Buttons */}
-      <div className="flex flex-col sm:flex-row gap-3 w-full max-w-[16rem] sm:max-w-xl">
+      <div className="flex flex-col sm:flex-row  w-full max-w-[16rem] sm:max-w-xl">
         <Button
           label={loading ? "Submitting..." : "Submit"}
           onClick={handleSubmit}
           disabled={loading}
-          className="flex-1 !text-lg sm:!text-xl !font-bold py-2 sm:py-3"
+          className=" !text-lg sm:!text-xl !font-bold py-2 sm:py-3 "
         />
         <Button
           label={skipDisabled ? `Skip (${countdown}s)` : "Skip"}
           onClick={handleSkip}
           disabled={skipDisabled}
-          className="flex-1 !text-lg sm:!text-xl !font-bold py-2 sm:py-3"
+          className="flex-1 !text-lg sm:!text-xl !font-bold py-2 sm:py-3 "
         />
       </div>
 

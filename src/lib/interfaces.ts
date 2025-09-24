@@ -57,7 +57,7 @@ export const TeamSchema = z.object({
   total_score: z.number().min(0).default(0),
   teamString: z.string().optional(),
   stringValidated: z.boolean().default(false), 
-  scoreLastUpdatedAt: 
+  lastQuestionAnsweredAt: 
     z.date().optional()
 });
 

@@ -16,12 +16,27 @@ async function verifyToken(token: string) {
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-
   const isPublicPath =
     PUBLIC_PATHS.includes(path) || path.startsWith("/verifyemail");
 
   const token = request.cookies.get("token")?.value;
   const payload = token ? await verifyToken(token) : null;
+
+  let response = NextResponse.next();
+
+  response.headers.set("Access-Control-Allow-Origin", "https://mellohyu.itch.io");
+  response.headers.set(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS"
+  );
+  response.headers.set(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization"
+  );
+
+  if (request.method === "OPTIONS") {
+    return new NextResponse(null, { headers: response.headers });
+  }
 
   if (payload) {
     const role = payload.role;
@@ -29,11 +44,11 @@ export async function middleware(request: NextRequest) {
     if (isPublicPath) {
       if (role === "core_member")
         return path === "/core-member"
-          ? NextResponse.next()
+          ? response
           : NextResponse.redirect(new URL("/core-member", request.url));
       if (role === "admin")
         return path === "/admin"
-          ? NextResponse.next()
+          ? response
           : NextResponse.redirect(new URL("/admin", request.url));
       return NextResponse.redirect(new URL("/", request.url));
     }
@@ -46,20 +61,14 @@ export async function middleware(request: NextRequest) {
     }
 
     if (role === "core_member") {
-      // if (
-      //   !payload.core_allocated_station &&
-      //   path !== "/core-member/choose-station"
-      // ) {
-      //   return NextResponse.redirect(
-      //     new URL("/core-member/choose-station", request.url)
-      //   );
-      // }
-
       if (!path.startsWith("/core-member")) {
         return NextResponse.redirect(new URL("/core-member", request.url));
       }
 
-      if (!payload.core_allocated_station && path !== "/core-member/choose-station") {
+      if (
+        !payload.core_allocated_station &&
+        path !== "/core-member/choose-station"
+      ) {
         return NextResponse.redirect(
           new URL("/core-member/choose-station", request.url)
         );
@@ -89,7 +98,8 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
   }
-  return NextResponse.next();
+
+  return response;
 }
 
 export const config = {
@@ -109,5 +119,6 @@ export const config = {
     "/admin/:path*",
     "/hell-instructions",
     "/instructions",
+    "/api/:path*", 
   ],
 };
