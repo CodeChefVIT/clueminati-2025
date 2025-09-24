@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+mailing.py
+clue_part.csv
+passwords.csv
+test.csv
