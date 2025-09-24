@@ -131,5 +131,6 @@ export const config = {
     "/admin/:path*",
     "/hell-instructions",
     "/instructions",
+    "/api/:path"
   ],
 };
