@@ -17,8 +17,11 @@ export default function QuestionScreen() {
   const [difficultyInfo, setDifficultyInfo] = useState<{ text: string, className: string } | null>(null);
   const id = params.id;
   const [loading, setLoading] = useState(true);
-  const [showPopup, setShowPopup] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [message, setMessage] = useState("");
+  const [revealedChar, setRevealedChar] = useState("");
+  const [nextStationName, setNextStationName] = useState("");
   const [skipDisabled, setSkipDisabled] = useState(true);
   const [countdown, setCountdown] = useState(30);
 
@@ -29,19 +32,25 @@ export default function QuestionScreen() {
         const response = await axios.get("/api/round/get-question-by-id", {
           params: { id },
         });
-        const { question_description, difficulty } = response.data.data;
-        setQuestion(question_description);
-
-        if (difficulty === "hard") {
-          setDifficultyInfo({ text: "H 70", className: "text-red-400" });
-        } else if (difficulty === "medium") {
-          setDifficultyInfo({ text: "M 40", className: "text-blue-400" });
-        } else if (difficulty === "easy") {
-          setDifficultyInfo({ text: "E 10", className: "text-green-400" });
+        
+        const { difficulty } = response.data.data;
+        const { round } = response.data;
+        
+        // Calculate points based on round and difficulty
+        let points: number;
+        if (round === "1") {
+          points = difficulty === "easy" ? 20 : difficulty === "medium" ? 40 : 70;
+        } else if (round === "2") {
+          points = difficulty === "easy" ? 25 : 60; // medium and hard both get 60
         } else {
-          setDifficultyInfo(null);
+          points = 0;
         }
-
+        
+        const difficultyLabel = difficulty === "easy" ? "E" : difficulty === "medium" ? "M" : "H";
+        
+        setQuestion(
+          response.data.data.question_description + " " + `${difficultyLabel} ${points}`
+        );
       } catch (error: any) {
         console.error(error);
       } finally {
@@ -83,25 +92,24 @@ export default function QuestionScreen() {
             localStorage.setItem(`answered_${round}`, "true");
           }
 
-          let msg = "Correct Answer!";
+          // Set success popup data
+          setRevealedChar(response.data.reveal || "");
+          setNextStationName(response.data.nextStation?.station_name || "");
+          setShowSuccessPopup(true);
 
-          if (response.data.reveal) {
-            msg += `\nSecret Char: ${response.data.reveal}`;
-          }
-
-          if (response.data.nextStation) {
-            msg += `\nNext Station: ${response.data.nextStation.station_name}`;
-          }
-
-          setMessage(msg);
-          setShowPopup(true);
-
+          // Auto-redirect after 12 seconds (un-skippable)
           setTimeout(() => {
             router.push("/submission-history");
-          }, 1200);
+          }, 12000);
         } else {
+          // Set error popup
           setMessage(response.data.message);
-          setShowPopup(true);
+          setShowErrorPopup(true);
+
+          // Auto-hide error popup after 2 seconds
+          setTimeout(() => {
+            setShowErrorPopup(false);
+          }, 2000);
         }
       }
 
@@ -109,7 +117,12 @@ export default function QuestionScreen() {
     } catch (error: any) {
       console.error(error);
       setMessage(error.response?.data?.error || "Something went wrong");
-      setShowPopup(true);
+      setShowErrorPopup(true);
+
+      // Auto-hide error popup after 2 seconds
+      setTimeout(() => {
+        setShowErrorPopup(false);
+      }, 2000);
     } finally {
       setLoading(false);
     }
@@ -117,10 +130,11 @@ export default function QuestionScreen() {
 
   const handleSkip = () => {
     setMessage("Answer skipped!");
-    setShowPopup(true);
+    setShowErrorPopup(true);
     setTimeout(() => {
+      setShowErrorPopup(false);
       router.push("/");
-    }, 1000);
+    }, 2000);
   };
 
   return (
@@ -169,18 +183,39 @@ export default function QuestionScreen() {
         />
       </div>
 
-      {/* Popup */}
+      {/* Success Popup - Un-skippable */}
       <Modal
-        isOpen={showPopup}
-        onClose={() => setShowPopup(false)}
+        isOpen={showSuccessPopup}
+        onClose={() => {}} // Empty function - makes it un-skippable
+        backgroundSvg={questionBox}
+        showCloseButton={false}
+      >
+        <div className="text-center space-y-6 px-4">
+          <div className="font-bold text-2xl text-green-400">
+            Correct Answer!
+          </div>
+          {revealedChar && (
+            <div className="font-bold text-xl">
+              Secret Char: <span className="text-3xl text-yellow-400 animate-pulse filter drop-shadow-[0_0_8px_rgba(255,215,0,0.8)]">{revealedChar}</span>
+            </div>
+          )}
+          {nextStationName && (
+            <div className="font-bold text-lg text-blue-400">
+              Next Station: <span className="text-white">{nextStationName}</span>
+            </div>
+          )}
+        </div>
+      </Modal>
+
+      {/* Error Popup - Auto-dismiss */}
+      <Modal
+        isOpen={showErrorPopup}
+        onClose={() => setShowErrorPopup(false)}
         backgroundSvg={questionBox}
       >
         <div className="text-center space-y-6 px-4">
-          <div
-            className="font-bold text-xl sm:text-2xl leading-snug tracking-wide"
-            style={{ color: "#B9B9B9" }}
-          >
-            {message}
+          <div className="font-bold text-xl text-red-400">
+             {message}
           </div>
         </div>
       </Modal>

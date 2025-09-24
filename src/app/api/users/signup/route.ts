@@ -45,7 +45,7 @@ export async function POST(request: NextRequest){   //took request as parameter 
       }
     }
 
-    const password = crypto.randomBytes(8).toString('hex');
+    const password = crypto.randomBytes(4).toString('hex');
     const salt = await bcryptjs.genSalt(10);     
     const hashedPassword = await bcryptjs.hash(password,salt)     
 

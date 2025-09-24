@@ -7,6 +7,7 @@ type Submission = {
   questionId: string;
   difficulty: "easy" | "medium" | "hard";
   questionDescription: string | null;
+  round: string | null;
 };
 
 export default function History() {
@@ -38,17 +39,30 @@ export default function History() {
     fetchSubmissions();
   }, []);
 
-  const getPoints = (difficulty: string) => {
-    switch (difficulty) {
-      case "easy":
-        return 10;
-      case "medium":
-        return 40;
-      case "hard":
-        return 70;
-      default:
-        return 0;
+  const getPoints = (difficulty: string, round: string | null) => {
+    if (round === "1") {
+      switch (difficulty) {
+        case "easy":
+          return 20;
+        case "medium":
+          return 40;
+        case "hard":
+          return 70;
+        default:
+          return 0;
+      }
+    } else if (round === "2") {
+      switch (difficulty) {
+        case "easy":
+          return 25;
+        case "medium":
+        case "hard":
+          return 60;
+        default:
+          return 0;
+      }
     }
+    return 0; // fallback for unknown rounds
   };
 
   return (
@@ -100,7 +114,7 @@ export default function History() {
                   <span className="text-xs opacity-80">{item.difficulty}</span>
                 </div>
                 <span className="text-xl font-bold text-yellow-400">
-                  +{getPoints(item.difficulty)}
+                  +{getPoints(item.difficulty, item.round)}
                 </span>
               </div>
             ))

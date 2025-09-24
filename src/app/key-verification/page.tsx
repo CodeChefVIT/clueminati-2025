@@ -57,14 +57,14 @@ const KeyVerification: React.FC = () => {
 
       if (response.data.success) {
         setMessage(
-          "You have successfully entered the correct string. You may now proceed to hell."
+          "Congratulations! Round 2 complete. Redirecting..."
         );
         setIsSuccess(true);
 
-        // // Redirect to hell-instructions after successful validation
-        // setTimeout(() => {
-        //   router.push("/hell-instructions");
-        // }, 3000);
+        // Redirect to round-2-complete after successful validation
+        setTimeout(() => {
+          router.push("/round-2-complete");
+        }, 3000);
       } else {
         setMessage(response.data.message || response.data.error);
         setIsSuccess(false);
