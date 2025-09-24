@@ -30,7 +30,8 @@ export async function GET(req: NextRequest) {
           members: 1,
           total_score: { $add: ["$total_score","$round1.indoor_score", "$round2.indoor_score"] },
           secret_string: "$round2.secret_string", // include secret_string
-          _id : 1
+          _id : 1,
+          lastQuestionAnsweredAt:1,
         },
       },
       { 
@@ -80,17 +81,23 @@ export async function GET(req: NextRequest) {
               }
             }
           }, 
+          lastQuestionAnsweredAt: "$lastQuestionAnsweredAt",
         },
       },
     ]);
 
-    const leaderboard = teams.map((team: any, index: number) => ({
-      rank: index + 1,
+    const leaderboard = teams.map((team: any, index: number) => {
+
+      const LastUpdatedTime = team.lastQuestionAnsweredAt ? new Date(team.lastQuestionAnsweredAt) : new Date("1900-1-1 00:09:00+05:30") ;
+      const formattedTime = `${String(LastUpdatedTime.getHours()).padStart(2,'0')}:${String(LastUpdatedTime.getMinutes()).padStart(2,'0')}`;
+
+      return {rank: index + 1,
       name: team.teamname,
       total_score: team.total_score,
       secret_string: team.secret_string || "", // added secret_string over here..empty for now cuz not added in db
       members: team.members || [],
-    }));
+      lastQuestionAnsweredAt: formattedTime,
+    }});
 
     return NextResponse.json(
       { message: "Leaderboard fetched successfully", data: leaderboard, totalCount: await Team.countDocuments() },
