@@ -10,6 +10,6 @@ export async function getAllStations() {
     id: station._id.toString(),
     name: station.station_name,
     difficulty: station.difficulty || "Not specified",
-    members: station.members || []
+    // members: station.members || []
   }));
 }
