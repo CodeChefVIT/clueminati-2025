@@ -72,7 +72,7 @@ export default function Instructions({ timeLeft }: { timeLeft?: number }) {
           </p>
         )}
       </div>
-      <Link
+      {/* <Link
         href="/"
         className="relative mt-8 w-[50%] max-w-xs hover:brightness-50"
       >
@@ -86,7 +86,7 @@ export default function Instructions({ timeLeft }: { timeLeft?: number }) {
         <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-xl sm:text-2xl">
           Proceed
         </span>
-      </Link>
+      </Link> */}
     </div>
   );
 }
