@@ -32,7 +32,8 @@ export default function LayoutClientWrapper({
     "/admin/*",
     "/not-found",
     "/key-verification",
-    "/core-member/choose-station"
+    "/core-member/choose-station",
+    "/admin/edit-stations"
   ];
 
   const isDocsPage = pathname.startsWith("/docs");

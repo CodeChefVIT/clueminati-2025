@@ -19,12 +19,11 @@ export default function Instructions({ timeLeft }: { timeLeft?: number }) {
   return (
     <div className="w-full h-screen flex flex-col items-center justify-center text-white">
       <div
-
         className="relative w-full bg-center bg-contain bg-no-repeat flex flex-col items-center justify-center h-[33rem] px-6 min-h-[100px]"
         style={{ backgroundImage: "url('/assets/instructions_bg.svg')" }}
       >
         <h2 className="text-2xl font-bold mb-6 mt-8 text-[#A5A5A5]">
-          Instructions 
+          Instructions
         </h2>
         <div className="relative w-40 sm:w-44">
           <img src="/assets/timer-box.svg" alt="Timer" className="w-full" />
@@ -32,51 +31,56 @@ export default function Instructions({ timeLeft }: { timeLeft?: number }) {
             {formatTime(timeLeft!)}
           </span>
         </div>
-        <p className="text-center text-[#A5A5A5] mb-4 text-sm sm:text-base">{currentRound}</p>
+        <p className="text-center text-[#A5A5A5] mb-4 text-sm sm:text-base">
+          {currentRound}
+        </p>
 
-        {currentRound === "Not Started" && 
-
-          (<p
+        {currentRound === "Not Started" && (
+          <p
             className="text-center text-[#A5A5A5] text-sm sm:text-base max-w-[65%] max-h-[100px] overflow-y-auto sm:max-w-[65%] break-words"
             style={{ paddingLeft: "2.5rem", paddingRight: "2.5rem" }} // px-10 = 2.5rem
           >
-          Hear ye, brave wanderers!
-You now hold the Scroll of Instructions. Read carefully, for it holds the rules and whispers that may tip the scales in your favor.
+            Hear ye, brave wanderers! You now hold the Scroll of Instructions.
+            Read carefully, for it holds the rules and whispers that may tip the
+            scales in your favor. Your journey begins at the station assigned to
+            you. This is your first and mandatory trial - only after attempting
+            it will the rest of the map unveil itself. Once revealed, you are
+            free to roam the campus and visit any number of stations, in any
+            order you desire. The trials await in three forms: easy, medium, and
+            hard — offering 20, 40, and 70 points respectively. But beware,
+            patience is part of the test. A question may only be skipped after
+            five minutes, when the option reveals itself upon your screen. The
+            more you explore, the more you gain. And remember—knowing the
+            locations of each station may serve you well in the trials to come…
+            though the choice, of course, is yours.
+          </p>
+        )}
 
-Your journey begins at the station assigned to you. This is your first and mandatory trial - only after attempting it will the rest of the map unveil itself.
-Once revealed, you are free to roam the campus and visit any number of stations, in any order you desire.
-The trials await in three forms: easy, medium, and hard — offering 20, 40, and 70 points respectively. But beware, patience is part of the test.
- A question may only be skipped after five minutes, when the option reveals itself upon your screen.
-The more you explore, the more you gain. And remember—knowing the locations of each station may serve you well in the trials to come… though the choice, of course, is yours.
-        </p>) }
-
-        {currentRound === "Half Time" && 
-
-        (<p className="text-center text-[#A5A5A5] text-sm sm:text-base px-8 max-w-[70%] max-h-[100px] px-18 overflow-y-auto sm:max-w-[65%] break-words">
-          Round 2 YAPPPPPP
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Click on the Home button to start
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Click on the Home button to start
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Click on the Home button to start
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Click on the Home button to start
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Click on the Home button to start
-        </p>) }
-
-
+        {currentRound === "Half Time" && (
+          <p className="text-center text-[#A5A5A5] text-sm sm:text-base  max-w-[70%] max-h-[100px] px-18 overflow-y-auto sm:max-w-[65%] break-words">
+            Round 2 YAPPPPPP Lorem ipsum dolor sit amet, consectetur adipiscing
+            elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+            laboris nisi ut aliquip ex ea commodo consequat. Click on the Home
+            button to start Lorem ipsum dolor sit amet, consectetur adipiscing
+            elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+            laboris nisi ut aliquip ex ea commodo consequat. Click on the Home
+            button to start Lorem ipsum dolor sit amet, consectetur adipiscing
+            elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+            laboris nisi ut aliquip ex ea commodo consequat. Click on the Home
+            button to start Lorem ipsum dolor sit amet, consectetur adipiscing
+            elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+            laboris nisi ut aliquip ex ea commodo consequat. Click on the Home
+            button to start Lorem ipsum dolor sit amet, consectetur adipiscing
+            elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+            laboris nisi ut aliquip ex ea commodo consequat. Click on the Home
+            button to start
+          </p>
+        )}
       </div>
 
       {/* <Link

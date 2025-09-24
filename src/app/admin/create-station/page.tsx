@@ -86,7 +86,7 @@ export default function CreateStationPage() {
             />
           </div>
 
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <Label htmlFor="members" className="text-lg">
               Members (comma-separated)
             </Label>
@@ -99,7 +99,7 @@ export default function CreateStationPage() {
               placeholder="Enter member names separated by commas"
               className="bg-gray-700 border-gray-600 text-white focus:ring-blue-500"
             />
-          </div>
+          </div> */}
 
           <div className="space-y-2">
             <Label htmlFor="difficulty" className="text-lg">

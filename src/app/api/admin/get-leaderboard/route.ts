@@ -87,7 +87,7 @@ export async function GET(req: NextRequest) {
     const leaderboard = teams.map((team: any, index: number) => ({
       rank: index + 1,
       name: team.teamname,
-      total_score: team.total_score,
+      total_score: team.total_score + team.round1.indoor_score + team.round2.indoor_score,
       secret_string: team.secret_string || "", // added secret_string over here..empty for now cuz not added in db
       members: team.members || [],
     }));
