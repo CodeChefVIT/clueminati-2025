@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
         $project: {
           teamname: 1,
           members: 1,
-          total_score: 1,
+          total_score: { $add: ["$total_score","$round1.indoor_score", "$round2.indoor_score"] },
           secret_string: "$round2.secret_string", // include secret_string
           _id : 1
         },
@@ -87,7 +87,7 @@ export async function GET(req: NextRequest) {
     const leaderboard = teams.map((team: any, index: number) => ({
       rank: index + 1,
       name: team.teamname,
-      total_score: team.total_score + team.round1.indoor_score + team.round2.indoor_score,
+      total_score: team.total_score,
       secret_string: team.secret_string || "", // added secret_string over here..empty for now cuz not added in db
       members: team.members || [],
     }));
