@@ -38,7 +38,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // starting validation (6 characters)
     if (!/^[a-zA-Z]{6}$/.test(inputString)) {
       return NextResponse.json(
         { message: 'Input must be exactly 6 characters' },
@@ -46,11 +45,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    //team object
     const team = await Team.findById(user.teamId)
     if (!team) {
       return NextResponse.json(
-        { message: 'Team not found' }, //fck u
+        { message: 'Team not found' }, 
         { status: 404 }
       )
     }
@@ -72,15 +70,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    //actual comparison bool 
     const isMatch = inputString.toLowerCase() === team.teamString.toLowerCase()
 
     if (isMatch) {
-      //badhai ho, points lelo
-      const stringScore = 40; //awarded points, itne se kya hoga? ok
+      const stringScore = 70; 
       
       team.stringValidated = true;
       team.total_score += stringScore;
+      team.scoreLastUpdatedAt = new Date();
       
       await team.save();
 
@@ -103,7 +100,6 @@ export async function POST(request: NextRequest) {
         }
       })
     }
-    //im not debugging for shi anymore
   } catch (error: any) {
     console.error('Error in validate-string route:', error)
     return NextResponse.json(

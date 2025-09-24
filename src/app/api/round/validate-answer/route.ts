@@ -105,6 +105,7 @@ export async function POST(req: NextRequest) {
       team[roundKey]!.score += points;
     }
     team.total_score += points;
+    team.scoreLastUpdatedAt = new Date();
 
     let revealChar: string | null = null;
     let nextStation: any = null;
@@ -116,12 +117,10 @@ export async function POST(req: NextRequest) {
 
       if (revealSteps.includes(totalSolved)) {
 
-        // cha mudao im returning the 0,1,2nd indexes of the string 
         let charIndex: number;
         if (totalSolved === 3) charIndex = 0;
         else if (totalSolved === 5) charIndex = 1;
         else if (totalSolved === 7) charIndex = 2;
-        //safety check
         else charIndex = -1;
 
         if (team.teamString && charIndex >= 0 && charIndex < team.teamString.length) {

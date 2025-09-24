@@ -49,6 +49,7 @@ export async function POST(req: NextRequest) {
     await team.save();
 
     user.teamId = undefined;
+    user.region = undefined;
     await user.save();
     const tokenData = {
       id: user._id,
