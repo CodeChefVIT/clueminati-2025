@@ -75,11 +75,18 @@ export default function Instructions({ timeLeft }: { timeLeft?: number }) {
     locations of each station may serve you well in the trials to come…
     though the choice, of course, is yours.`,
 
-    "Half Time": `Round 2 YAPPPPPP Lorem ipsum dolor sit amet, consectetur adipiscing
-    elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-    aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-    laboris nisi ut aliquip ex ea commodo consequat. Click on the Home
-    button to start...`,
+    "Half Time": `How’s it going, wanderers?
+"In order to seal the gates of Hell, you have to enter Hell yourself. And for that, you must first find the Key."
+This round will last 1 hour 30 minutes.
+You will be given a fixed path. Each station must be visited in the order assigned to you — no skipping, no straying.
+At every station, you may choose your challenge: Easy (25 points) or Hard (60 points).
+The drill is the same though — except this time we tell you the station location. You get to choose the difficulty level of the question, and then you must solve the riddle.
+Along your path, you will discover three letters. The remaining three shall be found by your teammates inside Hell.
+By the end of the round, you must bring all six letters together and unscramble them to form a word — your pass to Hell.
+Once the round ends, all players must return to Anna Auditorium without delay.
+
+
+Choose wisely, walk steadily, and secure your key.`,
 
     // Add more rounds here as needed
   };
