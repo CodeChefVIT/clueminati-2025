@@ -192,7 +192,7 @@ setBackground(region === "hell" ? "/assets/hell-bg.png" : "/assets/background.pn
             Region Selection
           </h1>
           <p className={`${pixelFont.className} text-white text-center mb-10 text-lg`}>
-  Your text here
+  
 </p>
 
           <div className="grid grid-cols-1 gap-6 mb-8">

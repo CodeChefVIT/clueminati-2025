@@ -70,7 +70,7 @@ function HellInstructions() {
         <Button
           onClick={leaveTeam}
           disabled={leaving}
-          className="w-48 h-14 text-xl font-bold rounded-xl transition-all duration-300 bg-no-repeat bg-center bg-cover text-white shadow-lg hover:scale-105"
+          className="w-48 h-14 text-md font-bold rounded-xl transition-all duration-300 bg-no-repeat bg-center bg-cover text-white shadow-lg hover:scale-105"
           style={{
             backgroundImage: `url('/assets/round-box-hell.svg')`,
           }}
@@ -80,7 +80,7 @@ function HellInstructions() {
         <Button
           onClick={handleLogout}
           disabled={loading}
-          className="w-48 h-14 text-xl font-bold rounded-xl transition-all duration-300 bg-no-repeat bg-center bg-cover text-white shadow-lg hover:scale-105"
+          className="w-48 h-14 text-md font-bold rounded-xl transition-all duration-300 bg-no-repeat bg-center bg-cover text-white shadow-lg hover:scale-105"
           style={{
             backgroundImage: `url('/assets/round-box-hell.svg')`,
           }}
