@@ -94,69 +94,76 @@ const KeyVerification: React.FC = () => {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[9999]"
+      className="fixed inset-0 flex items-center justify-center p-4 z-[9999]"
       onClick={handleOverlayClick}
-      style={{ backgroundImage: "url('/assets/login-bg.png')" }}
     >
-      <div className="relative max-w-md w-full z-[10000]">
-        {/* Popup box with background */}
-        <div
-          className="relative px-8 py-20 flex flex-col items-center justify-center"
-          style={{
-            backgroundImage: "url(/assets/Question_Box.svg)",
-            backgroundSize: "100% 100%",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center",
-          }}
-        >
-          {/* Popup content */}
-          <div className="relative text-center space-y-6 ">
-            <div
-  className={`${pixelFont.className} font-bold text-xl leading-tight tracking-wide translate-y-[50px] mt-8`}
-  style={{ color: "#B9B9B9" }}
->
-  Enter the final code
-</div>
+      {/* Background Image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center -z-10"
+        style={{ backgroundImage: "url('/assets/login-bg.png')" }}
+      />
+      {/* Black Overlay */}
+      <div className="absolute inset-0 bg-black bg-opacity-50 -z-10" />
+      {!showModal && (
+        <div className="relative max-w-md w-full z-[10000]">
+          {/* Popup box with background */}
+          <div
+            className="relative px-8 py-20 flex flex-col items-center justify-center"
+            style={{
+              backgroundImage: "url(/assets/Question_Box.svg)",
+              backgroundSize: "100% 100%",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+            }}
+          >
+            {/* Popup content */}
+            <div className="relative text-center space-y-6 ">
+              <div
+                className={`${pixelFont.className} font-bold text-xl leading-tight tracking-wide translate-y-[50px] mt-8`}
+                style={{ color: "#B9B9B9" }}
+              >
+                Enter the final code
+              </div>
 
-            <div
-              className={`${pixelFont.className} font-bold text-sm leading-tight tracking-wide translate-y-[50px]`}
-  style={{ color: "#B9B9B9" }}
->
-              Hint: how's your indoor team doing?
+              <div
+                className={`${pixelFont.className} font-bold text-sm leading-tight tracking-wide translate-y-[50px]`}
+                style={{ color: "#B9B9B9" }}
+              >
+                Hint: how's your indoor team doing?
+              </div>
+
+              {/* Code input boxes */}
+              <div className="flex justify-center gap-1 mt translate-y-[50px] ">
+                {code.map((char, index) => (
+                  <input
+                    key={index}
+                    id={`code-input-${index}`}
+                    type="text"
+                    maxLength={1}
+                    value={char}
+                    onChange={(e) => handleChange(e.target.value, index)}
+                    onKeyDown={(e) => handleKeyDown(e, index)}
+                    className="w-10 h-12 text-center text-xl font-bold rounded-md bg-gray-800 text-white border border-gray-600 focus:border-blue-400 focus:outline-none flex-shrink-0"
+                  />
+                ))}
+              </div>
+
+              {/* Submit button (image) */}
+              <button
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                className={`${pixelFont.className} mt-6 w-32 h-12 translate-y-[100px] bg-cover bg-center bg-no-repeat hover:brightness-50 transition-opacity text-white text-md font-semibold disabled:opacity-50 disabled:cursor-not-allowed`}
+                style={{
+                  backgroundImage: "url(/assets/round-box.svg)",
+                }}
+                aria-label="Submit code"
+              >
+                {isSubmitting ? "..." : "Submit"}
+              </button>
             </div>
-
-            {/* Code input boxes */}
-            <div className="flex justify-center gap-1 mt translate-y-[50px] ">
-              {code.map((char, index) => (
-                <input
-                  key={index}
-                  id={`code-input-${index}`}
-                  type="text"
-                  maxLength={1}
-                  value={char}
-                  onChange={(e) => handleChange(e.target.value, index)}
-                  onKeyDown={(e) => handleKeyDown(e, index)}
-                  className="w-10 h-12 text-center text-xl font-bold rounded-md bg-gray-800 text-white border border-gray-600 focus:border-blue-400 focus:outline-none flex-shrink-0"
-                />
-              ))}
-            </div>
-
-            {/* Submit button (image) */}
-            <button
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-              className={`${pixelFont.className} mt-6 w-32 h-12 translate-y-[100px] bg-cover bg-center bg-no-repeat hover:brightness-50 transition-opacity text-white text-md font-semibold disabled:opacity-50 disabled:cursor-not-allowed`}
-style={{
-  backgroundImage: "url(/assets/round-box.svg)",
-}}
-
-              aria-label="Submit code"
-            >
-              {isSubmitting ? "..." : "Submit"}
-            </button>
           </div>
         </div>
-      </div>
+      )}
       <Modal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
@@ -169,6 +176,11 @@ style={{
         </h2>
         <p className="mb-6 text-center text-white">{modalMessage}</p>
       </Modal>
+      <div
+        className={`${pixelFont.className} fixed bottom-4 text-center text-white text-lg w-full px-4 z-[9998]`}
+      >
+        You are now requested to reach Anna Auditorium ASAP!!
+      </div>
     </div>
   );
 };
