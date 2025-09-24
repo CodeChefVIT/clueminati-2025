@@ -6,6 +6,7 @@ import axios, { isAxiosError } from "axios";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { pixelFont } from "../fonts";
+import Modal from "@/components/Modal";
 
 function HellInstructions() {
   const router = useRouter();
@@ -13,19 +14,21 @@ function HellInstructions() {
   const [leaving, setLeaving] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
   async function leaveTeam() {
     setLeaving(true);
     try {
       const res = await axios.post("/api/users/leave-team");
       console.log("Leave team response:", res.data);
-
       router.push("/join-team");
     } catch (error) {
       console.error("Error leaving team:", error);
       let message = "Failed to leave team. Please try again.";
+
       if (isAxiosError(error) && error.response) {
-        message = error.response.data.error || message;
+        message = "You can leave team once the round starts.";
       }
+
       setErrorMessage(message);
       setShowErrorModal(true);
     } finally {
@@ -51,10 +54,13 @@ function HellInstructions() {
     <div
       className={`min-h-screen relative overflow-hidden w-full font-pixel ${pixelFont.variable} flex flex-col justify-between items-center`}
     >
+      {/* Background */}
       <div
         className="absolute inset-0 bg-center bg-cover bg-no-repeat"
         style={{ backgroundImage: "url('/assets/hell-bg.png')" }}
       />
+
+      {/* Instructions */}
       <div className="relative z-10 w-full flex flex-col items-center justify-center text-white h-full p-4 max-h-[580px]">
         <div
           className="relative w-full max-w-md bg-center bg-contain bg-no-repeat flex flex-col items-center justify-center text-white h-[40rem] px-8"
@@ -66,6 +72,8 @@ function HellInstructions() {
           </p>
         </div>
       </div>
+
+      {/* Buttons */}
       <div className="relative z-10 flex justify-center flex-col pb-8 gap-4">
         <Button
           onClick={leaveTeam}
@@ -88,6 +96,21 @@ function HellInstructions() {
           Logout
         </Button>
       </div>
+
+      <Modal
+        isOpen={showErrorModal}
+        onClose={() => setShowErrorModal(false)}
+        backgroundSvg="/assets/round-box-hell.svg"
+      >
+        <h2 className="text-xl font-bold mb-4 text-red-400">Notice</h2>
+        <p className="mb-6 text-center">{errorMessage}</p>
+        <Button
+          onClick={() => setShowErrorModal(false)}
+          className="w-32 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg"
+        >
+          Close
+        </Button>
+      </Modal>
     </div>
   );
 }

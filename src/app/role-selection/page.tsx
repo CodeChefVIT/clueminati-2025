@@ -188,7 +188,7 @@ setBackground(region === "hell" ? "/assets/hell-bg.png" : "/assets/background.pn
       />
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center p-4 font-pixel">
         <div className="w-full max-w-md mx-auto">
-          <h1 className="text-3xl font-bold text-white text-center mb-4 font-pixel">
+          <h1 className="text-2xl font-bold text-white text-center mb-4 font-pixel">
             Region Selection
           </h1>
           <div className="grid grid-cols-1 gap-6 mb-8">
@@ -231,7 +231,7 @@ setBackground(region === "hell" ? "/assets/hell-bg.png" : "/assets/background.pn
             </div>
           )}
 
-          <p className="text-white text-center font-medium text-base">
+          <p className="text-white text-center text-[12px] font-medium text-base">
             Choose wisely! Hell region: max 2 members, Earth region: max 3
             members per team.
           </p>
