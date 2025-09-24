@@ -122,7 +122,7 @@ export default function ProfileScreen() {
   return (
     <div className="w-full flex flex-col items-center justify-start text-white min-h-[calc(100vh-7rem)] p-4 sm:p-8 pt-4">
       <div className="flex flex-col items-center ">
-        <div className="relative w-36 h-36 sm:w-48 sm:h-48 mb-4">
+        <div className="relative text-2xl w-36 h-36 sm:w-48 sm:h-48 mb-4">
           <img
             src={profilePic}
             alt="Profile"
@@ -132,13 +132,13 @@ export default function ProfileScreen() {
         </div>
 
         <div className="text-center mb-6">
-          <h1 className="text-3xl sm:text-4xl font-bold text-white">
+          <h1 className="text-2xl sm:text-4xl font-bold text-white">
             {user.fullname}
           </h1>
-          <p className="text-base sm:text-lg text-gray-300">{user.email}</p>
+          <p className="text-base sm:text-sm text-gray-300">{user.email}</p>
         </div>
 
-        <div className="text-white text-xl sm:text-2xl max-w-xs w-full mb-8 space-y-6">
+        <div className="text-white text-md sm:text-2xl max-w-xs w-full mb-8 space-y-6">
           <div className="flex justify-between">
             <span>Team:</span>
             <span>{" " + teamName}</span>
@@ -155,25 +155,28 @@ export default function ProfileScreen() {
 
         <div className="flex flex-col space-y-1 items-center w-full max-w-xs">
           {team && (
-            <Button label="Show Team QR" onClick={() => setShowQR(true)} />
+            <Button label="Show Team QR" onClick={() => setShowQR(true)} 
+            className="text-md sm:text-base"/>
           )}
           {team && (
             <Button
               label={leaving ? "Leaving..." : "Leave Team"}
+              className="text-md sm:text-base"
               onClick={() => {
                 if (!leaving) leaveTeam();
               }}
             />
           )}
 
-          <Button label="Log Out" onClick={logout} />
+          <Button label="Log Out" onClick={logout} 
+          className="text-md sm:text-base"/>
         </div>
       </div>
 
       {showQR && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/80 z-50 px-4">
           <div className="relative w-full max-w-md bg-[#1a1a1a] rounded-2xl p-6 flex flex-col items-center shadow-lg border border-green-500/40">
-            <h2 className="text-green-400 font-bold text-lg mb-4">
+            <h2 className="text-green-400 font-bold text-md mb-4">
               Team QR Code
             </h2>
             <QRCode

@@ -53,7 +53,7 @@ export default function History() {
 
   return (
     <div className="w-full flex flex-col items-center justify-start text-white  p-8 sm:p-12">
-      <h1 className="text-3xl sm:text-4xl font-bold mb-6">
+      <h1 className="text-2xl sm:text-2xl font-bold mb-6">
         Submission History
       </h1>
 
@@ -85,7 +85,7 @@ export default function History() {
             submissions.map((item, index) => (
               <div
                 key={index}
-                className="flex justify-between items-center px-6 py-3 w-full max-w-md min-h-[100px]"
+                className="flex justify-between items-center px-11 py-3 w-full max-w-md min-h-[100px]"
                 style={{
                   backgroundImage: "url('/assets/submission_bg.svg')",
                   backgroundSize: "100% 100%",
@@ -99,7 +99,7 @@ export default function History() {
                   </span>
                   <span className="text-xs opacity-80">{item.difficulty}</span>
                 </div>
-                <span className="text-4xl font-bold text-yellow-400">
+                <span className="text-xl font-bold text-yellow-400">
                   +{getPoints(item.difficulty)}
                 </span>
               </div>

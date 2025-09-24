@@ -188,12 +188,12 @@ setBackground(region === "hell" ? "/assets/hell-bg.svg" : "/assets/background.sv
       />
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center p-4 font-pixel">
         <div className="w-full max-w-md mx-auto">
-          <h1 className="text-4xl font-bold text-white text-center mb-4">
+          <h1 className="text-3xl font-bold text-white text-center mb-4 font-pixel">
             Region Selection
           </h1>
-          <p className="text-white text-center font-rethink mb-10 text-lg">
-            Choose your region to play in
-          </p>
+          <p className={`${pixelFont.className} text-white text-center mb-10 text-lg`}>
+  Your text here
+</p>
 
           <div className="grid grid-cols-1 gap-6 mb-8">
             <RegionButton
