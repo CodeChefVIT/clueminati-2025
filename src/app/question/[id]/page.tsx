@@ -149,15 +149,12 @@ export default function QuestionScreen() {
       {/* Question Box */}
       <div className="relative w-full max-w-2xl mt-2">
         <img src={questionBox} alt="Question Box" className="w-full" />
-        <div className="absolute inset-0 flex items-center justify-center px-6 text-center text-base sm:text-lg font-bold leading-tight">
-          <p>
-            {question.split("\n").map((line, i) => (
-              <span key={i}>
-                {line}
-                <br />
-              </span>
-            ))}
-
+        <div className="absolute inset-0 flex items-start justify-center px-6 py-4 text-center text-base sm:text-lg font-bold leading-tight overflow-y-auto whitespace-normal break-words">
+          <p
+            dangerouslySetInnerHTML={{
+              __html: question,
+            }}
+          >
             {difficultyInfo && (
               <span className={`ml-2 ${difficultyInfo.className}`}>
                 ({difficultyInfo.text})
