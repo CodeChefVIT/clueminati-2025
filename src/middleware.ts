@@ -1,8 +1,15 @@
 import { NextResponse, NextRequest } from "next/server";
 import { jwtVerify } from "jose";
-import { getCurrentRound } from "./utils/getRound";
 
 const PUBLIC_PATHS = ["/login", "/signup"];
+
+function withCORS(response: NextResponse) {
+  response.headers.set("Access-Control-Allow-Origin", "*"); 
+  response.headers.set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  response.headers.set("Access-Control-Allow-Credentials", "true");
+  return response;
+}
 
 async function verifyToken(token: string) {
   try {
@@ -15,91 +22,96 @@ async function verifyToken(token: string) {
 }
 
 export async function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname;
+  const { pathname } = request.nextUrl;
+
+  if (request.method === "OPTIONS") {
+    return withCORS(new NextResponse(null, { status: 204 }));
+  }
+
   const isPublicPath =
-    PUBLIC_PATHS.includes(path) || path.startsWith("/verifyemail");
+    PUBLIC_PATHS.includes(pathname) || pathname.startsWith("/verifyemail");
 
   const token = request.cookies.get("token")?.value;
   const payload = token ? await verifyToken(token) : null;
-
-  let response = NextResponse.next();
-
-  response.headers.set("Access-Control-Allow-Origin", "https://mellohyu.itch.io");
-  response.headers.set(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS"
-  );
-  response.headers.set(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization"
-  );
-
-  if (request.method === "OPTIONS") {
-    return new NextResponse(null, { headers: response.headers });
-  }
 
   if (payload) {
     const role = payload.role;
 
     if (isPublicPath) {
-      if (role === "core_member")
-        return path === "/core-member"
-          ? response
-          : NextResponse.redirect(new URL("/core-member", request.url));
-      if (role === "admin")
-        return path === "/admin"
-          ? response
-          : NextResponse.redirect(new URL("/admin", request.url));
-      return NextResponse.redirect(new URL("/", request.url));
+      if (role === "core_member") {
+        return withCORS(
+          pathname === "/core-member"
+            ? NextResponse.next()
+            : NextResponse.redirect(new URL("/core-member", request.url))
+        );
+      }
+      if (role === "admin") {
+        return withCORS(
+          pathname === "/admin"
+            ? NextResponse.next()
+            : NextResponse.redirect(new URL("/admin", request.url))
+        );
+      }
+      return withCORS(
+        NextResponse.redirect(new URL("/", request.url))
+      );
     }
 
-    if (role === "admin" && !path.startsWith("/admin")) {
-      return NextResponse.redirect(new URL("/admin", request.url));
+    if (role === "admin" && !pathname.startsWith("/admin")) {
+      return withCORS(NextResponse.redirect(new URL("/admin", request.url)));
     }
-    if (role !== "admin" && path.startsWith("/admin")) {
-      return NextResponse.redirect(new URL("/", request.url));
+    if (role !== "admin" && pathname.startsWith("/admin")) {
+      return withCORS(NextResponse.redirect(new URL("/", request.url)));
     }
 
     if (role === "core_member") {
-      if (!path.startsWith("/core-member")) {
-        return NextResponse.redirect(new URL("/core-member", request.url));
-      }
 
+      if (!pathname.startsWith("/core-member")) {
+        return withCORS(NextResponse.redirect(new URL("/core-member", request.url)));
+      }
       if (
         !payload.core_allocated_station &&
-        path !== "/core-member/choose-station"
+        pathname !== "/core-member/choose-station"
       ) {
-        return NextResponse.redirect(
-          new URL("/core-member/choose-station", request.url)
+        return withCORS(
+          NextResponse.redirect(new URL("/core-member/choose-station", request.url))
         );
       }
     }
-    if (role !== "core_member" && path.startsWith("/core-member")) {
-      return NextResponse.redirect(new URL("/", request.url));
+    if (role !== "core_member" && pathname.startsWith("/core-member")) {
+      return withCORS(NextResponse.redirect(new URL("/", request.url)));
     }
 
     if (role === "participant") {
-      if (!payload.teamId && path !== "/join-team" && path !== "/create-team") {
-        return NextResponse.redirect(new URL("/join-team", request.url));
+      if (
+        !payload.teamId &&
+        pathname !== "/join-team" &&
+        pathname !== "/create-team"
+      ) {
+        return withCORS(NextResponse.redirect(new URL("/join-team", request.url)));
       }
-      if (payload.teamId && !payload.region && path !== "/role-selection") {
-        return NextResponse.redirect(new URL("/role-selection", request.url));
+      if (
+        payload.teamId &&
+        !payload.region &&
+        pathname !== "/role-selection"
+      ) {
+        return withCORS(NextResponse.redirect(new URL("/role-selection", request.url)));
       }
-      if (payload.region === "hell" && path !== "/hell-instructions") {
-        return NextResponse.redirect(
-          new URL("/hell-instructions", request.url)
+      if (
+        payload.region === "hell" &&
+        pathname !== "/hell-instructions"
+      ) {
+        return withCORS(
+          NextResponse.redirect(new URL("/hell-instructions", request.url))
         );
       }
-      if (payload.region === "earth") {
-      }
-    }
-  } else {
-    if (!isPublicPath) {
-      return NextResponse.redirect(new URL("/login", request.url));
     }
   }
+  else if (!isPublicPath) {
+    return withCORS(NextResponse.redirect(new URL("/login", request.url)));
+  }
 
-  return response;
+  return withCORS(NextResponse.next());
 }
 
 export const config = {
@@ -119,6 +131,5 @@ export const config = {
     "/admin/:path*",
     "/hell-instructions",
     "/instructions",
-    "/api/:path*", 
   ],
 };
