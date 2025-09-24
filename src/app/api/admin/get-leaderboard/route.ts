@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
         $project: {
           teamname: 1,
           members: 1,
-          total_score: 1,
+          total_score: { $add: ["$total_score","$round1.indoor_score", "$round2.indoor_score"] },
           secret_string: "$round2.secret_string", // include secret_string
           _id : 1
         },

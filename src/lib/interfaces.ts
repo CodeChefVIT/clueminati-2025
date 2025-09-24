@@ -56,7 +56,9 @@ export const TeamSchema = z.object({
   round2: Round2Schema.optional(),
   total_score: z.number().min(0).default(0),
   teamString: z.string().optional(),
-  stringValidated: z.boolean().default(false),  //added this booooooool to check if team has validated their string already
+  stringValidated: z.boolean().default(false), 
+  lastQuestionAnsweredAt: 
+    z.date().optional()
 });
 
 export const QuestionSchema = z.object({

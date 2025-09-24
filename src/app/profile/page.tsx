@@ -65,7 +65,7 @@ export default function ProfileScreen() {
     try {
       const response = await axios.get("/api/users/logout");
       console.log(response.data);
-      localStorage.removeItem("round");
+      // localStorage.removeItem("round");
       router.push("/login");
     } catch (error) {
       console.error("Logout failed:", error);
@@ -149,7 +149,7 @@ export default function ProfileScreen() {
           </div>
           <div className="flex justify-between">
             <span>Region:</span>
-            <span>{user.region || "N/A"}</span>
+            <span>{user.region?.toUpperCase() || "N/A"}</span>
           </div>
         </div>
 

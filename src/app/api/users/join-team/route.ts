@@ -44,6 +44,7 @@ export async function POST(req: NextRequest) {
     }
 
     user.teamId = team._id.toString();
+    user.region = undefined; // Explicitly clear region on joining a new team
     await user.save();
 
     team.members.push(user._id.toString());

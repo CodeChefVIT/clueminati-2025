@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     const user = await User.findById(userId)
     if (!user) {
       return NextResponse.json(
-        { error: 'User not found' }, //fuck u
+        { message: 'User not found' },
         { status: 404 }
       )
     }
@@ -23,63 +23,57 @@ export async function POST(request: NextRequest) {
     //iss check ko remove kardoon kya?
     if (!user.teamId) {
       return NextResponse.json(
-        { error: 'User is not part of any team' },
+        { message: 'User is not part of any team' },
         { status: 400 }
       )
     }
 
     // Get the user input from request body
     const { inputString } = await request.json()
-    
+
     if (!inputString) {
       return NextResponse.json(
-        { error: 'Input string is required' },
+        { message: 'Input string is required' },
         { status: 400 }
       )
     }
 
-    // starting validation (6 characters)
     if (!/^[a-zA-Z]{6}$/.test(inputString)) {
       return NextResponse.json(
-        { error: 'Input must be exactly 6 characters' },
+        { message: 'Input must be exactly 6 characters' },
         { status: 400 }
       )
     }
 
-    //team object
     const team = await Team.findById(user.teamId)
     if (!team) {
       return NextResponse.json(
-        { error: 'Team not found' }, //fck u 
+        { message: 'Team not found' }, 
         { status: 404 }
       )
     }
 
     if (!team.teamString) {
       return NextResponse.json(
-        { error: 'Team string not assigned yet' },
+        { message: 'Team string not assigned yet' },
         { status: 400 }
       )
     }
 
-    //validation flag
     if (team.stringValidated) {
       return NextResponse.json(
         { 
           success: false, 
-          error: 'Team ki string validate ho gyi, can do it only once',
-          message: 'Your team has already validated the string successfully. This can only be done once per team.' 
+          message: 'Your team has already validated the string successfully. This can only be done once per team.'
         },
         { status: 400 }
       )
     }
 
-    //actual comparison bool 
     const isMatch = inputString.toLowerCase() === team.teamString.toLowerCase()
 
     if (isMatch) {
-      //badhai ho, points lelo
-      const stringScore = 40; //awarded points, itne se kya hoga? ok
+      const stringScore = 70; 
       
       team.stringValidated = true;
       team.total_score += stringScore;
@@ -99,17 +93,16 @@ export async function POST(request: NextRequest) {
     } else {
       return NextResponse.json({
         success: false,
-        message: 'String validation failed. The entered code does not match your team string. FUCK U',
+        message: 'String validation failed. The entered code does not match your team string.',
         data: {
           inputString: inputString
         }
       })
     }
-    //im not debugging for shi anymore
   } catch (error: any) {
     console.error('Error in validate-string route:', error)
     return NextResponse.json(
-      { error: 'Internal server error', details: error.message },
+      { message: 'An internal server error occurred.', details: error.message },
       { status: 500 }
     )
   }

@@ -1,11 +1,36 @@
 "use client";
+import axios from "axios";
 import Image from "next/image";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 export default function CoreMember() {
+  const [station, setStation] = useState("");
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const response = await axios.get("/api/users/profile");
+        const stationData = response.data.data.station;
+        setStation(stationData.difficulty);
+      } catch (error: any) {
+        console.error(
+          "Error fetching profile:",
+          error.response?.data || error.message
+        );
+        if (error.response?.status === 401) {
+        }
+      } finally {
+      }
+    }
+
+    fetchProfile();
+  }, []);
   return (
     <main className="pt-20 w-full flex flex-col items-center justify-center p-4">
       {/* Instruction Text */}
+      <div className="text-white text-lg mb-4 text-center">
+        CAUTION!!! FOR ROUND 1 SERVE ONLY {station.toUpperCase()} QUESTIONS
+      </div>
       <div className="text-white text-lg mb-4 text-center">Scan Team QR</div>
 
       {/* QR Scanner Image */}

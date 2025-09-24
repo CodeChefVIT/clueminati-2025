@@ -45,12 +45,11 @@ export async function POST(request: NextRequest){   //took request as parameter 
       }
     }
 
-    // Generate random password
     const password = crypto.randomBytes(8).toString('hex');
-    const salt = await bcryptjs.genSalt(10);     // hashing password for security
-    const hashedPassword = await bcryptjs.hash(password,salt)     // hashed password
+    const salt = await bcryptjs.genSalt(10);     
+    const hashedPassword = await bcryptjs.hash(password,salt)     
 
-    const newUser = new User({        // creating new user object consisting of username, email, hashed password
+    const newUser = new User({        
       fullname,           
       email,
       password:hashedPassword,
@@ -58,12 +57,10 @@ export async function POST(request: NextRequest){   //took request as parameter 
       isVerified: true
     })
 
-    const savedUser = await newUser.save()                           // saving new user to db
+    const savedUser = await newUser.save()                           
     console.log(savedUser);        
 
-    //send verification email with password
-    await sendEmail({email, password})     // sending email for verification
-
+    await sendEmail({email, password})    
     console.log("Signup process completed for:", email);   
 
     return NextResponse.json({                                       // response if user is created successfully
