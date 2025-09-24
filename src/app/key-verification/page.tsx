@@ -3,13 +3,15 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { pixelFont } from "@/app/fonts"; 
+import Modal from "@/components/Modal";
 
 const KeyVerification: React.FC = () => {
   const router = useRouter();
   const [code, setCode] = useState(Array(6).fill("")); // store 6 characters
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalTitle, setModalTitle] = useState("");
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -42,13 +44,13 @@ const KeyVerification: React.FC = () => {
 
     // 6 char
     if (inputString.length !== 6) {
-      setMessage("Please enter all 6 characters");
-      setIsSuccess(false);
+      setModalTitle("Invalid Code");
+      setModalMessage("Please enter all 6 characters.");
+      setShowModal(true);
       return;
     }
 
     setIsSubmitting(true);
-    setMessage("");
 
     try {
       const response = await axios.post("/api/validate-string", {
@@ -56,18 +58,18 @@ const KeyVerification: React.FC = () => {
       });
 
       if (response.data.success) {
-        setMessage(
-          "Congratulations! Round 2 complete. Redirecting..."
-        );
-        setIsSuccess(true);
+        setModalTitle("Success!");
+        setModalMessage("Congratulations! Round 2 complete. Redirecting...");
+        setShowModal(true);
 
         // Redirect to round-2-complete after successful validation
         setTimeout(() => {
           router.push("/round-2-complete");
         }, 3000);
       } else {
-        setMessage(response.data.message || response.data.error);
-        setIsSuccess(false);
+        setModalTitle("Validation Failed");
+        setModalMessage(response.data.message || response.data.error);
+        setShowModal(true);
       }
     } catch (error: any) {
       let errorMessage = "An error occurred while validating the code.";
@@ -82,8 +84,9 @@ const KeyVerification: React.FC = () => {
         errorMessage = error.message;
       }
 
-      setMessage(errorMessage);
-      setIsSuccess(false);
+      setModalTitle("Error");
+      setModalMessage(errorMessage);
+      setShowModal(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -151,20 +154,21 @@ style={{
             >
               {isSubmitting ? "..." : "Submit"}
             </button>
-
-            {/* Status message */}
-            {message && (
-              <div
-                className={`mt-4 translate-y-[100px] text-center text-sm font-medium ${
-                  isSuccess ? "text-green-400" : "text-red-400"
-                }`}
-              >
-                {message}
-              </div>
-            )}
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        backgroundSvg="/assets/round-box-hell.svg"
+      >
+        <h2
+          className={`text-xl font-bold mb-4 ${modalTitle.includes("Success") ? "text-green-400" : "text-red-400"}`}
+        >
+          {modalTitle}
+        </h2>
+        <p className="mb-6 text-center text-white">{modalMessage}</p>
+      </Modal>
     </div>
   );
 };
