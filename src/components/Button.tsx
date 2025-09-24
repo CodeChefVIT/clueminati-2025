@@ -23,7 +23,9 @@ const Button: FC<ButtonProps> = ({ label, onClick, className, disabled }) => {
         alt={label}
         className={`w-full h-auto ${className || ""}`}
       />
-      <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-xl sm:text-2xl">
+       <span className={`absolute inset-0 flex items-center justify-center text-white font-bold ${
+        className?.includes('text-') ? '' : 'text-xl sm:text-2xl'
+      } ${className || ''}`}>
         {label}
       </span>
     </button>

@@ -10,6 +10,7 @@ export default function Instructions({ timeLeft }: { timeLeft?: number }) {
 
   useEffect(() => {
     const round = localStorage.getItem("round");
+    console.log(round);
     if (round) {
       setCurrentRound(round);
     }
@@ -18,8 +19,9 @@ export default function Instructions({ timeLeft }: { timeLeft?: number }) {
   return (
     <div className="w-full h-screen flex flex-col items-center justify-center text-white">
       <div
-        className="relative w-full bg-center bg-contain bg-no-repeat flex flex-col items-center justify-center h-[40rem] px-5"
-        style={{ backgroundImage: "url('/assets/instructions_bg.svg')", backgroundSize: "90% auto" }}
+
+        className="relative w-full bg-center bg-contain bg-no-repeat flex flex-col items-center justify-center h-[33rem] px-6 min-h-[100px]"
+        style={{ backgroundImage: "url('/assets/instructions_bg.svg')" }}
       >
         <h2 className="text-2xl font-bold mb-6 mt-8 text-[#A5A5A5]">
           Instructions 
@@ -73,6 +75,7 @@ The more you explore, the more you gain. And remember—knowing the locations of
           minim veniam, quis nostrud exercitation ullamco laboris nisi ut
           aliquip ex ea commodo consequat. Click on the Home button to start
         </p>) }
+
 
       </div>
 
