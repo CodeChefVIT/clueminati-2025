@@ -98,6 +98,26 @@ export default function ProfileScreen() {
     }
   }
 
+  const truncateEmail = (email: string, maxLength: number = 35) => {
+    if (email.length <= maxLength) {
+      return email;
+    }
+
+    const [localPart, domain] = email.split("@");
+
+    if (!domain || domain.length >= maxLength - 5) {
+      // Fallback for very long domains or if not a standard email format
+      return email.substring(0, maxLength - 3) + "...";
+    }
+
+    const availableLength = maxLength - domain.length - 1; // -1 for '@'
+    const startLength = Math.ceil((availableLength - 3) / 2); // -3 for '...'
+    const endLength = Math.floor((availableLength - 3) / 2);
+
+    const truncatedLocalPart = `${localPart.substring(0, startLength)}...${localPart.substring(localPart.length - endLength)}`;
+    return `${truncatedLocalPart}@${domain}`;
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-7rem)] text-white">
@@ -135,7 +155,9 @@ export default function ProfileScreen() {
           <h1 className="text-2xl sm:text-4xl font-bold text-white">
             {user.fullname}
           </h1>
-          <p className="text-base sm:text-sm text-gray-300">{user.email}</p>
+          <p className="text-base sm:text-sm text-gray-300">
+            {truncateEmail(user.email)}
+          </p>
         </div>
 
         <div className="text-white text-md sm:text-2xl max-w-xs w-full mb-8 space-y-6">

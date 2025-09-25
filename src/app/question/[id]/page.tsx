@@ -107,7 +107,7 @@ export default function QuestionScreen() {
           // Auto-redirect after 12 seconds (un-skippable)
           setTimeout(() => {
             router.push("/submission-history");
-          }, 12000);
+          }, 2000);
         } else {
           // Set error popup
           setMessage(response.data.message);
@@ -210,7 +210,7 @@ export default function QuestionScreen() {
           {revealedChar && (
             <div className="font-bold text-xl">
               Secret Char:{" "}
-              <span className="text-3xl text-yellow-400 animate-pulse filter drop-shadow-[0_0_8px_rgba(255,215,0,0.8)]">
+              <span className="text-3xl text-red-700 animate-pulse filter drop-shadow-[0_0_8px_rgba(255,215,0,0.8)]">
                 {revealedChar}
               </span>
             </div>

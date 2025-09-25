@@ -146,11 +146,15 @@ export default function Login() {
             </div>
           </form>
 
-          <p className="text-center font-medium text-base text-white mt-5">
+          {/* <p className="text-center font-medium text-base text-white mt-5">
             Don't have an account?{" "}
             <Link href="/signup" className="text-[#24CCFF]">
               Sign up
             </Link>
+          </p> */}
+          <p className="text-center font-medium text-base text-white mt-5">
+            Welcome To <span className="text-[#24CCFF]">Clueminati</span>
+          
           </p>
         </div>
       </div>

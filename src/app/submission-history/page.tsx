@@ -109,7 +109,9 @@ export default function History() {
               >
                 <div className="flex flex-col">
                   <span className="text-sm sm:text-base">
-                    {item.questionDescription || "No description available"}
+                    {item.questionDescription && item.questionDescription.length > 40
+                      ? `${item.questionDescription.substring(0, 40)}...`
+                      : item.questionDescription || "No description available"}
                   </span>
                   <span className="text-xs opacity-80">{item.difficulty}</span>
                 </div>
