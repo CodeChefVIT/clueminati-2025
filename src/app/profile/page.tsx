@@ -204,8 +204,8 @@ export default function ProfileScreen() {
             <QRCode
               value={teamIdForQR}
               size={260}
-              bgColor="#3b2f2f"
-              fgColor="#22c55e"
+              bgColor="#000000"
+              fgColor="#ffffff"
             />
 
             <div className="mt-6">
