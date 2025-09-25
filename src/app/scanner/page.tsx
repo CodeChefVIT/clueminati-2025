@@ -75,7 +75,7 @@ export default function ScannerPage() {
                 onError={(error) => {
                   console.error("QR Scanner Error:", error);
                 }}
-                constraints={{ facingMode: "environment" }}
+                constraints={{ facingMode: { exact: "environment" } }}
                 styles={{
                   container: { width: "100%", height: "100%" },
                   video: { objectFit: "cover", width: "100%", height: "100%" },
