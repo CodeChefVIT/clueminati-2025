@@ -8,7 +8,7 @@ const userSchema = new Schema<IUser>({
   },
   reg_num: {
     type: String,
-    required: [true, "Registration Number is required"],
+    required: false,
   },
   email: { 
     type: String, 

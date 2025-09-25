@@ -15,7 +15,7 @@ export const UserSchema = z.object({
   reg_num: z.string().regex(/^\d{2}[A-Z]{3}\d{4}$/, {
       message: "Invalid registration number format. Example: 23BCX1234",
     })
-    .transform((val: string) => val.toUpperCase()),
+    .transform((val: string) => val.toUpperCase()).optional(),
   core_allocated_station: z.string().optional(),
 });
 
