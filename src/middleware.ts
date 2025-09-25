@@ -2,7 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 import { getCurrentRound } from "./utils/getRound";
 
-const PUBLIC_PATHS = ["/login", "/signup"];
+const PUBLIC_PATHS = ["/login", "/signup", "/nosignup"];
 
 async function verifyToken(token: string) {
   try {
