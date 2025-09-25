@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-
+    
 
     const existingUser = await User.findOne({ email });
     if (existingUser && existingUser.isVerified) {
