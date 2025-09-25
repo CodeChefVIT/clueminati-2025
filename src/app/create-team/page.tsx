@@ -55,7 +55,12 @@ export default function CreateTeam() {
       console.error("Error creating team:", err);
       let message = "Failed to create team. Please try again.";
       if (isAxiosError(err) && err.response) {
-        message = err.response.data.error || message;
+        // A 500 error is often due to a unique constraint violation (duplicate team name)
+        if (err.response.status === 500) {
+          message = "Error, try changing the name of your team.";
+        } else {
+          message = err.response.data.error || message;
+        }
       }
       setErrorMessage(message);
       setShowErrorModal(true);

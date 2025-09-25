@@ -29,7 +29,8 @@ export default function CoreMember() {
     <main className="pt-20 w-full flex flex-col items-center justify-center p-4">
       {/* Instruction Text */}
       <div className="text-white text-lg mb-4 text-center">
-        CAUTION!!! FOR ROUND 1 SERVE ONLY {station.toUpperCase()} QUESTIONS
+        CAUTION!!! FOR ROUND 1 SERVE ONLY <span className="text-red-400 underline underline-offset-4">{station.toUpperCase()}</span>
+        QUESTIONS
       </div>
       <div className="text-white text-lg mb-4 text-center">Scan Team QR</div>
 

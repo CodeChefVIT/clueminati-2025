@@ -238,7 +238,6 @@ export default function LayoutClientWrapper({
         <KeyVerification />
       ) : pathname.startsWith("/core-member") ?(
         <div className="text-9xl z-100">
-          Khel Khatam Pesa Hazam
         </div>
       ) : (
         ""
