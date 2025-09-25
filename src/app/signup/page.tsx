@@ -48,7 +48,6 @@ export default function SignupPage() {
       setLoading(true);
       const response = await axios.post("/api/users/signup", {
         fullname,
-        reg_num: regno,
         email,
       });
       console.log("Signup success", response.data);

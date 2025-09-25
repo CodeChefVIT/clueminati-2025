@@ -79,7 +79,6 @@ export async function POST(req: NextRequest) {
     const tokenData = {
       id: user._id,
       fullname: user.fullname,
-      reg_num: user.reg_num,
       email: user.email,
       role: user.role,
       teamId: user.teamId ?? null,
