@@ -30,7 +30,6 @@ export async function GET(req: NextRequest) {
 
     const userList = Users.map((user: any, index: number) => ({
       fullname: user.fullname,
-      reg_num: user.reg_num,
       email: user.email,
       role: user.role,
       region: user.region,

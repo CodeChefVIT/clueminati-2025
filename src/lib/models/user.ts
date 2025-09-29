@@ -6,10 +6,7 @@ const userSchema = new Schema<IUser>({
     type: String,
     required: [true, "Please provide a full name"],
   },
-  reg_num: {
-    type: String,
-    required: [true, "Registration Number is required"],
-  },
+
   email: { 
     type: String, 
     required: [true, "Please provide an email"], 

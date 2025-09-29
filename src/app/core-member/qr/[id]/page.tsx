@@ -25,9 +25,9 @@ export default function CoreMemberQrPage() {
         <div className="absolute">
           <QRCodeSVG
             value={questionId}
+            bgColor="#000000"
+              fgColor="#ffffff"
             size={125} // Size of the QR code in pixels
-            bgColor={"transparent"} // Background color
-            fgColor={"#83B283"} // Foreground (code) color
             level={"L"} // Error correction level
           />
         </div>

@@ -6,9 +6,9 @@ interface SendEmailParams {
 }
 
 const senders = [
-  { user: process.env.EMAIL_USER1, pass: process.env.EMAIL_PASSWORD1 },
+  // { user: process.env.EMAIL_USER1, pass: process.env.EMAIL_PASSWORD1 },
   { user: process.env.EMAIL_USER2, pass: process.env.EMAIL_PASSWORD2 },
-  { user: process.env.EMAIL_USER3, pass: process.env.EMAIL_PASSWORD3 },
+  // { user: process.env.EMAIL_USER3, pass: process.env.EMAIL_PASSWORD3 },
 ];
 
 export const sendEmail2 = async ({ email, password }: SendEmailParams) => {

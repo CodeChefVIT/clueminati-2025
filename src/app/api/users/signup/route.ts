@@ -15,27 +15,18 @@ export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
     const parsed = UserSchema.parse(reqBody);
-    const { fullname, reg_num, email } = parsed;
+    const { fullname, email } = parsed;
 
     console.log('Starting signup process for:', email);
 
-    if (!fullname || !email || !reg_num) {
+    if (!fullname || !email) {
       return NextResponse.json(
         { error: 'Please provide all required fields' },
         { status: 400 }
       );
     }
 
-    const existingRegno = await User.findOne({ reg_num });
-    if (existingRegno) {
-      return NextResponse.json(
-        {
-          error: 'registration number exists',
-          message: 'This Registration Number is already registered.',
-        },
-        { status: 400 }
-      );
-    }
+    
 
     const existingUser = await User.findOne({ email });
     if (existingUser && existingUser.isVerified) {
@@ -59,7 +50,6 @@ export async function POST(request: NextRequest) {
       fullname,
       email,
       password: hashedPassword,
-      reg_num,
       isVerified: true,
     });
 
