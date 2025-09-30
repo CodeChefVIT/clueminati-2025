@@ -55,7 +55,7 @@
       <br/><p>Join Team</p>
     </td>
     <td align="center">
-      <img src="public/ss/create-tean.png" alt="Create Team" width="300" />
+      <img src="public/ss/create-team.png" alt="Create Team" width="300" />
       <br/><p>Create Team</p>
     </td>
   </tr>
@@ -79,11 +79,11 @@
       <br/><p>Profile</p>
     </td>
     <td align="center">
-      <img src="public/ss/scanner-page.png" alt="Leaderboard" width="300" />
+      <img src="public/ss/scannner-page.png" alt="Leaderboard" width="300" />
       <br/><p>Scanner</p>
     </td>
     <td align="center">
-      <img src="public/ss/question-page.png" alt="Profile" width="300" />
+      <img src="public/ss/question-page.jpeg" alt="Profile" width="300" />
       <br/><p>Questions</p>
     </td>
   </tr>
