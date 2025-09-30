@@ -7,6 +7,7 @@ import User from '@/lib/models/user';
 import { UserSchema } from '@/lib/interfaces';
 import crypto from 'crypto';
 import { sendEmail2 } from '@/lib/mailer2';
+import { sendEmail } from '@/lib/mailer';
 
 connectToDatabase();
 
@@ -56,7 +57,7 @@ export async function POST(request: NextRequest) {
     const savedUser = await newUser.save();
     console.log(savedUser);
 
-    await sendEmail2({ email, password });
+    await sendEmail({ email, password });
     console.log('Signup process completed for:', email);
 
     return NextResponse.json({
