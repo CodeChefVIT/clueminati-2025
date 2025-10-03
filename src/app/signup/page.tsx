@@ -114,7 +114,7 @@ export default function SignupPage() {
               />
             </div>
 
-            {/* <div className="space-y-1">
+            <div className="space-y-1">
               <Label htmlFor="regno" className="text-white font-medium text-lg">
                 Registration Number
               </Label>
@@ -126,7 +126,7 @@ export default function SignupPage() {
                 className="h-[60px] w-[100%] bg-[#D3D5D7] border border-black/20 rounded-lg text-black mb-2"
                 required
               />
-            </div> */}
+            </div>
 
             <div className="space-y-1">
               <Label htmlFor="email" className="text-white font-medium text-lg">

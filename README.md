@@ -15,8 +15,8 @@
 
 <h3>🌐 Deploy</h3>
 <p>
-  <a href="https://clueminati25.codechefvit.com" target="_blank" rel="noreferrer">
-    https://clueminati25.codechefvit.com
+  <a href="https://clueminati.codechefvit.com" target="_blank" rel="noreferrer">
+    https://clueminati.codechefvit.com
   </a>
 </p>
 
