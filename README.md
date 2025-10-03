@@ -79,7 +79,7 @@
       <br/><p>Profile</p>
     </td>
     <td align="center">
-      <img src="public/ss/scannner-page.png" alt="Leaderboard" width="300" />
+      <img src="public/ss/scannner-page.jpeg" alt="Leaderboard" width="300" />
       <br/><p>Scanner</p>
     </td>
     <td align="center">
