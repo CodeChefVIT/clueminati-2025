@@ -7,7 +7,7 @@
 <h2 align="center">Clueminati 3.0</h2>
 
 <p>
-  <strong>Clueminati 3.0</strong> is CodeChef VIT's annual treasure hunt event, back with its third edition in <strong>2025</strong>.
+  <strong>Clueminati 3.0</strong> is CodeChef VIT's annual treasure hunt event, back with its 3rd edition in <strong>2025</strong>.
   This web application enables seamless team creation, score tracking, and real-time leaderboard management—ensuring participants enjoy an engaging and competitive experience throughout the event.
 </p>
 
