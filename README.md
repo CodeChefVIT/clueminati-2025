@@ -22,13 +22,13 @@
 
 <h3>⚙️ Tech Stack</h3>
 <ul>
-  <li><strong>Home Page</strong> — central hub for navigation and quick access to event features.</li>
-  <li><strong>Scanner Page</strong> — scan QR codes to fetch questions during the treasure hunt.</li>
-  <li><strong>Questions Page</strong> — view, attempt, and submit answers to event questions.</li>
-  <li><strong>Admin Dashboard</strong> — manage teams, monitor scores, and update the leaderboard.</li>
-  <li><strong>Team Management</strong> — participants can easily create or join teams.</li>
-  <li><strong>Dynamic Leaderboard</strong> — real-time ranking updates for all teams.</li>
-  <li><strong>Responsive Design</strong> — optimized for all devices and screen sizes.</li>
+  <li><a href="https://nextjs.org" target="_blank" rel="noreferrer">Next.js</a></li>
+  <li><a href="https://www.typescriptlang.org" target="_blank" rel="noreferrer">TypeScript</a></li>
+  <li><a href="https://tailwindcss.com" target="_blank" rel="noreferrer">Tailwind CSS</a></li>
+  <li><a href="https://react-hot-toast.com" target="_blank" rel="noreferrer">React Hot Toast</a></li>
+  <li><a href="https://axios-http.com" target="_blank" rel="noreferrer">Axios</a></li>
+  <li><a href="https://ui.shadcn.com" target="_blank" rel="noreferrer">Shadcn</a></li>
+  <li><a href="https://www.mongodb.com" target="_blank" rel="noreferrer">MongoDB</a></li>
 </ul>
 
 <h3>💡 Features</h3>
@@ -43,7 +43,6 @@
 </ul>
 
 <h3>🖼 Screenshots</h3>
-<p>Add images to <code>public/</code> and update the paths below.</p>
 <table>
   <tr>
     <td align="center">
