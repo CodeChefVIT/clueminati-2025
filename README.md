@@ -137,11 +137,12 @@ pnpm db:index</code></pre>
 </ul>
 
 <h3>🚀 Contributors</h3>
+
 <table>
   <tr align="center">
     <td>
       <p align="center">
-        <img src="https://avatars.githubusercontent.com/u/88274018?s=64&v=4" width="170" height="170" alt="Harshit Kashyap Sharma" style="border:2px solid grey;border-radius:8px;">
+        <img src="https://avatars.githubusercontent.com/u/110464184?v=4" width="200" height="200" alt="Harshit Kashyap Sharma" style="border:2px solid grey;border-radius:8px;">
       </p>
       <p style="font-size:17px;font-weight:600;">Harshit Kashyap Sharma</p>
       <p align="center">
@@ -153,7 +154,7 @@ pnpm db:index</code></pre>
     </td>
     <td>
       <p align="center">
-        <img src="https://avatars.githubusercontent.com/u/195720773?s=60&v=4" width="170" height="170" alt="Ayman Raza" style="border:2px solid grey;border-radius:8px;">
+        <img src="https://avatars.githubusercontent.com/u/195720773?v=4" width="200" height="200" alt="Ayman Raza" style="border:2px solid grey;border-radius:8px;">
       </p>
       <p style="font-size:17px;font-weight:600;">Ayman</p>
       <p align="center">
@@ -165,7 +166,7 @@ pnpm db:index</code></pre>
     </td>
     <td>
       <p align="center">
-        <img src="https://avatars.githubusercontent.com/u/184590869?s=60&v=4" width="170" height="170" alt="Narendra Sadhukhan" style="border:2px solid grey;border-radius:8px;">
+        <img src="https://avatars.githubusercontent.com/u/184590869?v=4" width="200" height="200" alt="Narendra Sadhukhan" style="border:2px solid grey;border-radius:8px;">
       </p>
       <p style="font-size:17px;font-weight:600;">Narendra Sadhukhan</p>
       <p align="center">
@@ -177,12 +178,9 @@ pnpm db:index</code></pre>
         </a>
       </p>
     </td>
-  </tr>
-
-  <tr align="center">
     <td>
       <p align="center">
-        <img src="https://avatars.githubusercontent.com/u/174669430?s=60&v=4" width="170" height="170" alt="Hardik" style="border:2px solid grey;border-radius:8px;">
+        <img src="https://avatars.githubusercontent.com/u/174669430?v=4" width="200" height="200" alt="Hardik" style="border:2px solid grey;border-radius:8px;">
       </p>
       <p style="font-size:17px;font-weight:600;">Hardik</p>
       <p align="center">
@@ -194,9 +192,11 @@ pnpm db:index</code></pre>
         </a>
       </p>
     </td>
+  </tr>
+  <tr align="center">
     <td>
       <p align="center">
-        <img src="https://avatars.githubusercontent.com/u/118340787?v=4" width="170" height="170" alt="Sajith M" style="border:2px solid grey;border-radius:8px;">
+        <img src="https://avatars.githubusercontent.com/u/118340787?v=4" width="200" height="200" alt="Sajith M" style="border:2px solid grey;border-radius:8px;">
       </p>
       <p style="font-size:17px;font-weight:600;">Sajith M</p>
       <p align="center">
@@ -208,7 +208,7 @@ pnpm db:index</code></pre>
     </td>
     <td>
       <p align="center">
-        <img src="https://avatars.githubusercontent.com/u/174238080?s=60&v=4" width="170" height="170" alt="Harsheta Bhardwaj" style="border:2px solid grey;border-radius:8px;">
+        <img src="https://avatars.githubusercontent.com/u/174238080?v=4" width="200" height="200" alt="Harsheta Bhardwaj" style="border:2px solid grey;border-radius:8px;">
       </p>
       <p style="font-size:17px;font-weight:600;">Harsheta Bhardwaj</p>
       <p align="center">
@@ -218,13 +218,9 @@ pnpm db:index</code></pre>
         <img src="http://www.iconninja.com/files/863/607/751/network-linkedin-social-connection-circular-circle-media-icon.svg" width="36" height="36" alt="LinkedIn"/>
       </p>
     </td>
-
-  </tr>
-
-  <tr align="center">
     <td>
       <p align="center">
-        <img src="https://avatars.githubusercontent.com/u/144542509?v=4" width="170" height="170" alt="Rohith JN" style="border:2px solid grey;border-radius:8px;">
+        <img src="https://avatars.githubusercontent.com/u/144542509?v=4" width="200" height="200" alt="Rohith JN" style="border:2px solid grey;border-radius:8px;">
       </p>
       <p style="font-size:17px;font-weight:600;">Rohith JN</p>
       <p align="center">
@@ -238,7 +234,7 @@ pnpm db:index</code></pre>
     </td>
     <td>
       <p align="center">
-        <img src="https://avatars.githubusercontent.com/u/128321388?v=4" width="170" height="170" alt="Sanjana Shyamsundar" style="border:2px solid grey;border-radius:8px;">
+        <img src="https://avatars.githubusercontent.com/u/128321388?v=4" width="200" height="200" alt="Sanjana Shyamsundar" style="border:2px solid grey;border-radius:8px;">
       </p>
       <p style="font-size:17px;font-weight:600;">Sanjana Shyamsundar</p>
       <p align="center">
@@ -250,9 +246,11 @@ pnpm db:index</code></pre>
         </a>
       </p>
     </td>
+  </tr>
+  <tr align="center">
     <td>
       <p align="center">
-        <img src="https://avatars.githubusercontent.com/u/182229100?s=60&v=4" width="170" height="170" alt="Rupesh Tripathi" style="border:2px solid grey;border-radius:8px;">
+        <img src="https://avatars.githubusercontent.com/u/174238080?v=4" width="200" height="200" alt="Rupesh Tripathi" style="border:2px solid grey;border-radius:8px;">
       </p>
       <p style="font-size:17px;font-weight:600;">Rupesh Tripathi</p>
       <p align="center">
@@ -264,13 +262,9 @@ pnpm db:index</code></pre>
         </a>
       </p>
     </td>
-
-  </tr>
-
-  <tr align="center">
     <td>
       <p align="center">
-        <img src="https://avatars.githubusercontent.com/u/67090539?v=4" width="170" height="170" alt="Abhinav" style="border:2px solid grey;border-radius:8px;">
+        <img src="https://avatars.githubusercontent.com/u/67090539?v=4" width="200" height="200" alt="Abhinav" style="border:2px solid grey;border-radius:8px;">
       </p>
       <p style="font-size:17px;font-weight:600;">Abhinav</p>
       <p align="center">
@@ -284,9 +278,9 @@ pnpm db:index</code></pre>
     </td>
     <td>
       <p align="center">
-        <img src="https://avatars.githubusercontent.com/u/155614230?s=60&v=4" width="170" height="170" alt="Soham Maha" style="border:2px solid grey;border-radius:8px;">
+        <img src="https://avatars.githubusercontent.com/u/155614230?v=4" width="200" height="200" alt="Soham Maha" style="border:2px solid grey;border-radius:8px;">
       </p>
-      <p style="font-size:17px;font-weight:600;">Soham Maha</p>
+      <p style="font-size:17px;font-weight:600;">Soham Mahapatra</p>
       <p align="center">
         <a href="https://github.com/Soham-Maha">
           <img src="http://www.iconninja.com/files/241/825/211/round-collaboration-social-github-code-circle-network-icon.svg" width="36" height="36" alt="GitHub"/>
@@ -298,7 +292,7 @@ pnpm db:index</code></pre>
     </td>
     <td>
       <p align="center">
-        <img src="https://avatars.githubusercontent.com/u/142434600?s=64&v=4" width="170" height="170" alt="Samya Mehta" style="border:2px solid grey;border-radius:8px;">
+        <img src="https://avatars.githubusercontent.com/u/142434600?v=4" width="200" height="200" alt="Samya Mehta" style="border:2px solid grey;border-radius:8px;">
       </p>
       <p style="font-size:17px;font-weight:600;">Samya Mehta</p>
       <p align="center">
