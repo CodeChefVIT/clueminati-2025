@@ -142,7 +142,7 @@ pnpm db:index</code></pre>
   <tr align="center">
     <td>
       <p align="center">
-        <img src="https://avatars.githubusercontent.com/u/110464184?v=4" width="200" height="200" alt="Harshit Kashyap Sharma" style="border:2px solid grey;border-radius:8px;">
+        <img src="https://avatars.githubusercontent.com/u/88274018?s=64&v=4" width="200" height="200" alt="Harshit Kashyap Sharma" style="border:2px solid grey;border-radius:8px;">
       </p>
       <p style="font-size:17px;font-weight:600;">Harshit Kashyap Sharma</p>
       <p align="center">
@@ -250,7 +250,7 @@ pnpm db:index</code></pre>
   <tr align="center">
     <td>
       <p align="center">
-        <img src="https://avatars.githubusercontent.com/u/174238080?v=4" width="200" height="200" alt="Rupesh Tripathi" style="border:2px solid grey;border-radius:8px;">
+        <img src="https://avatars.githubusercontent.com/u/182229100?v=4" width="200" height="200" alt="Rupesh Tripathi" style="border:2px solid grey;border-radius:8px;">
       </p>
       <p style="font-size:17px;font-weight:600;">Rupesh Tripathi</p>
       <p align="center">
