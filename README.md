@@ -140,7 +140,7 @@ pnpm db:index</code></pre>
 <ul>
   <li><a href="https://github.com/kashyap-harshit" target="_blank" rel="noreferrer">Harshit Kashyap Sharma</a><li>
   <li><a href="https://github.com/harsheta-6" target="_blank" rel="noreferrer">Harsheta Bhardwaj</a><li>
-  <li><a href="https://github.com/naren06-afk" target="_blank" rel="noreferrer">Narendra Sadhukhan<a>
+  <li><a href="https://github.com/naren06-afk" target="_blank" rel="noreferrer">Narendra Sadhukhan<a><li>
   <li><a href="https://github.com/Rohith-JN" target="_blank" rel="noreferrer">Rohith JN</a><li>
   <li><a href="https://github.com/rupeshhh007" target="_blank" rel="noreferrer">Rupesh Tripathi</a><li>
   <li><a href="https://github.com/Sajith-13" target="_blank" rel="noreferrer">Sajith M</a><li>
