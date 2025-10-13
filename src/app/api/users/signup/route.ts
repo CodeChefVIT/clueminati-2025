@@ -40,7 +40,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const password = crypto.randomBytes(8).toString('hex');
+    let randomBytes = crypto.randomBytes(8);
+    const specialChars = "!@#$%^&*()_+~`|}{[]\:;?><,./-=";
+    const allChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789" + specialChars;
+      
+    for (let i = 0; i < randomBytes.length; i++) {
+        randomBytes[i] = allChars.charCodeAt(randomBytes[i] % allChars.length);
+    }
+    
+    let password = randomBytes.toString('utf-8');
+
 
   
     // Hash password before saving to DB
