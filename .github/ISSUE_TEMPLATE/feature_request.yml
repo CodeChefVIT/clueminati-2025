@@ -1,0 +1,51 @@
+name: Feature request
+description: Suggest a new idea or enhancement for Clueminati 2025
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for contributing! Please fill out the sections below so we can evaluate the idea quickly.
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: Briefly describe the feature or enhancement.
+      placeholder: e.g. Add support for offline puzzle syncing
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Explain the problem this feature solves and who it helps.
+      placeholder: Describe the current pain point and desired outcome
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Outline how you envision the feature working.
+      placeholder: Include user flows, screens, or API details if known
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: List other options you explored and why they were rejected.
+      placeholder: Mention any workarounds or related ideas
+  - type: input
+    id: impact
+    attributes:
+      label: Impact or priority
+      description: Estimate how urgent or impactful this feature is.
+      placeholder: Low / Medium / High
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add screenshots, references, or anything else helpful.
+      placeholder: Links to designs, docs, or related issues
