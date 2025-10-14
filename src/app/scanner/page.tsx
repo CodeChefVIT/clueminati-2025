@@ -64,6 +64,7 @@ export default function ScannerPage() {
         <div className="mt-[20px] relative w-[340px] h-[340px] flex items-center justify-center z-10">
           <div className="relative w-full h-full rounded-2xl overflow-hidden">
             {isScanning && (
+              <>
               <Scanner
                 onScan={(detectedCodes) => {
                   if (detectedCodes.length > 0) {
@@ -81,6 +82,11 @@ export default function ScannerPage() {
                   video: { objectFit: "cover", width: "100%", height: "100%" },
                 }}
               />
+              {/*scanning linea*/}
+                <div className="absolute inset-0 pointer-events-none z-10">
+                  <div className="animate-scan absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_10px_rgba(34,211,238,0.8)]" />
+                </div>
+              </>
             )}
           </div>
 
@@ -88,7 +94,7 @@ export default function ScannerPage() {
             src="/assets/scanner-screen.svg"
             alt="Scanner Frame Overlay"
             fill
-            className="pointer-events-none object-contain absolute top-0 left-0 z-20"
+            className="pointer-events-none object-contain absolute top-0 left-0 z-20 rounded-2xl"
           />
         </div>
       )}
