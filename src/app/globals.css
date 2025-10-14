@@ -152,6 +152,17 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-rethinkSansBold);
 }
+@keyframes scan {
+  0%, 100% {
+    top: 10%;
+    opacity: 0.8;
+  }
+  50% {
+    top: 90%;
+    opacity: 1;
+  }
+}
 
-
-
+.animate-scan {
+  animation: scan 2.5s ease-in-out infinite;
+}
