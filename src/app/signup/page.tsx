@@ -145,7 +145,7 @@ export default function SignupPage() {
             <div className="flex justify-center mt-6">
               <Button
                 type="submit"
-                // disabled={buttonDisabled || loading}
+                disabled={buttonDisabled || loading}
                 className={`w-43 h-11 bg-no-repeat bg-center rounded-xl bg-cover flex items-center justify-center
                   ${
                     buttonDisabled || loading
