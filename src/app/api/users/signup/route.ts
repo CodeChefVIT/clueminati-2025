@@ -49,8 +49,7 @@ export async function POST(request: NextRequest) {
     }
     
     let password = randomBytes.toString('utf-8');
-
-
+    // console.log(password);
   
     // Hash password before saving to DB
     const salt = await bcryptjs.genSalt(10);
