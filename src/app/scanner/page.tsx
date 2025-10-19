@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Scanner } from "@yudiel/react-qr-scanner";
 import { useRouter } from "next/navigation";
@@ -46,6 +46,32 @@ export default function ScannerPage() {
       setIsScanning(true);
     }
   };
+//over-contraintederror handling; Issue: fixed;
+  useEffect(() => {
+    // quick capability check
+    if (typeof navigator === "undefined" || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      setMessage("Camera not available in this browser. You can enter the code manually.");
+      setShowPopup(true);
+      setIsScanning(false);
+    }
+  }, []);
+
+  const handleScannerError = (error: any) => {
+    console.error("QR Scanner Error:", error);
+    // provide a more helpful message to the user
+    let msg = "Unable to access camera. Please allow camera permissions, use a secure (https) connection, or enter the code manually.";
+    if (error && error.name === "OverconstrainedError") {
+      msg = "No camera matches the requested constraints (environment facing). Trying default camera. If this persists, switch to manual mode.";
+    } else if (error && error.name === "NotAllowedError") {
+      msg = "Camera permission denied. Please allow camera access in your browser settings.";
+    } else if (error && error.name === "NotFoundError") {
+      msg = "No camera device found on this system.";
+    }
+
+    setMessage(msg);
+    setShowPopup(true);
+    setIsScanning(false);
+  };
 
   return (
     <main className="relative w-full flex flex-col items-center justify-start overflow-hidden no-scrollbar">
@@ -73,10 +99,9 @@ export default function ScannerPage() {
                     handleScan(result);
                   }
                 }}
-                onError={(error) => {
-                  console.error("QR Scanner Error:", error);
-                }}
-                constraints={{ facingMode: { exact: "environment" } }}
+                onError={handleScannerError}
+                // use a permissive/ideal constraint instead of "exact" which can fail on some devices/browsers
+                constraints={ { facingMode: { ideal: "environment" } } }
                 styles={{
                   container: { width: "100%", height: "100%" },
                   video: { objectFit: "cover", width: "100%", height: "100%" },
