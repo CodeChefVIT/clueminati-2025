@@ -102,6 +102,7 @@ export async function POST(req: NextRequest) {
 
     if (team[roundKey]) {
       team[roundKey]!.questions_solved[difficulty].push(questionId);
+      team[roundKey].solved_at[difficulty].push(new Date())
       team[roundKey]!.score += points;
     }
     team.total_score += points;
