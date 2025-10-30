@@ -27,8 +27,15 @@ const QuestionTrackingSchema = z.object({
   hard: z.array(z.string()).default([]),
 });
 
+const SolvedAtSchema = z.object({
+  easy: z.array(z.date()).default([]),
+  medium: z.array(z.date()).default([]),
+  hard: z.array(z.date()).default([]),
+})
+
 const Round1Schema = z.object({
   questions_solved: QuestionTrackingSchema,
+  solved_at: SolvedAtSchema,
   questions_encountered: QuestionTrackingSchema,
   score: z.number().min(0).default(0),
   indoor_score: z.number().min(0).default(0),

@@ -16,6 +16,11 @@ const TeamSchema = new Schema<ITeam>({
       medium: { type: [{ type: String, ref: "Questions" }], default: [] },
       hard: { type: [{ type: String, ref: "Questions" }], default: [] },
     },
+    solved_at: {
+      easy: { type: [{ type: Date }], default: []},
+      medium: { type: [{ type: Date }], default: []},
+      hard: { type: [{ type: Date }], default: []},
+    },
     score: { type: Number, default: 0 },
     indoor_score: { type: Number, default: 0 },
   },
@@ -29,6 +34,11 @@ const TeamSchema = new Schema<ITeam>({
       easy: { type: [{ type: String, ref: "Questions" }], default: [] },
       medium: { type: [{ type: String, ref: "Questions" }], default: [] },
       hard: { type: [{ type: String, ref: "Questions" }], default: [] },
+    },
+    solved_at: {
+      easy: { type: [{ type: Date }], default: []},
+      medium: { type: [{ type: Date }], default: []},
+      hard: { type: [{ type: Date }], default: []},
     },
     score: { type: Number, default: 0 },
     indoor_score: { type: Number, default: 0 },
